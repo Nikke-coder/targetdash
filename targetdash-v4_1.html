@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>targetdash > financial intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:       #0a0a0f;
+  --bg2:      #0e0e16;
+  --bg3:      #12121c;
+  --panel:    rgba(255,255,255,0.04);
+  --panel-hi: rgba(255,255,255,0.07);
+  --glass:    rgba(14,14,22,0.7);
+  --border:   rgba(255,255,255,0.08);
+  --border-hi:rgba(255,255,255,0.14);
+  --violet:   #7c3aed;
+  --violet-hi:#9d5ffc;
+  --violet-lo:#5b21b6;
+  --vglow:    rgba(124,58,237,0.25);
+  --vglow2:   rgba(124,58,237,0.08);
+  --vdim:     rgba(124,58,237,0.15);
+  --lilac:    #c4b5fd;
+  --white:    #ffffff;
+  --text:     #f1f0f5;
+  --mid:      #8b8a9a;
+  --dim:      #3d3c52;
+  --green:    #34d399;
+  --amber:    #fbbf24;
+  --red:      #f87171;
+  --sans:     'Plus Jakarta Sans', sans-serif;
+  --serif:    'Fraunces', serif;
+}
+
+html{ scroll-behavior: smooth; }
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CURSOR ── */
+#cur {
+  position: fixed; width: 6px; height: 6px;
+  background: var(--violet-hi); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  box-shadow: 0 0 12px var(--violet);
+  transition: width .2s, height .2s;
+}
+#cur-r {
+  position: fixed; width: 26px; height: 26px;
+  border: 1px solid rgba(124,58,237,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: width .3s, height .3s, border-color .3s;
+}
+body:has(a:hover,button:hover) #cur-r {
+  width: 42px; height: 42px;
+  border-color: rgba(124,58,237,0.7);
+}
+
+/* ── CANVAS ── */
+#canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ── GRID OVERLAY ── */
+.grid-overlay {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* ── RADIAL VIGNETTE ── */
+.vignette {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,10,15,0.6) 100%);
+}
+
+.page { position: relative; z-index: 10; }
+
+/* ════════════════════════════════════
+   NAV
+════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 52px; height: 68px;
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex; align-items: center; gap: 2px;
+  text-decoration: none;
+}
+.logo-name {
+  font-family: var(--sans); font-size: 16px; font-weight: 600;
+  color: var(--white); letter-spacing: -0.02em;
+}
+.logo-gt {
+  font-size: 18px; font-weight: 300; color: var(--violet-hi);
+  display: inline-block;
+  transition: transform .25s ease, color .25s;
+  text-shadow: 0 0 16px var(--violet);
+}
+.logo:hover .logo-gt { transform: translateX(4px); color: var(--lilac); }
+
+.nav-links {
+  display: flex; align-items: center; gap: 36px;
+}
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--mid);
+  text-decoration: none; letter-spacing: -0.01em;
+  transition: color .2s; position: relative;
+}
+.nav-links a:hover { color: var(--text); }
+
+.nav-right { display: flex; align-items: center; gap: 10px; }
+
+.btn-ghost {
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--mid); text-decoration: none;
+  padding: 8px 18px; border: 1px solid var(--border-hi);
+  border-radius: 8px; transition: all .2s;
+}
+.btn-ghost:hover { color: var(--text); border-color: rgba(124,58,237,0.4); }
+
+.btn-primary {
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  color: var(--white); text-decoration: none;
+  padding: 9px 20px;
+  background: var(--violet);
+  border-radius: 8px;
+  transition: all .25s;
+  box-shadow: 0 0 0 0 var(--vglow);
+}
+.btn-primary:hover {
+  background: var(--violet-hi);
+  box-shadow: 0 0 24px var(--vglow), 0 4px 16px rgba(124,58,237,0.3);
+}
+
+/* ════════════════════════════════════
+   HERO
+════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 52px 80px; padding-top: 68px;
+  position: relative;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 500; color: var(--lilac);
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 100px; padding: 6px 14px;
+  width: fit-content; margin-bottom: 48px;
+  opacity: 0; animation: fadeUp .7s ease forwards .1s;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--violet-hi); box-shadow: 0 0 8px var(--violet);
+  animation: glow 2s ease infinite;
+}
+@keyframes glow {
+  0%,100%{ box-shadow: 0 0 8px var(--violet); }
+  50%{ box-shadow: 0 0 16px var(--violet-hi), 0 0 32px var(--vglow); }
+}
+
+.hero-headline {
+  max-width: 900px;
+  opacity: 0; animation: fadeUp .9s cubic-bezier(.16,1,.3,1) forwards .25s;
+}
+.hero-h1 {
+  font-family: var(--sans); font-size: clamp(52px, 7vw, 96px);
+  font-weight: 700; line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--white);
+}
+.hero-h1 .violet { color: var(--violet-hi); }
+.hero-h1 .serif-word {
+  font-family: var(--serif); font-style: italic;
+  font-weight: 300; color: var(--lilac);
+  letter-spacing: -0.01em;
+}
+
+.hero-sub {
+  font-size: 18px; font-weight: 300; color: var(--mid);
+  line-height: 1.7; margin-top: 24px; max-width: 560px;
+  opacity: 0; animation: fadeUp .8s ease forwards .45s;
+}
+.hero-sub b { color: var(--text); font-weight: 500; }
+
+.hero-actions {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 40px;
+  opacity: 0; animation: fadeUp .8s ease forwards .6s;
+}
+.hero-btn-main {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px;
+  background: var(--violet); color: var(--white);
+  font-family: var(--sans); font-size: 14px; font-weight: 600;
+  text-decoration: none; border-radius: 10px;
+  transition: all .25s; letter-spacing: -0.01em;
+  box-shadow: 0 4px 32px rgba(124,58,237,0.35);
+}
+.hero-btn-main:hover {
+  background: var(--violet-hi);
+  box-shadow: 0 4px 48px rgba(124,58,237,0.55), 0 0 0 1px rgba(157,95,252,0.3);
+  transform: translateY(-1px);
+}
+.hero-btn-main svg { width: 16px; height: 16px; transition: transform .2s; }
+.hero-btn-main:hover svg { transform: translateX(3px); }
+
+.hero-btn-sec {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px;
+  color: var(--mid); font-family: var(--sans); font-size: 14px; font-weight: 500;
+  text-decoration: none; border-radius: 10px;
+  border: 1px solid var(--border-hi);
+  transition: all .2s;
+}
+.hero-btn-sec:hover { color: var(--text); border-color: rgba(124,58,237,0.35); }
+
+/* HERO STATS */
+.hero-stats {
+  display: flex; align-items: center; gap: 40px;
+  margin-top: 72px; padding-top: 40px;
+  border-top: 1px solid var(--border);
+  opacity: 0; animation: fadeUp .8s ease forwards .85s;
+}
+.hstat { display: flex; flex-direction: column; gap: 3px; }
+.hstat-num {
+  font-family: var(--sans); font-size: 28px; font-weight: 700;
+  color: var(--white); letter-spacing: -0.03em;
+}
+.hstat-num span { color: var(--violet-hi); }
+.hstat-lbl { font-size: 12px; font-weight: 400; color: var(--dim); }
+.hstat-div { width: 1px; height: 36px; background: var(--border); }
+
+/* ── SCROLL INDICATOR ── */
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 52px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--dim); letter-spacing: 0.06em;
+  opacity: 0; animation: fadeIn 1s ease forwards 1.5s;
+}
+.scroll-line {
+  width: 32px; height: 1px; background: var(--dim);
+  position: relative; overflow: hidden;
+}
+.scroll-line::after {
+  content: ''; position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%; background: var(--violet-hi);
+  animation: scanLine 2s ease infinite;
+}
+@keyframes scanLine { 0%{left:-100%} 100%{left:100%} }
+
+/* ════════════════════════════════════
+   STRIP
+════════════════════════════════════ */
+.strip {
+  overflow: hidden; position: relative;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.strip::before, .strip::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2;
+}
+.strip::before { left: 0; background: linear-gradient(90deg, var(--bg2), transparent); }
+.strip::after  { right: 0; background: linear-gradient(-90deg, var(--bg2), transparent); }
+.strip-track {
+  display: flex; white-space: nowrap;
+  animation: marquee 28s linear infinite;
+}
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.strip-item {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0 28px; font-size: 11px; font-weight: 500;
+  color: var(--dim); border-right: 1px solid var(--border);
+  flex-shrink: 0; letter-spacing: 0.02em;
+}
+.strip-item.lit { color: var(--mid); }
+.strip-item .dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--violet); opacity: 0.6;
+}
+.strip-item.lit .dot { opacity: 1; box-shadow: 0 0 6px var(--violet); }
+
+/* ════════════════════════════════════
+   SECTIONS — BASE
+════════════════════════════════════ */
+section { padding: 120px 52px; }
+
+.label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--violet-hi);
+  margin-bottom: 16px;
+}
+.label::before {
+  content: ''; width: 16px; height: 1px;
+  background: var(--violet-hi);
+  box-shadow: 0 0 6px var(--violet);
+}
+
+.section-title {
+  font-family: var(--sans); font-size: clamp(36px,4.5vw,60px);
+  font-weight: 700; line-height: 1.08; letter-spacing: -0.03em;
+  color: var(--white); margin-bottom: 0;
+}
+.section-title .accent { color: var(--violet-hi); }
+.section-title .serif {
+  font-family: var(--serif); font-style: italic;
+  font-weight: 300; color: var(--lilac); letter-spacing: -0.01em;
+}
+
+/* ════════════════════════════════════
+   AI CHAT SECTION
+════════════════════════════════════ */
+.ai-section {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.ai-inner {
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px;
+  align-items: start;
+}
+
+.ai-copy p {
+  font-size: 15px; color: var(--mid); line-height: 1.75;
+  font-weight: 300; margin-top: 20px;
+}
+.ai-copy p b { color: var(--text); font-weight: 500; }
+
+.capability-pills {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px;
+}
+.pill {
+  font-size: 11px; font-weight: 500; color: var(--mid);
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 100px; padding: 5px 14px;
+  transition: all .2s;
+}
+.pill:hover {
+  color: var(--lilac); border-color: rgba(124,58,237,0.3);
+  background: rgba(124,58,237,0.08);
+}
+
+/* CHAT WIDGET */
+.chat-box {
+  background: var(--bg3);
+  border: 1px solid var(--border-hi);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.1), 0 0 60px rgba(124,58,237,0.04);
+  position: relative;
+}
+.chat-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--violet), transparent);
+  opacity: 0.6;
+}
+
+.chat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  background: rgba(124,58,237,0.06);
+  border-bottom: 1px solid var(--border);
+}
+.chat-agent {
+  display: flex; align-items: center; gap: 10px;
+}
+.agent-avatar {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--violet-lo), var(--violet-hi));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--white);
+}
+.agent-name { font-size: 13px; font-weight: 600; color: var(--white); }
+.agent-status {
+  font-size: 11px; color: var(--green);
+  display: flex; align-items: center; gap: 5px; margin-top: 1px;
+}
+.agent-status::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 6px var(--green);
+  animation: glow 2s infinite;
+}
+
+.chat-msgs {
+  padding: 20px; min-height: 340px;
+  display: flex; flex-direction: column; gap: 14px;
+  overflow-y: auto;
+}
+.chat-msgs::-webkit-scrollbar { width: 4px; }
+.chat-msgs::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+
+.msg { display: flex; flex-direction: column; gap: 4px; max-width: 88%; }
+.msg.user { align-self: flex-end; align-items: flex-end; }
+.msg.ai   { align-self: flex-start; align-items: flex-start; }
+
+.msg-label { font-size: 10px; font-weight: 500; color: var(--dim); letter-spacing: 0.04em; }
+.msg.user .msg-label { color: rgba(157,95,252,0.5); }
+
+.bubble {
+  padding: 11px 15px; border-radius: 12px;
+  font-size: 13px; line-height: 1.6; font-weight: 400;
+}
+.msg.user .bubble {
+  background: var(--violet); color: var(--white);
+  border-radius: 12px 12px 4px 12px;
+}
+.msg.ai .bubble {
+  background: var(--panel-hi);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 12px 12px 12px 4px;
+}
+.bubble .v  { color: var(--violet-hi); font-weight: 600; }
+.bubble .g  { color: var(--green); font-weight: 600; }
+.bubble .a  { color: var(--amber); font-weight: 600; }
+.bubble .r  { color: var(--red); font-weight: 600; }
+
+/* typing dots */
+.typing-bubble {
+  padding: 13px 18px; border-radius: 12px 12px 12px 4px;
+  background: var(--panel-hi); border: 1px solid var(--border);
+  display: flex; gap: 5px; align-items: center;
+}
+.typing-bubble span {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--violet-hi); opacity: 0.5;
+}
+.typing-bubble span:nth-child(1){ animation: td .9s ease infinite 0s; }
+.typing-bubble span:nth-child(2){ animation: td .9s ease infinite .18s; }
+.typing-bubble span:nth-child(3){ animation: td .9s ease infinite .36s; }
+@keyframes td {
+  0%,100%{ transform: translateY(0); opacity: .4; }
+  50%{ transform: translateY(-5px); opacity: 1; }
+}
+
+.msg { opacity: 0; transform: translateY(8px); transition: opacity .4s ease, transform .4s ease; }
+.msg.visible { opacity: 1; transform: none; }
+
+.chat-footer {
+  border-top: 1px solid var(--border);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.02);
+}
+.chat-input-fake {
+  flex: 1; font-family: var(--sans); font-size: 13px;
+  color: var(--dim); background: transparent; border: none; outline: none;
+}
+.chat-send-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--violet); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s; flex-shrink: 0;
+}
+.chat-send-btn:hover { background: var(--violet-hi); box-shadow: 0 0 16px var(--vglow); }
+.chat-send-btn svg { width: 13px; height: 13px; color: var(--white); }
+
+/* ════════════════════════════════════
+   FEATURES
+════════════════════════════════════ */
+.feat-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--border);
+  margin-top: 64px;
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+.feat {
+  background: var(--bg);
+  padding: 36px 32px;
+  position: relative; overflow: hidden;
+  transition: background .3s;
+}
+.feat:hover { background: var(--panel); }
+.feat-shine {
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--violet), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.feat:hover .feat-shine { opacity: 0.6; }
+
+.feat-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--violet-hi); margin-bottom: 20px;
+}
+.feat-icon svg { width: 18px; height: 18px; }
+.feat-title {
+  font-size: 15px; font-weight: 600; color: var(--white);
+  margin-bottom: 10px; letter-spacing: -0.02em;
+}
+.feat-body {
+  font-size: 13px; color: var(--mid);
+  line-height: 1.7; font-weight: 300;
+}
+.feat-tag {
+  display: inline-block; margin-top: 18px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--violet-hi); text-transform: uppercase;
+}
+
+/* ════════════════════════════════════
+   PLATFORM / TERMINAL
+════════════════════════════════════ */
+.plat-section {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.plat-inner {
+  display: grid; grid-template-columns: 1fr 1.6fr;
+  gap: 80px; align-items: center;
+}
+.plat-list { list-style: none; margin-top: 32px; }
+.plat-list li {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px; color: var(--mid); line-height: 1.5; font-weight: 300;
+}
+.plat-list li .check {
+  width: 16px; height: 16px; border-radius: 4px;
+  background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+  color: var(--violet-hi); font-size: 9px;
+}
+
+/* TERMINAL */
+.terminal {
+  background: #08080f;
+  border: 1px solid var(--border-hi);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,58,237,0.08);
+  position: relative;
+}
+.terminal::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124,58,237,0.7), transparent);
+}
+.term-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  background: rgba(124,58,237,0.04);
+}
+.term-dots { display: flex; gap: 6px; }
+.td-dot { width: 10px; height: 10px; border-radius: 50%; }
+.td-dot:nth-child(1){ background: #ff5f57; }
+.td-dot:nth-child(2){ background: #febc2e; }
+.td-dot:nth-child(3){ background: #28c840; }
+.term-title { font-size: 11px; color: var(--dim); letter-spacing: 0.06em; font-family: 'JetBrains Mono', var(--sans); }
+.term-indicator { font-size: 10px; color: var(--green); display: flex; align-items: center; gap: 5px; }
+.term-indicator::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: glow 1.8s infinite; }
+
+.term-body { padding: 18px; font-family: 'JetBrains Mono', monospace; }
+.trow { display: flex; gap: 8px; margin-bottom: 5px; font-size: 11px; line-height: 1.5; }
+.tp { color: var(--violet-hi); flex-shrink: 0; }
+.tc { color: var(--text); }
+.to { color: var(--mid); padding-left: 16px; }
+.to.ok  { color: var(--green); }
+.to.warn{ color: var(--amber); }
+.to.vio { color: var(--violet-hi); }
+.tdivider { height: 1px; background: var(--border); margin: 12px 0; }
+
+.kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); margin: 4px 0 12px; border-radius: 8px; overflow: hidden; }
+.kpi-cell { background: var(--bg3); padding: 12px 13px; }
+.kpi-lbl { font-size: 9px; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+.kpi-val { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: -0.02em; font-family: var(--sans); }
+.kpi-val small { font-size: 10px; color: var(--violet-hi); font-family: 'JetBrains Mono', monospace; font-weight: 400; }
+.kpi-delta { font-size: 9px; color: var(--green); margin-top: 3px; }
+
+.bars-wrap { margin-top: 10px; }
+.bars-lbl { font-size: 9px; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.bars { display: flex; align-items: flex-end; gap: 4px; height: 48px; }
+.bar { flex: 1; background: var(--bg2); position: relative; border-radius: 2px 2px 0 0; }
+.bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--violet); border-radius: 1px; box-shadow: 0 0 6px var(--violet); }
+.bar.hi { background: linear-gradient(to top, var(--bg2), rgba(124,58,237,0.2)); }
+
+/* ════════════════════════════════════
+   STATS
+════════════════════════════════════ */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border: 1px solid var(--border); border-radius: 16px;
+  overflow: hidden; margin-top: 64px;
+}
+.stat-cell {
+  padding: 44px 40px; border-right: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  transition: background .3s;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-cell:hover { background: var(--panel); }
+.stat-num {
+  font-size: clamp(44px,5vw,72px); font-weight: 700;
+  color: var(--white); letter-spacing: -0.04em; line-height: 1;
+  margin-bottom: 8px; display: block;
+}
+.stat-num .u { color: var(--violet-hi); }
+.stat-lbl { font-size: 12px; color: var(--dim); font-weight: 400; }
+.stat-bar {
+  position: absolute; bottom: 0; left: 0;
+  height: 2px; width: 0;
+  background: linear-gradient(90deg, var(--violet), var(--violet-hi));
+  box-shadow: 0 0 8px var(--violet);
+  transition: width 1.4s cubic-bezier(.16,1,.3,1);
+}
+
+/* ════════════════════════════════════
+   CTA
+════════════════════════════════════ */
+.cta-section {
+  text-align: center; padding: 160px 52px;
+  position: relative; overflow: hidden;
+}
+.cta-orb {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 600px; height: 400px; pointer-events: none;
+  background: radial-gradient(ellipse, rgba(124,58,237,0.08) 0%, transparent 65%);
+}
+.cta-section .label { justify-content: center; }
+.cta-h {
+  font-family: var(--sans); font-size: clamp(40px,5.5vw,76px);
+  font-weight: 700; letter-spacing: -0.04em; line-height: 1.05;
+  color: var(--white); margin: 0 auto 20px; max-width: 700px;
+}
+.cta-h .accent { color: var(--violet-hi); }
+.cta-sub {
+  font-size: 16px; color: var(--mid); font-weight: 300;
+  max-width: 420px; margin: 0 auto 48px; line-height: 1.7;
+}
+.cta-btns { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+/* ════════════════════════════════════
+   FOOTER
+════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.foot-left {}
+.foot-brand {
+  font-size: 15px; font-weight: 600; color: var(--mid); letter-spacing: -0.02em;
+}
+.foot-brand span { color: var(--violet-hi); }
+.foot-copy { font-size: 11px; color: var(--dim); margin-top: 4px; }
+.foot-links { display: flex; gap: 24px; }
+.foot-links a {
+  font-size: 12px; color: var(--dim); text-decoration: none;
+  font-weight: 500; transition: color .2s;
+}
+.foot-links a:hover { color: var(--text); }
+
+/* ════════════════════════════════════
+   ANIMATIONS
+════════════════════════════════════ */
+@keyframes fadeUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+
+.rv {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity .75s ease, transform .75s ease;
+}
+.rv.in { opacity: 1; transform: none; }
+.d1{transition-delay:.1s} .d2{transition-delay:.2s}
+.d3{transition-delay:.3s} .d4{transition-delay:.4s}
+.d5{transition-delay:.5s}
+
+/* ════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════ */
+@media(max-width:1100px){
+  .ai-inner { grid-template-columns: 1fr; }
+  .plat-inner { grid-template-columns: 1fr; gap: 48px; }
+  .feat-grid { grid-template-columns: repeat(2,1fr); }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .stat-cell:nth-child(2){ border-right: none; }
+  .stat-cell:nth-child(1),
+  .stat-cell:nth-child(2){ border-bottom: 1px solid var(--border); }
+}
+@media(max-width:768px){
+  nav{ padding: 0 24px; }
+  .nav-links{ display: none; }
+  section, .hero, footer{ padding-left: 24px; padding-right: 24px; }
+  .hero-h1{ font-size: clamp(40px,10vw,64px); }
+  .feat-grid{ grid-template-columns: 1fr; }
+  .stats-grid{ grid-template-columns: 1fr 1fr; }
+  footer{ flex-direction: column; gap: 20px; }
+  .hero-stats{ flex-wrap: wrap; gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+<canvas id="canvas"></canvas>
+<div class="grid-overlay"></div>
+<div class="vignette"></div>
+
+<div class="page">
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="logo">
+    <span class="logo-name">targetdash</span><span class="logo-gt">&gt;</span>
+  </a>
+  <div class="nav-links">
+    <a href="#ai">AI Assistant</a>
+    <a href="#features">Features</a>
+    <a href="#platform">Platform</a>
+    <a href="mailto:niklas@targetflow.fi">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a href="/login" class="btn-ghost">Sign in</a>
+    <a href="/login" class="btn-primary">Get access</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    Now live — Nordic financial intelligence platform
+  </div>
+
+  <div class="hero-headline">
+    <h1 class="hero-h1">
+      Your clients' finances,<br/>
+      <span class="violet">finally</span> <span class="serif-word">intelligent.</span>
+    </h1>
+  </div>
+
+  <p class="hero-sub">
+    targetdash &gt; unifies KPIs, cash flows, budgets and risk signals across all your clients — with a built-in <b>AI assistant</b> that reads your data and talks back.
+  </p>
+
+  <div class="hero-actions">
+    <a href="/login" class="hero-btn-main">
+      Open dashboard
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#ai" class="hero-btn-sec">See AI demo</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hstat">
+      <span class="hstat-num">8<span>+</span></span>
+      <span class="hstat-lbl">Active client dashboards</span>
+    </div>
+    <div class="hstat-div"></div>
+    <div class="hstat">
+      <span class="hstat-num">&lt;1<span>s</span></span>
+      <span class="hstat-lbl">Data sync latency</span>
+    </div>
+    <div class="hstat-div"></div>
+    <div class="hstat">
+      <span class="hstat-num">AI<span>›</span></span>
+      <span class="hstat-lbl">Powered by Claude</span>
+    </div>
+    <div class="hstat-div"></div>
+    <div class="hstat">
+      <span class="hstat-num">100<span>%</span></span>
+      <span class="hstat-lbl">Nordic-built</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- ── STRIP ── -->
+<div class="strip">
+  <div class="strip-track">
+    <span class="strip-item lit"><span class="dot"></span>KPI Dashboards</span>
+    <span class="strip-item"><span class="dot"></span>Cash Flow Intelligence</span>
+    <span class="strip-item lit"><span class="dot"></span>AI Financial Assistant</span>
+    <span class="strip-item"><span class="dot"></span>Budget vs Actuals</span>
+    <span class="strip-item lit"><span class="dot"></span>Risk Monitoring</span>
+    <span class="strip-item"><span class="dot"></span>Netvisor Sync</span>
+    <span class="strip-item lit"><span class="dot"></span>Procountor API</span>
+    <span class="strip-item"><span class="dot"></span>FX Conversion</span>
+    <span class="strip-item lit"><span class="dot"></span>Member Access Control</span>
+    <span class="strip-item"><span class="dot"></span>Snapshot History</span>
+    <span class="strip-item lit"><span class="dot"></span>Targetflow Oy</span>
+    <!-- dupe -->
+    <span class="strip-item lit"><span class="dot"></span>KPI Dashboards</span>
+    <span class="strip-item"><span class="dot"></span>Cash Flow Intelligence</span>
+    <span class="strip-item lit"><span class="dot"></span>AI Financial Assistant</span>
+    <span class="strip-item"><span class="dot"></span>Budget vs Actuals</span>
+    <span class="strip-item lit"><span class="dot"></span>Risk Monitoring</span>
+    <span class="strip-item"><span class="dot"></span>Netvisor Sync</span>
+    <span class="strip-item lit"><span class="dot"></span>Procountor API</span>
+    <span class="strip-item"><span class="dot"></span>FX Conversion</span>
+    <span class="strip-item lit"><span class="dot"></span>Member Access Control</span>
+    <span class="strip-item"><span class="dot"></span>Snapshot History</span>
+    <span class="strip-item lit"><span class="dot"></span>Targetflow Oy</span>
+  </div>
+</div>
+
+<!-- ── AI SECTION ── -->
+<section class="ai-section" id="ai">
+  <div class="ai-inner">
+    <div class="ai-copy">
+      <div class="label rv">AI Assistant</div>
+      <h2 class="section-title rv">Your data,<br/><span class="serif">talking back.</span></h2>
+      <p class="rv">Ask anything about your clients' finances in plain language. The built-in AI assistant reads live data and responds like a <b>senior analyst</b> — spotting anomalies, explaining variances, and flagging risk before it becomes a problem.</p>
+      <p class="rv">No dashboards to interpret. No reports to compile. Just ask.</p>
+      <div class="capability-pills rv">
+        <span class="pill">Cash flow analysis</span>
+        <span class="pill">Budget variance</span>
+        <span class="pill">Risk signals</span>
+        <span class="pill">Client summaries</span>
+        <span class="pill">Anomaly detection</span>
+        <span class="pill">Trend forecasting</span>
+        <span class="pill">Multi-client comparison</span>
+      </div>
+    </div>
+
+    <div class="chat-box rv" id="chatBox">
+      <div class="chat-header">
+        <div class="chat-agent">
+          <div class="agent-avatar">AI</div>
+          <div>
+            <div class="agent-name">targetdash assistant</div>
+            <div class="agent-status">Live — connected to your data</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-msgs" id="chatMsgs"></div>
+      <div class="chat-footer">
+        <input class="chat-input-fake" placeholder="Ask about your clients' financials…" readonly/>
+        <button class="chat-send-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 19-4-9-9-4 19-7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section id="features">
+  <div class="label rv">Capabilities</div>
+  <h2 class="section-title rv">Built for real complexity.</h2>
+
+  <div class="feat-grid">
+    <div class="feat rv">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg></div>
+      <div class="feat-title">Live KPI Dashboards</div>
+      <p class="feat-body">Real-time metrics per client — revenue, margins, burn rate and custom KPIs. Switch clients in one click, zero reload.</p>
+      <span class="feat-tag">Live sync</span>
+    </div>
+    <div class="feat rv d1">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <div class="feat-title">Cash Flow Intelligence</div>
+      <p class="feat-body">AI-flagged anomalies and 12-week rolling forecasts. Visualise flows across all entities before they become problems.</p>
+      <span class="feat-tag">Forecasting</span>
+    </div>
+    <div class="feat rv d2">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="feat-title">Risk Monitoring</div>
+      <p class="feat-body">Liquidity, credit and operational risk signals with configurable thresholds. Proactive alerts before things go wrong.</p>
+      <span class="feat-tag">Automated</span>
+    </div>
+    <div class="feat rv">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+      <div class="feat-title">AI Financial Assistant</div>
+      <p class="feat-body">Ask questions in plain language. Get answers backed by live data — analysis, anomalies, summaries, risk commentary.</p>
+      <span class="feat-tag">Claude AI</span>
+    </div>
+    <div class="feat rv d1">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg></div>
+      <div class="feat-title">Netvisor & Procountor</div>
+      <p class="feat-body">Direct API sync from Finland's leading accounting platforms. Fully automated — no exports, no manual work.</p>
+      <span class="feat-tag">Integrated</span>
+    </div>
+    <div class="feat rv d2">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <div class="feat-title">Multi-client Access</div>
+      <p class="feat-body">Superuser, MainUser, Member tiers. Share curated live views with clients — full control over visibility and permissions.</p>
+      <span class="feat-tag">Secure</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PLATFORM ── -->
+<section class="plat-section" id="platform">
+  <div class="plat-inner">
+    <div>
+      <div class="label rv">The platform</div>
+      <h2 class="section-title rv">One screen.<br/><span class="serif">Every client.</span></h2>
+      <ul class="plat-list rv">
+        <li><span class="check">✓</span> Persistent snapshot history across all sessions</li>
+        <li><span class="check">✓</span> FX conversion via ECB / Suomen Pankki rates</li>
+        <li><span class="check">✓</span> Custom tabs and shared views per client</li>
+        <li><span class="check">✓</span> Billing audit tools for transferred portfolios</li>
+        <li><span class="check">✓</span> Google SSO + email auth via Supabase</li>
+        <li><span class="check">✓</span> Deployed globally on Vercel edge network</li>
+      </ul>
+    </div>
+
+    <div class="terminal rv">
+      <div class="term-bar">
+        <div class="term-dots">
+          <div class="td-dot"></div><div class="td-dot"></div><div class="td-dot"></div>
+        </div>
+        <div class="term-title">targetdash &gt; dashboard</div>
+        <div class="term-indicator">LIVE</div>
+      </div>
+      <div class="term-body">
+        <div class="trow"><span class="tp">›</span><span class="tc">load client alpha_ventures</span></div>
+        <div class="trow"><span class="to ok">✓ connected · 3 sources · synced 0s ago</span></div>
+        <div class="tdivider"></div>
+        <div class="kpi-row">
+          <div class="kpi-cell">
+            <div class="kpi-lbl">Revenue MTD</div>
+            <div class="kpi-val">84.2<small>k€</small></div>
+            <div class="kpi-delta">↑ +12.4%</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-lbl">Cash position</div>
+            <div class="kpi-val">241<small>k€</small></div>
+            <div class="kpi-delta">↑ +3.1%</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-lbl">Burn rate</div>
+            <div class="kpi-val">18.6<small>k€</small></div>
+            <div class="kpi-delta" style="color:var(--amber)">→ stable</div>
+          </div>
+        </div>
+        <div class="bars-wrap">
+          <div class="bars-lbl">Cash flow — 6 months</div>
+          <div class="bars">
+            <div class="bar" style="height:40%"></div>
+            <div class="bar" style="height:55%"></div>
+            <div class="bar hi" style="height:64%"></div>
+            <div class="bar" style="height:48%"></div>
+            <div class="bar hi" style="height:78%"></div>
+            <div class="bar" style="height:65%"></div>
+            <div class="bar hi" style="height:86%"></div>
+            <div class="bar" style="height:71%"></div>
+            <div class="bar hi" style="height:93%"></div>
+            <div class="bar" style="height:77%"></div>
+            <div class="bar hi" style="height:100%"></div>
+            <div class="bar hi" style="height:96%"></div>
+          </div>
+        </div>
+        <div class="tdivider"></div>
+        <div class="trow"><span class="tp">›</span><span class="tc">ai analyze --risk</span></div>
+        <div class="trow"><span class="to vio">No critical signals. Runway 14.2 mo. Monitor receivables aging.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<section>
+  <div class="label rv">By the numbers</div>
+  <h2 class="section-title rv">The signal.</h2>
+  <div class="stats-grid">
+    <div class="stat-cell rv">
+      <span class="stat-num">8<span class="u">+</span></span>
+      <span class="stat-lbl">Client dashboards active</span>
+      <div class="stat-bar" data-w="80%"></div>
+    </div>
+    <div class="stat-cell rv d1">
+      <span class="stat-num">&lt;1<span class="u">s</span></span>
+      <span class="stat-lbl">Data sync latency</span>
+      <div class="stat-bar" data-w="95%"></div>
+    </div>
+    <div class="stat-cell rv d2">
+      <span class="stat-num">100<span class="u">%</span></span>
+      <span class="stat-lbl">Nordic-built and hosted</span>
+      <div class="stat-bar" data-w="100%"></div>
+    </div>
+    <div class="stat-cell rv d3">
+      <span class="stat-num">AI<span class="u">›</span></span>
+      <span class="stat-lbl">Powered by Claude</span>
+      <div class="stat-bar" data-w="75%"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="cta-orb"></div>
+  <div class="label rv">Get started</div>
+  <h2 class="cta-h rv">
+    Ready to see your clients<br/><span class="accent">differently?</span>
+  </h2>
+  <p class="cta-sub rv">targetdash &gt; is built exclusively for Targetflow's advisory practice. Sign in or request access below.</p>
+  <div class="cta-btns rv">
+    <a href="/login" class="hero-btn-main">
+      Sign in to dashboard
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="mailto:niklas@targetflow.fi" class="hero-btn-sec">Request access</a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="foot-left">
+    <div class="foot-brand">targetdash<span>&gt;</span></div>
+    <div class="foot-copy">© 2026 Targetflow Oy · All rights reserved</div>
+  </div>
+  <div class="foot-links">
+    <a href="https://targetflow.fi" target="_blank">Targetflow.fi</a>
+    <a href="mailto:niklas@targetflow.fi">Contact</a>
+    <a href="/login">Sign in</a>
+  </div>
+</footer>
+
+</div><!-- /page -->
+
+<script>
+// ── CURSOR ───────────────────────────────────────────────────────────────
+const cur = document.getElementById('cur');
+const curR = document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+(function tick(){
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+  rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+  curR.style.left=rx+'px'; curR.style.top=ry+'px';
+  requestAnimationFrame(tick);
+})();
+
+// ── CANVAS — VIOLET AMBIENT ──────────────────────────────────────────────
+const cv = document.getElementById('canvas');
+const cc = cv.getContext('2d');
+let W, H, particles = [];
+
+function resize() { W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
+resize(); window.addEventListener('resize', ()=>{ resize(); spawnParticles(); });
+
+function spawnParticles() {
+  particles = [];
+  const n = Math.floor(W*H/16000);
+  for(let i=0;i<n;i++) particles.push({
+    x: Math.random()*W, y: Math.random()*H,
+    vx: (Math.random()-.5)*.18, vy: (Math.random()-.5)*.18,
+    r: Math.random()*.9+.2,
+    a: Math.random()*.3+.05,
+    phase: Math.random()*Math.PI*2,
+    speed: .006+Math.random()*.012
+  });
+}
+spawnParticles();
+
+// violet aurora orbs
+const orbs = [
+  { ox:.18, oy:.35, dx:.06, dy:.04, t:0, ts:.005, r:.45, a:.05 },
+  { ox:.78, oy:.62, dx:.05, dy:.07, t:2.1, ts:.006, r:.38, a:.035 },
+  { ox:.5,  oy:.1,  dx:.04, dy:.05, t:3.8, ts:.004, r:.3,  a:.025 },
+  { ox:.88, oy:.15, dx:.07, dy:.04, t:1.2, ts:.007, r:.22, a:.02 },
+];
+
+function drawParticleConnections() {
+  const d = 110;
+  for(let i=0;i<particles.length;i++) {
+    for(let j=i+1;j<particles.length;j++) {
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<d) {
+        cc.strokeStyle=`rgba(124,58,237,${(1-dist/d)*.04})`;
+        cc.lineWidth=.5;
+        cc.beginPath(); cc.moveTo(particles[i].x,particles[i].y);
+        cc.lineTo(particles[j].x,particles[j].y); cc.stroke();
+      }
+    }
+  }
+}
+
+let T=0;
+(function frame() {
+  T+=.005;
+  cc.clearRect(0,0,W,H);
+
+  // orbs
+  orbs.forEach(o => {
+    o.t += o.ts;
+    const bx=(o.ox+Math.sin(o.t)*o.dx)*W;
+    const by=(o.oy+Math.cos(o.t*1.3)*o.dy)*H;
+    const g=cc.createRadialGradient(bx,by,0,bx,by,Math.min(W,H)*o.r);
+    g.addColorStop(0, `rgba(124,58,237,${o.a})`);
+    g.addColorStop(.5, `rgba(91,33,182,${o.a*.4})`);
+    g.addColorStop(1, 'transparent');
+    cc.fillStyle=g; cc.fillRect(0,0,W,H);
+  });
+
+  drawParticleConnections();
+
+  // particles
+  particles.forEach(p => {
+    p.x+=p.vx; p.y+=p.vy; p.phase+=p.speed;
+    if(p.x<0||p.x>W) p.vx*=-1;
+    if(p.y<0||p.y>H) p.vy*=-1;
+    const a = p.a*(.6+.4*Math.sin(p.phase));
+    const r = p.r*(.88+.12*Math.sin(p.phase*1.5));
+    cc.beginPath(); cc.arc(p.x,p.y,r,0,Math.PI*2);
+    cc.fillStyle=`rgba(157,95,252,${a})`; cc.fill();
+  });
+  requestAnimationFrame(frame);
+})();
+
+// ── CHAT ANIMATION ───────────────────────────────────────────────────────
+const CONVO = [
+  { role:'user', text:'What\'s the overall cash position across all clients this month?' },
+  { role:'ai',   text:'Total cash across active clients is <span class="v">€847,200</span> — up <span class="g">+8.3%</span> from last month. Client Alpha leads with €241k. Two clients are trending below their 8-week runway threshold, worth watching.' },
+  { role:'user', text:'Which clients need attention before end of quarter?' },
+  { role:'ai',   text:'Two flags: <span class="a">Client Beta</span> has a payroll reserve below threshold — recommend topping up within 2 weeks. <span class="a">Client Delta</span> shows receivables aging past 45 days on 3 invoices totalling <span class="v">€28,400</span>. All others are green.' },
+  { role:'user', text:'Draft a brief status summary I can send to my team.' },
+  { role:'ai',   text:'<span class="g">Q2 Status — All Clients</span><br/>Portfolio cash: €847k (+8.3%). Revenue trend: positive across 5 of 6 clients. Action items: Beta payroll reserve, Delta receivables follow-up. Overall risk level: <span class="g">Low</span>. Ready to export.' },
+];
+
+const msgsEl = document.getElementById('chatMsgs');
+let chatRunning = false;
+
+function makeMsg(m) {
+  const w = document.createElement('div');
+  w.className = `msg ${m.role}`;
+  w.innerHTML = `<div class="msg-label">${m.role==='user'?'You':'targetdash AI'}</div>
+    <div class="bubble">${m.text}</div>`;
+  return w;
+}
+
+function runChat() {
+  if(chatRunning) return; chatRunning = true;
+  msgsEl.innerHTML = '';
+  let delay = 500;
+
+  CONVO.forEach((m, i) => {
+    setTimeout(() => {
+      if(m.role === 'ai') {
+        const typing = document.createElement('div');
+        typing.className = 'msg ai visible';
+        typing.innerHTML = `<div class="msg-label">targetdash AI</div>
+          <div class="typing-bubble"><span></span><span></span><span></span></div>`;
+        msgsEl.appendChild(typing);
+        msgsEl.scrollTop = msgsEl.scrollHeight;
+        setTimeout(() => {
+          typing.remove();
+          const el = makeMsg(m);
+          msgsEl.appendChild(el);
+          requestAnimationFrame(() => el.classList.add('visible'));
+          msgsEl.scrollTop = msgsEl.scrollHeight;
+        }, 1000);
+      } else {
+        const el = makeMsg(m);
+        msgsEl.appendChild(el);
+        requestAnimationFrame(() => el.classList.add('visible'));
+        msgsEl.scrollTop = msgsEl.scrollHeight;
+      }
+    }, delay);
+    delay += m.role === 'ai' ? 2800 : 1600;
+  });
+
+  setTimeout(() => { chatRunning = false; runChat(); }, delay + 4000);
+}
+
+// ── SCROLL REVEAL ────────────────────────────────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('in');
+      if(e.target.id === 'chatBox') setTimeout(runChat, 800);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: .1 });
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+// ── STAT BARS ────────────────────────────────────────────────────────────
+document.querySelectorAll('.stat-bar').forEach(b => {
+  const w = b.dataset.w; b.style.width = '0';
+  new IntersectionObserver(([e]) => {
+    if(e.isIntersecting) {
+      setTimeout(() => { b.style.width = w; }, 300);
+    }
+  }, { threshold:.5 }).observe(b);
+});
+</script>
+</body>
+</html>
