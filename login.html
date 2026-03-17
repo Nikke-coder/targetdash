@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>targetdash › Sign in</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:       #0a0a0f;
+  --bg2:      #0e0e16;
+  --bg3:      #12121c;
+  --panel:    rgba(255,255,255,0.04);
+  --panel-hi: rgba(255,255,255,0.07);
+  --border:   rgba(255,255,255,0.08);
+  --border-hi:rgba(255,255,255,0.14);
+  --violet:   #7c3aed;
+  --violet-hi:#9d5ffc;
+  --violet-lo:#5b21b6;
+  --vglow:    rgba(124,58,237,0.3);
+  --lilac:    #c4b5fd;
+  --white:    #fff;
+  --text:     #f1f0f5;
+  --mid:      #8b8a9a;
+  --dim:      #3d3c52;
+  --green:    #34d399;
+  --red:      #f87171;
+  --sans:     'Outfit', sans-serif;
+  --ui:       'Instrument Sans', sans-serif;
+}
+
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);}
+
+/* ── LAYOUT ── */
+.wrap{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 480px;
+}
+
+/* LEFT PANEL */
+.left{
+  position:relative;overflow:hidden;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  justify-content:space-between;padding:52px;
+}
+.left-orb{
+  position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(124,58,237,0.12) 0%,transparent 60%),
+    radial-gradient(ellipse at 80% 70%,rgba(91,33,182,0.08) 0%,transparent 55%);
+}
+.left-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+
+.brand{
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:4px;text-decoration:none;
+}
+.brand-name{font-family:var(--ui);font-size:18px;font-weight:600;color:var(--white);letter-spacing:-0.01em;}
+.brand-gt{font-size:20px;font-weight:400;color:var(--violet-hi);text-shadow:0 0 16px var(--violet);}
+
+.left-body{position:relative;z-index:1;}
+.left-eyebrow{
+  font-family:var(--ui);font-size:11px;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;color:var(--violet-hi);
+  display:flex;align-items:center;gap:8px;margin-bottom:20px;
+}
+.left-eyebrow::before{content:'';width:20px;height:1px;background:var(--violet-hi);box-shadow:0 0 6px var(--violet);}
+.left-headline{
+  font-family:var(--sans);font-size:clamp(36px,4vw,54px);
+  font-weight:700;line-height:1.06;letter-spacing:-0.04em;
+  color:var(--white);margin-bottom:20px;
+}
+.left-headline .hl{color:var(--violet-hi);}
+.left-sub{font-family:var(--ui);font-size:15px;color:var(--mid);line-height:1.7;max-width:420px;margin-bottom:40px;}
+
+/* feature list */
+.feature-list{display:flex;flex-direction:column;gap:14px;}
+.feature-item{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--ui);font-size:13px;color:var(--mid);
+}
+.feature-check{
+  width:20px;height:20px;border-radius:6px;flex-shrink:0;
+  background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--violet-hi);font-size:10px;font-weight:700;
+}
+
+.left-footer{
+  position:relative;z-index:1;
+  font-family:var(--ui);font-size:11px;color:var(--dim);
+}
+
+/* RIGHT PANEL */
+.right{
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:52px 48px;
+}
+
+.form-box{width:100%;max-width:360px;}
+
+.form-title{
+  font-family:var(--sans);font-size:26px;font-weight:700;
+  color:var(--white);letter-spacing:-0.03em;margin-bottom:6px;
+}
+.form-sub{font-family:var(--ui);font-size:14px;color:var(--mid);margin-bottom:32px;}
+
+/* GOOGLE BTN */
+.btn-google{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:12px 20px;
+  background:var(--panel-hi);border:1px solid var(--border-hi);
+  border-radius:10px;cursor:pointer;transition:all .2s;
+  font-family:var(--ui);font-size:14px;font-weight:500;color:var(--text);
+  text-decoration:none;
+}
+.btn-google:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);}
+.btn-google svg{width:18px;height:18px;flex-shrink:0;}
+
+.divider{
+  display:flex;align-items:center;gap:12px;
+  margin:24px 0;
+}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-text{font-family:var(--ui);font-size:11px;color:var(--dim);}
+
+/* FORM FIELDS */
+.field{margin-bottom:14px;}
+.field label{
+  display:block;font-family:var(--ui);font-size:12px;font-weight:500;
+  color:var(--mid);margin-bottom:6px;letter-spacing:0.02em;
+}
+.field input{
+  width:100%;padding:11px 14px;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:9px;outline:none;
+  font-family:var(--ui);font-size:14px;color:var(--text);
+  transition:border-color .2s;
+}
+.field input:focus{border-color:rgba(124,58,237,0.5);background:rgba(124,58,237,0.05);}
+.field input::placeholder{color:var(--dim);}
+
+/* SUBMIT */
+.btn-submit{
+  width:100%;padding:13px;margin-top:8px;
+  background:var(--violet);border:none;border-radius:10px;
+  font-family:var(--ui);font-size:14px;font-weight:600;color:#fff;
+  cursor:pointer;transition:all .25s;
+  box-shadow:0 4px 24px rgba(124,58,237,0.35);
+}
+.btn-submit:hover{background:var(--violet-hi);box-shadow:0 4px 36px rgba(124,58,237,0.5);}
+.btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+
+/* FORGOT */
+.forgot{
+  display:block;text-align:right;
+  font-family:var(--ui);font-size:11px;color:var(--dim);
+  text-decoration:none;margin-top:6px;transition:color .2s;
+}
+.forgot:hover{color:var(--mid);}
+
+/* TOGGLE */
+.toggle{
+  text-align:center;margin-top:20px;
+  font-family:var(--ui);font-size:13px;color:var(--dim);
+}
+.toggle button{
+  background:none;border:none;color:var(--lilac);
+  font-family:var(--ui);font-size:13px;font-weight:500;
+  cursor:pointer;padding:0;transition:color .2s;
+}
+.toggle button:hover{color:var(--violet-hi);}
+
+/* MESSAGES */
+.msg-box{
+  display:none;padding:11px 14px;border-radius:9px;
+  font-family:var(--ui);font-size:13px;line-height:1.5;
+  margin-bottom:16px;
+}
+.msg-box.error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--red);}
+.msg-box.success{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:var(--green);}
+.msg-box.show{display:block;}
+
+/* LOADING SPINNER */
+.spinner{
+  display:inline-block;width:14px;height:14px;
+  border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;
+  vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* RESET FORM */
+.reset-back{
+  background:none;border:none;color:var(--mid);
+  font-family:var(--ui);font-size:13px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;padding:0;margin-bottom:20px;
+  transition:color .2s;
+}
+.reset-back:hover{color:var(--text);}
+.reset-back svg{width:14px;height:14px;}
+
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr;}
+  .left{display:none;}
+  .right{padding:40px 24px;}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="left-orb"></div>
+    <div class="left-grid"></div>
+
+    <a href="/" class="brand">
+      <span class="brand-name">targetdash</span><span class="brand-gt">&gt;</span>
+    </a>
+
+    <div class="left-body">
+      <div class="left-eyebrow">Financial intelligence</div>
+      <h1 class="left-headline">
+        Your numbers,<br/>
+        <span class="hl">finally clear.</span>
+      </h1>
+      <p class="left-sub">Sign in to your targetdash dashboard — live KPIs, AI-powered insights and cost centre analysis, all in one place.</p>
+      <div class="feature-list">
+        <div class="feature-item"><span class="feature-check">✓</span> 6 AI advisor roles — CEO, CFO, CMO and more</div>
+        <div class="feature-item"><span class="feature-check">✓</span> Cost centre dashboards by country, city, channel</div>
+        <div class="feature-item"><span class="feature-check">✓</span> Netvisor &amp; Procountor sync — fully automated</div>
+        <div class="feature-item"><span class="feature-check">✓</span> CSV import with AI field mapping</div>
+        <div class="feature-item"><span class="feature-check">✓</span> FX conversion via ECB / Suomen Pankki</div>
+      </div>
+    </div>
+
+    <div class="left-footer">© 2026 targetdash.ai · VAT 0%</div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="form-box">
+
+      <!-- SIGN IN FORM -->
+      <div id="signinView">
+        <div class="form-title">Welcome back</div>
+        <div class="form-sub">Sign in to your dashboard</div>
+
+        <div class="msg-box" id="signinMsg"></div>
+
+        <button class="btn-google" id="googleBtn">
+          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">or sign in with email</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="signinEmail" placeholder="you@company.com" autocomplete="email"/>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="signinPassword" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+        <a href="#" class="forgot" id="forgotLink">Forgot password?</a>
+        <button class="btn-submit" id="signinBtn">Sign in</button>
+
+        <div class="toggle">
+          Don't have an account? <button id="toSignup">Create one</button>
+        </div>
+      </div>
+
+      <!-- SIGN UP FORM -->
+      <div id="signupView" style="display:none">
+        <div class="form-title">Get started</div>
+        <div class="form-sub">Create your targetdash account</div>
+
+        <div class="msg-box" id="signupMsg"></div>
+
+        <button class="btn-google" id="googleBtnSignup">
+          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">or sign up with email</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="signupEmail" placeholder="you@company.com" autocomplete="email"/>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="signupPassword" placeholder="Min 8 characters" autocomplete="new-password"/>
+        </div>
+        <button class="btn-submit" id="signupBtn">Create account</button>
+
+        <div class="toggle">
+          Already have an account? <button id="toSignin">Sign in</button>
+        </div>
+      </div>
+
+      <!-- RESET PASSWORD FORM -->
+      <div id="resetView" style="display:none">
+        <button class="reset-back" id="resetBack">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Back to sign in
+        </button>
+        <div class="form-title">Reset password</div>
+        <div class="form-sub">We'll send a reset link to your email</div>
+
+        <div class="msg-box" id="resetMsg"></div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="resetEmail" placeholder="you@company.com"/>
+        </div>
+        <button class="btn-submit" id="resetBtn">Send reset link</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL  = 'https://nghlvfngpfrhhigkoeem.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
+const DASHBOARD_URL = '/dashboard';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── CHECK SESSION ────────────────────────────────────────────────────────
+sb.auth.getSession().then(({ data: { session } }) => {
+  if(session) window.location.href = DASHBOARD_URL;
+});
+
+// ── VIEW HELPERS ─────────────────────────────────────────────────────────
+function show(id)   { document.getElementById(id).style.display = ''; }
+function hide(id)   { document.getElementById(id).style.display = 'none'; }
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = `msg-box show ${type}`;
+}
+function setLoading(btnId, loading, label) {
+  const btn = document.getElementById(btnId);
+  btn.disabled = loading;
+  btn.innerHTML = loading ? `<span class="spinner"></span>Working…` : label;
+}
+
+// ── VIEW TOGGLES ─────────────────────────────────────────────────────────
+document.getElementById('toSignup').onclick = () => {
+  hide('signinView'); show('signupView');
+};
+document.getElementById('toSignin').onclick = () => {
+  hide('signupView'); show('signinView');
+};
+document.getElementById('forgotLink').onclick = e => {
+  e.preventDefault(); hide('signinView'); show('resetView');
+};
+document.getElementById('resetBack').onclick = () => {
+  hide('resetView'); show('signinView');
+};
+
+// ── GOOGLE SSO ───────────────────────────────────────────────────────────
+async function signInWithGoogle() {
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin + DASHBOARD_URL }
+  });
+}
+document.getElementById('googleBtn').onclick       = signInWithGoogle;
+document.getElementById('googleBtnSignup').onclick = signInWithGoogle;
+
+// ── EMAIL SIGN IN ─────────────────────────────────────────────────────────
+document.getElementById('signinBtn').onclick = async () => {
+  const email    = document.getElementById('signinEmail').value.trim();
+  const password = document.getElementById('signinPassword').value;
+  if(!email || !password) { showMsg('signinMsg','Please fill in both fields.','error'); return; }
+  setLoading('signinBtn', true, 'Sign in');
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  setLoading('signinBtn', false, 'Sign in');
+  if(error) { showMsg('signinMsg', error.message, 'error'); }
+  else      { window.location.href = DASHBOARD_URL; }
+};
+
+// allow Enter key
+document.getElementById('signinPassword').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('signinBtn').click();
+});
+
+// ── EMAIL SIGN UP ─────────────────────────────────────────────────────────
+document.getElementById('signupBtn').onclick = async () => {
+  const email    = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  if(!email || !password) { showMsg('signupMsg','Please fill in both fields.','error'); return; }
+  if(password.length < 8)  { showMsg('signupMsg','Password must be at least 8 characters.','error'); return; }
+  setLoading('signupBtn', true, 'Create account');
+  const { error } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + DASHBOARD_URL } });
+  setLoading('signupBtn', false, 'Create account');
+  if(error) { showMsg('signupMsg', error.message, 'error'); }
+  else      { showMsg('signupMsg', 'Check your email — we sent you a confirmation link.', 'success'); }
+};
+
+// ── PASSWORD RESET ────────────────────────────────────────────────────────
+document.getElementById('resetBtn').onclick = async () => {
+  const email = document.getElementById('resetEmail').value.trim();
+  if(!email) { showMsg('resetMsg','Please enter your email.','error'); return; }
+  setLoading('resetBtn', true, 'Send reset link');
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset-password' });
+  setLoading('resetBtn', false, 'Send reset link');
+  if(error) { showMsg('resetMsg', error.message, 'error'); }
+  else      { showMsg('resetMsg', 'Reset link sent — check your inbox.', 'success'); }
+};
+
+// ── AUTH STATE CHANGE ─────────────────────────────────────────────────────
+sb.auth.onAuthStateChange((event, session) => {
+  if(event === 'SIGNED_IN' && session) {
+    window.location.href = DASHBOARD_URL;
+  }
+});
+</script>
+</body>
+</html>
