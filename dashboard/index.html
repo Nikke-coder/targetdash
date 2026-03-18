@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>targetdash › Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.7/Recharts.umd.cjs"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0c18; --bg2:#13111f; --bg3:#1c1a2e; --bgr:#161424;
+  --b:#2d2845; --bs:#231f3a; --br:#1a1728;
+  --t:#f0ecff; --tm:#8a85a8; --td:#5a4f8a;
+  --a:#9333ea; --ah:#c084fc; --al:#7c3aed;
+  --blue:#818cf8; --green:#34d399; --amber:#fbbf24; --red:#fb7185; --purple:#a78bfa; --cyan:#a78bfa; --slate:#6e6a8a;
+  --logo:linear-gradient(135deg,#6d28d9,#9333ea);
+  --sans:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
+  --r:14px;
+}
+html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px;}
+*::-webkit-scrollbar{width:4px;height:4px;}
+*::-webkit-scrollbar-track{background:var(--bg);}
+*::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px;}
+
+/* ── TOPBAR ── */
+.topbar{
+  border-bottom:1px solid var(--b);
+  padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:56px; position:sticky;top:0;z-index:100;
+  background:var(--bg);
+}
+.tb-left{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:28px;height:28px;background:var(--logo);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.company-name{font-size:14px;font-weight:600;}
+.company-sub{font-size:10px;color:var(--td);font-family:var(--mono);}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.yr-btn{background:none;border:1px solid var(--b);border-radius:8px;padding:4px 12px;cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--tm);transition:all .18s;}
+.yr-btn:hover{border-color:var(--al);color:var(--ah);}
+.yr-btn.active{background:#2d1f5e;border-color:var(--al);color:var(--a);}
+.icon-btn{background:transparent;border:1px solid var(--b);border-radius:10px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--tm);transition:all .2s;flex-shrink:0;}
+.icon-btn:hover{border-color:var(--a);color:var(--a);}
+.credits-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(124,58,237,0.12);border:1px solid rgba(167,139,250,0.25);border-radius:20px;padding:4px 12px;font-size:11px;font-family:var(--mono);color:var(--a);cursor:pointer;}
+.demo-badge{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:20px;padding:3px 10px;font-size:10px;font-family:var(--mono);color:var(--amber);}
+
+/* ── TABS ── */
+.tabbar{border-bottom:1px solid var(--b);padding:0 32px;display:flex;gap:0;overflow-x:auto;background:var(--bg);}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab-btn{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--tm);padding:14px 16px;border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap;}
+.tab-btn:hover{color:var(--t);}
+.tab-btn.active{color:var(--a);border-bottom-color:var(--a);}
+
+/* ── PERIOD BAR ── */
+.periodbar{border-bottom:1px solid var(--b);background:var(--bg2);padding:8px 32px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.psel{background:var(--bg3);border:1px solid var(--b);border-radius:6px;padding:4px 8px;color:var(--t);font-family:var(--mono);font-size:11px;outline:none;cursor:pointer;}
+.mpill{background:transparent;border:1px solid var(--b);border-radius:8px;padding:3px 6px;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;gap:1px;transition:all .15s;min-width:38px;}
+.mpill:hover{border-color:var(--al);}
+.mpill.act{background:#2d1f5e;border-color:var(--al);}
+.mpill.rng{background:var(--bgr);border-color:var(--bs);}
+.pill-m{font-size:10px;line-height:1;}
+.pill-t{font-size:8px;line-height:1;font-weight:700;}
+
+/* ── CONTENT ── */
+.content{padding:24px 32px;min-height:calc(100vh - 160px);}
+
+/* ── CARDS ── */
+.card{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);}
+.card-pad{padding:18px 20px;}
+.sec-title{font-size:11px;font-weight:600;color:var(--slate);font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--b);}
+
+/* KPI GAUGE */
+.kpi-grid{display:grid;gap:14px;margin-bottom:14px;}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);}
+.g2{grid-template-columns:1fr 1fr;}
+.g5{grid-template-columns:repeat(5,1fr);}
+.gauge{background:var(--bg3);border:1px solid var(--b);border-radius:14px;padding:18px 20px;transition:transform .18s;}
+.gauge:hover{transform:translateY(-2px);}
+.g-label{font-size:10px;color:var(--slate);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.g-value{font-size:26px;font-weight:700;font-family:var(--mono);margin-bottom:4px;}
+.g-status{display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:6px;}
+.g-dot{width:6px;height:6px;border-radius:50%;}
+.g-desc{font-size:10px;color:var(--td);}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:11px;font-family:var(--mono);}
+th{padding:8px 10px;text-align:right;font-size:9px;font-weight:600;letter-spacing:.05em;color:var(--slate);}
+th:first-child{text-align:left;position:sticky;left:0;background:var(--bg3);z-index:2;min-width:180px;padding-left:20px;}
+td{padding:7px 8px;text-align:right;white-space:nowrap;}
+td:first-child{text-align:left;position:sticky;left:0;background:var(--bg3);z-index:1;padding-left:20px;padding-right:16px;}
+tr{border-bottom:1px solid #080f1a;}
+tr:hover td{background:rgba(124,58,237,0.04);}
+.tbl-head-row{border-bottom:1px solid var(--b);background:var(--bgr);}
+.bold-row td{font-weight:700;}
+
+/* ── AI SIDEBAR ── */
+.sidebar{
+  position:fixed;top:0;right:0;bottom:0;width:380px;
+  background:var(--bg2);border-left:1px solid var(--b);
+  display:flex;flex-direction:column;z-index:50;
+}
+.sb-header{padding:16px 18px;border-bottom:1px solid var(--b);background:var(--bg2);flex-shrink:0;}
+.sb-agent{display:flex;align-items:center;gap:10px;}
+.sb-avatar{width:36px;height:36px;border-radius:10px;background:var(--logo);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;font-family:var(--mono);}
+.sb-name{font-size:13px;font-weight:700;}
+.sb-role{font-size:10px;color:var(--a);margin-top:2px;display:flex;align-items:center;gap:5px;}
+.sb-role::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);display:inline-block;}
+.role-tabs{display:flex;gap:4px;padding:8px 18px;border-bottom:1px solid var(--b);flex-wrap:wrap;}
+.role-tab{background:none;border:1px solid var(--b);border-radius:6px;padding:3px 10px;font-family:var(--mono);font-size:10px;color:var(--tm);cursor:pointer;transition:all .15s;}
+.role-tab:hover{border-color:var(--al);color:var(--ah);}
+.role-tab.active{background:#2d1f5e;border-color:var(--al);color:var(--a);}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.msg{display:flex;flex-direction:column;gap:3px;max-width:90%;}
+.msg.user{align-self:flex-end;align-items:flex-end;}
+.msg.ai{align-self:flex-start;align-items:flex-start;}
+.msg-lbl{font-size:9px;color:var(--slate);letter-spacing:.03em;font-family:var(--mono);}
+.msg.user .msg-lbl{color:rgba(167,139,250,0.5);}
+.bubble{padding:9px 12px;border-radius:10px;font-size:12px;line-height:1.55;}
+.msg.user .bubble{background:var(--a);color:#fff;border-radius:10px 10px 3px 10px;}
+.msg.ai .bubble{background:rgba(255,255,255,0.05);border:1px solid var(--b);color:var(--t);border-radius:10px 10px 10px 3px;}
+.typing{padding:10px 14px;border-radius:10px 10px 10px 3px;background:rgba(255,255,255,0.05);border:1px solid var(--b);display:flex;gap:4px;align-items:center;width:fit-content;}
+.typing span{width:5px;height:5px;border-radius:50%;background:var(--ah);opacity:.5;}
+.typing span:nth-child(1){animation:td .9s ease infinite 0s}
+.typing span:nth-child(2){animation:td .9s ease infinite .18s}
+.typing span:nth-child(3){animation:td .9s ease infinite .36s}
+@keyframes td{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-4px);opacity:1}}
+.sb-input-row{border-top:1px solid var(--b);padding:10px 12px;display:flex;gap:8px;flex-shrink:0;}
+.sb-input{flex:1;background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:8px 12px;color:var(--t);font-size:12px;outline:none;font-family:var(--sans);}
+.sb-input:focus{border-color:var(--al);}
+.sb-input::placeholder{color:var(--td);}
+.sb-send{width:34px;height:34px;border-radius:8px;background:var(--a);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-send:hover{background:var(--ah);}
+.sb-send:disabled{opacity:.4;cursor:not-allowed;}
+.credits-row{padding:8px 18px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.cr-info{font-size:10px;font-family:var(--mono);color:var(--tm);}
+.cr-num{color:var(--a);font-weight:700;}
+
+/* ── DEMO BANNER ── */
+.demo-banner{background:rgba(251,191,36,0.06);border-bottom:1px solid rgba(251,191,36,0.2);padding:8px 32px;font-size:11px;color:var(--amber);font-family:var(--mono);display:flex;align-items:center;gap:8px;}
+
+/* ── LOADING ── */
+.loading{display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:12px;}
+.spin{width:32px;height:32px;border:3px solid var(--b);border-top-color:var(--a);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── MAIN LAYOUT ── */
+.main-wrap{margin-right:380px;}
+
+/* chart area */
+.chart-card{background:var(--bg3);border:1px solid var(--b);border-radius:14px;padding:20px;}
+.chart-lbl{font-size:11px;color:var(--slate);font-family:var(--mono);margin-bottom:12px;}
+
+/* sign out */
+.signout-btn{background:none;border:1px solid var(--b);border-radius:8px;padding:5px 12px;font-family:var(--mono);font-size:10px;color:var(--tm);cursor:pointer;}
+.signout-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* used up */
+.used-up{text-align:center;padding:32px 20px;}
+.used-up-icon{font-size:32px;margin-bottom:12px;}
+.used-up-title{font-size:14px;font-weight:600;color:var(--t);margin-bottom:6px;}
+.used-up-sub{font-size:12px;color:var(--tm);line-height:1.6;}
+
+@media(max-width:900px){
+  .main-wrap{margin-right:0;}
+  .sidebar{display:none;}
+  .g3,.g4{grid-template-columns:1fr 1fr!important;}
+  .g5{grid-template-columns:1fr 1fr!important;}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="loading"><div class="spin"></div><span style="color:var(--tm);font-family:var(--mono);font-size:11px;">Loading your dashboard…</span></div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://nghlvfngpfrhhigkoeem.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
+const ANTHROPIC_KEY = 'PASTE_YOUR_ANTHROPIC_KEY_HERE'; // set as Vercel env var
+const DEMO_CREDITS  = 5;
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── DEMO FINANCIAL DATA (2025 actuals) ──────────────────────────────────
+const DATA = {
+  revenue:     [204006,216592,246792,273432,277300,329288,228912,265383,320762,345892,316703,394939],
+  cogs:        [61202,64978,74038,82030,83190,98786,68674,79615,96229,103768,95011,118482],
+  opex:        [258236,198189,184957,193827,208612,194475,178463,201646,206297,217189,215692,292417],
+  depAmort:    [9200,9200,9200,9200,9200,9200,9200,9200,9200,9200,9200,9200],
+  finExp:      [2857,2161,4122,2870,2166,1837,1884,3066,3603,2602,1938,2827],
+  netProfit:   [-127489,-57936,-25525,-14495,-25868,19992,-29309,-28144,4346,10506,-5138,-27987],
+  grossProfit: [142804,151614,172754,191402,194110,230502,160238,185768,224533,242124,221692,276457],
+  ebitda:      [-115432,-46575,-12203,-2425,-14502,36027,-18225,-15878,18236,24935,6000,-15960],
+  ebit:        [-124632,-55775,-21403,-11625,-23702,26827,-27425,-25078,9036,15735,-3200,-25160],
+  inventory:   [15928,11544,19566,17983,21949,8233,8931,14591,13913,14791,12861,16702],
+  receivables: [410181,401512,398422,400367,412962,422395,413884,423052,431310,431910,448932,442003],
+  cash:        [35098,-1242,-29358,-29491,-36894,-26859,-43394,-56646,-69038,-52240,-46034,-68556],
+  equity:      [-108378,-166314,-191839,-206334,-232202,-212210,-241519,-269663,-265317,-254811,-259949,-287936],
+  payables:    [180365,174896,184296,196816,178836,189722,188098,187771,195949,193733,196322,201666],
+  otherCL:     [16397,26877,27579,30853,33631,31522,39207,38695,44948,38405,39928,41968],
+  tangibles:   [164653,161374,162030,162985,158286,154833,153882,157829,154430,151547,153598,154329],
+  otherCA:     [20039,21889,25285,26950,31026,17375,26317,22357,22145,19941,27680,17389],
+};
+const BUD = {
+  revenue:     [270196,274398,333213,321555,365291,362239,285869,327908,375467,417403,390085,476376],
+  cogs:        [75655,76831,93300,90035,102281,101427,80043,91814,105131,116873,109224,133385],
+  opex:        [257691,241920,240460,230056,229327,247588,224990,225302,243373,261098,243192,305004],
+  grossProfit: [194541,197567,239913,231520,263010,260812,205826,236094,270336,300530,280861,342991],
+  ebitda:      [-63150,-44353,-547,1464,33683,13224,-19164,10792,26963,39432,37669,37987],
+};
+
+const sum  = a => a.reduce((s,v)=>s+v,0);
+const sl   = (a,s,e) => a.slice(s,e+1);
+const fmt  = v => { const a=Math.abs(v),s=v<0?"-":""; return a>=1e6?s+"€"+(a/1e6).toFixed(2)+"M":a>=1e3?s+"€"+(a/1e3).toFixed(0)+"K":s+"€"+a.toFixed(0); };
+const pct  = (a,b) => b ? (a/b*100).toFixed(1) : "0.0";
+const vc   = v => v>=0 ? 'var(--green)' : 'var(--red)';
+
+// ── STATE ────────────────────────────────────────────────────────────────
+let state = {
+  year: "2025", tab: "kpis", role: "CFO",
+  startM: 0, endM: 11, actLast: 11,
+  credits: DEMO_CREDITS, msgs: [],
+  companyName: "Demo Company", userName: "User",
+  userEmail: "", userId: "", loading: false,
+  themeKey: "dark",
+};
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if(!session) { window.location.href = '/login'; return; }
+
+  state.userEmail = session.user.email;
+  state.userId    = session.user.id;
+
+  // Load profile
+  const { data: profile } = await sb.from('user_profiles')
+    .select('company_name, full_name, primary_role')
+    .eq('user_id', session.user.id)
+    .maybeSingle();
+
+  if(profile) {
+    state.companyName = profile.company_name || state.companyName;
+    state.userName    = (profile.full_name || '').split(' ')[0] || 'User';
+    state.role        = profile.primary_role || 'CFO';
+  }
+
+  // Load or initialise demo credits from Supabase
+  const { data: cr } = await sb.from('demo_credits')
+    .select('credits_used')
+    .eq('user_id', session.user.id)
+    .maybeSingle();
+
+  if(cr) {
+    state.credits = Math.max(0, DEMO_CREDITS - (cr.credits_used || 0));
+  } else {
+    // First visit — create record
+    await sb.from('demo_credits').insert({ user_id: session.user.id, user_email: state.userEmail, credits_used: 0 });
+    state.credits = DEMO_CREDITS;
+  }
+
+  // Greet
+  state.msgs = [{
+    role: 'ai',
+    text: `Welcome to targetdash, ${state.userName}! I'm EBITDA-9000, your AI financial advisor. You have <strong>${state.credits} demo credits</strong> — each question uses 1 credit. Ask me anything about the demo financials.`
+  }];
+
+  render();
+})();
+
+// ── COMPUTED ──────────────────────────────────────────────────────────────
+function computed() {
+  const S = state.startM, E = state.endM;
+  const rev  = sum(sl(DATA.revenue,S,E));
+  const gp   = sum(sl(DATA.grossProfit,S,E));
+  const ebit = sum(sl(DATA.ebit,S,E));
+  const ebid = sum(sl(DATA.ebitda,S,E));
+  const net  = sum(sl(DATA.netProfit,S,E));
+  const eq   = DATA.equity[E];
+  const rec  = DATA.receivables[E];
+  const inv  = DATA.inventory[E];
+  const pay  = DATA.payables[E];
+  const ann  = rev / (E-S+1) * 12;
+  return {
+    S,E,rev,gp,ebit,ebid,net,eq,rec,inv,pay,ann,
+    gmPct:  pct(gp,rev),
+    emPct:  pct(ebit,rev),
+    roePct: eq ? pct(net,eq) : "—",
+    dso:    ann ? (rec/(ann/365)).toFixed(0) : 0,
+    dio:    ann ? (inv/(ann/365)).toFixed(0) : 0,
+    dpo:    ann ? (pay/(ann/365)).toFixed(0) : 0,
+  };
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function render() {
+  const c = computed();
+  const TABS = [
+    {id:'kpis',     label:'KPIs'},
+    {id:'pl',       label:'P&L'},
+    {id:'balance',  label:'Balance Sheet'},
+    {id:'cashflow', label:'Cash Flow'},
+  ];
+
+  document.getElementById('app').innerHTML = `
+  <div class="main-wrap">
+    <!-- DEMO BANNER -->
+    <div class="demo-banner">
+      ⚡ Demo mode — ${state.companyName} · Sample data · ${state.credits} AI credits remaining
+    </div>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="tb-left">
+        <div class="logo-mark">TF</div>
+        <div>
+          <div class="company-name">${state.companyName}</div>
+          <div class="company-sub">targetdash› · ${state.year}</div>
+        </div>
+      </div>
+      <div class="tb-right">
+        ${['2023','2024','2025','2026'].map(y=>`<button class="yr-btn${state.year===y?' active':''}" onclick="setYear('${y}')">${y}</button>`).join('')}
+        <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">${state.themeKey==='dark'?'☀':'🌙'}</button>
+        <button class="signout-btn" onclick="signOut()">Sign out</button>
+      </div>
+    </div>
+
+    <!-- TABBAR -->
+    <div class="tabbar">
+      ${TABS.map(t=>`<button class="tab-btn${state.tab===t.id?' active':''}" onclick="setTab('${t.id}')">${t.label}</button>`).join('')}
+    </div>
+
+    <!-- PERIOD BAR -->
+    <div class="periodbar">
+      <span style="font-size:10px;color:var(--tm);font-family:var(--mono)">From</span>
+      <select class="psel" onchange="setState('startM',+this.value);render()">
+        ${MONTHS.map((m,i)=>`<option value="${i}"${state.startM===i?' selected':''}>${m}</option>`).join('')}
+      </select>
+      <span style="font-size:10px;color:var(--tm);font-family:var(--mono)">To</span>
+      <select class="psel" onchange="setState('endM',+this.value);render()">
+        ${MONTHS.map((m,i)=>`<option value="${i}"${state.endM===i?' selected':''}>${m}</option>`).join('')}
+      </select>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;">
+        ${MONTHS.map((m,i)=>{
+          const inRange=i>=state.startM&&i<=state.endM;
+          const isAct=i<=state.actLast;
+          const cls='mpill'+(i===state.startM||i===state.endM?(' '+(isAct?'act':'')):(inRange?' rng':''));
+          return `<button class="${cls}" onclick="pillClick(${i})">
+            <span class="pill-m" style="color:${(i===state.startM||i===state.endM)?(isAct?'var(--ah)':'var(--amber)'):(inRange?'var(--tm)':'var(--td)')">${m}</span>
+            <span class="pill-t" style="color:${isAct?'var(--blue)':'var(--amber)'}">${isAct?'ACT':'BUD'}</span>
+          </button>`;
+        }).join('')}
+      </div>
+      <span style="font-size:10px;font-family:var(--mono);color:var(--td)">${MONTHS[state.startM]} – ${MONTHS[state.endM]}</span>
+    </div>
+
+    <!-- TAB CONTENT -->
+    <div class="content" id="tabContent">
+      ${renderTab(c)}
+    </div>
+  </div>
+
+  <!-- AI SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-header">
+      <div class="sb-agent">
+        <div class="sb-avatar">E·9K</div>
+        <div>
+          <div class="sb-name">EBITDA-9000</div>
+          <div class="sb-role">Responding as ${state.role}</div>
+        </div>
+      </div>
+    </div>
+    <div class="role-tabs">
+      ${['CFO','CEO','CMO','CRO','CTO','HR'].map(r=>`<button class="role-tab${state.role===r?' active':''}" onclick="setRole('${r}')">${r}</button>`).join('')}
+    </div>
+    <div class="credits-row">
+      <span class="cr-info">Demo credits: <span class="cr-num">${state.credits}</span> / ${DEMO_CREDITS}</span>
+      <span style="font-size:9px;color:var(--td);font-family:var(--mono)">1 credit = 1 answer</span>
+    </div>
+    <div class="msgs" id="msgs">
+      ${state.msgs.map(m=>renderMsg(m)).join('')}
+    </div>
+    ${state.credits > 0 ? `
+    <div class="sb-input-row">
+      <input class="sb-input" id="aiInput" placeholder="Ask about the demo financials…" onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button class="sb-send" id="sendBtn" onclick="sendMsg()" ${state.loading?'disabled':''}>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 2L11 13M22 2l-7 19-4-9-9-4 19-7z"/></svg>
+      </button>
+    </div>` : `
+    <div class="sb-input-row">
+      <div class="used-up">
+        <div class="used-up-icon">🎯</div>
+        <div class="used-up-title">Demo credits used</div>
+        <div class="used-up-sub">You've explored all 5 demo questions. Sign up for a full account to get 100 credits/month.</div>
+        <a href="/onboarding" style="display:inline-block;margin-top:14px;background:var(--a);color:#fff;padding:10px 20px;border-radius:8px;font-size:12px;text-decoration:none;font-weight:600;">Get full access →</a>
+      </div>
+    </div>`}
+  </div>
+  `;
+
+  // Scroll msgs to bottom
+  const msgs = document.getElementById('msgs');
+  if(msgs) msgs.scrollTop = msgs.scrollHeight;
+}
+
+function renderMsg(m) {
+  return `<div class="msg ${m.role}">
+    <div class="msg-lbl">${m.role==='ai'?'EBITDA-9000 · '+state.role:'You'}</div>
+    <div class="bubble">${m.text}</div>
+  </div>`;
+}
+
+// ── TAB CONTENT ───────────────────────────────────────────────────────────
+function renderTab(c) {
+  if(state.tab === 'kpis')     return renderKPIs(c);
+  if(state.tab === 'pl')       return renderPL(c);
+  if(state.tab === 'balance')  return renderBalance(c);
+  if(state.tab === 'cashflow') return renderCashFlow(c);
+  return '';
+}
+
+function gauge(label, value, unit, target, targetLabel, color, desc, flip=false) {
+  const hit = flip ? +value <= target : +value >= target;
+  return `<div class="gauge">
+    <div class="g-label">${label}</div>
+    <div class="g-value" style="color:${color}">${value}${unit||''}</div>
+    <div class="g-status">
+      <div class="g-dot" style="background:${hit?'var(--green)':'var(--red)'}"></div>
+      <span style="font-size:11px;color:${hit?'var(--green)':'var(--red)'}">${hit?'On target':'Off target'} · ${targetLabel}: ${target}${unit||''}</span>
+    </div>
+    <div class="g-desc">${desc}</div>
+  </div>`;
+}
+
+function renderKPIs(c) {
+  const revBud = sum(sl(BUD.revenue, c.S, c.E));
+  const gpBud  = sum(sl(BUD.grossProfit, c.S, c.E));
+  const ebBud  = sum(sl(BUD.ebitda, c.S, c.E));
+  return `
+  <div style="display:flex;flex-direction:column;gap:24px;">
+    <div>
+      <div class="sec-title">Profitability</div>
+      <div class="kpi-grid g3" style="margin-bottom:14px;">
+        ${gauge('Gross Margin',c.gmPct,'%',65,'Target','var(--cyan)','(Revenue − COGS) / Revenue')}
+        ${gauge('EBIT Margin',c.emPct,'%',15,'Target','var(--blue)','EBIT / Revenue')}
+        ${gauge('ROE',c.roePct,'%',12,'Min','var(--purple)','Net Profit / Equity')}
+      </div>
+      <div class="kpi-grid g4">
+        ${kpiCard('Revenue',fmt(c.rev),fmt(c.rev-revBud),'vs Budget','var(--blue)')}
+        ${kpiCard('Gross Profit',fmt(c.gp),fmt(c.gp-gpBud),'vs Budget','var(--cyan)')}
+        ${kpiCard('EBITDA',fmt(c.ebid),fmt(c.ebid-ebBud),'vs Budget','var(--amber)')}
+        ${kpiCard('Net Profit',fmt(c.net),'','','var(--red)')}
+      </div>
+    </div>
+    <div>
+      <div class="sec-title">Efficiency</div>
+      <div class="kpi-grid g3">
+        ${gauge('DSO (AR days)',c.dso,' days',45,'Max','var(--cyan)','Receivables / (Revenue/365)',true)}
+        ${gauge('DIO (Inv days)',c.dio,' days',60,'Max','var(--purple)','Inventory / (Revenue/365)',true)}
+        ${gauge('DPO (AP days)',c.dpo,' days',30,'Min','var(--amber)','Payables / (Revenue/365)')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function kpiCard(label, value, delta, deltaLabel, color) {
+  const pos = delta && !delta.startsWith('-');
+  return `<div class="gauge">
+    <div class="g-label">${label}</div>
+    <div class="g-value" style="color:${color};font-size:22px;">${value}</div>
+    ${delta ? `<div style="font-size:11px;color:${pos?'var(--green)':'var(--red)'};">${delta} ${deltaLabel}</div>` : ''}
+  </div>`;
+}
+
+function renderPL(c) {
+  const rows = [
+    {label:'Revenue',         act:DATA.revenue,     bud:BUD.revenue,     color:'var(--blue)', bold:true},
+    {label:'  Cost of Goods', act:DATA.cogs.map(v=>-v), bud:BUD.cogs.map(v=>-v), color:'var(--slate)',indent:true},
+    {label:'Gross Profit',    act:DATA.grossProfit, bud:BUD.grossProfit, color:'var(--cyan)', bold:true},
+    {label:'  OPEX',          act:DATA.opex.map(v=>-v), bud:BUD.opex.map(v=>-v), color:'var(--slate)',indent:true},
+    {label:'EBITDA',          act:DATA.ebitda,      bud:BUD.ebitda,      color:'var(--amber)',bold:true},
+    {label:'  Depreciation',  act:DATA.depAmort.map(v=>-v), bud:null,   color:'var(--slate)',indent:true},
+    {label:'EBIT',            act:DATA.ebit,        bud:null,            color:'var(--blue)', bold:true},
+    {label:'  Finance costs', act:DATA.finExp.map(v=>-v), bud:null,     color:'var(--slate)',indent:true},
+    {label:'Net Profit',      act:DATA.netProfit,   bud:null,            color:'var(--red)',  bold:true},
+  ];
+  const visM = MONTHS.slice(c.S, c.E+1);
+  return `
+  <div class="card" style="overflow:hidden;">
+    <div style="padding:14px 22px;border-bottom:1px solid var(--b);font-size:13px;font-weight:600;color:var(--tm);">
+      P&L Statement · ${MONTHS[c.S]}–${MONTHS[c.E]} ${state.year}
+    </div>
+    <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr class="tbl-head-row">
+          <th style="text-align:left;padding-left:20px;">Line Item</th>
+          ${visM.map((m,i)=>`<th style="color:${c.S+i<=state.actLast?'var(--ah)':'var(--amber)'}">${m}</th>`).join('')}
+          <th style="border-left:1px solid var(--b);">Total</th>
+          <th style="color:var(--amber);">BUD</th>
+          <th style="color:var(--red);">VAR</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(row=>{
+          const aSlice = sl(row.act,c.S,c.E);
+          const bSlice = row.bud ? sl(row.bud,c.S,c.E) : null;
+          const totA = sum(aSlice);
+          const totB = bSlice ? sum(bSlice) : null;
+          const totV = totB !== null ? totA - totB : null;
+          return `<tr class="${row.bold?'bold-row':''}">
+            <td style="color:${row.color};padding-left:${row.indent?'36px':'20px'}">${row.label}</td>
+            ${aSlice.map((v,i)=>`<td style="color:${c.S+i<=state.actLast?row.color:'var(--amber)'}">${fmt(v)}</td>`).join('')}
+            <td style="color:${row.color};border-left:1px solid var(--b);font-weight:700;">${fmt(totA)}</td>
+            <td style="color:var(--amber);">${totB!==null?fmt(totB):'—'}</td>
+            <td style="color:${totV!==null?vc(totV):'var(--slate)'};">${totV!==null?fmt(totV):'—'}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderBalance(c) {
+  const E = state.endM;
+  const assets = [
+    {label:'Tangible Assets',  v:DATA.tangibles[E]},
+    {label:'Inventory',        v:DATA.inventory[E]},
+    {label:'Trade Receivables',v:DATA.receivables[E]},
+    {label:'Cash & Bank',      v:DATA.cash[E]},
+    {label:'Other Current',    v:DATA.otherCA[E]},
+  ];
+  const liabs = [
+    {label:'Equity',           v:DATA.equity[E]},
+    {label:'Trade Payables',   v:DATA.payables[E]},
+    {label:'Other Liabilities',v:DATA.otherCL[E]},
+  ];
+  const totA = assets.reduce((s,a)=>s+a.v,0);
+  const totL = liabs.reduce((s,a)=>s+a.v,0);
+  return `
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card card-pad">
+      <div class="sec-title">Assets — ${MONTHS[E]} ${state.year}</div>
+      ${assets.map(a=>`
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bs);">
+          <span style="color:var(--tm)">${a.label}</span>
+          <span style="color:${a.v>=0?'var(--t)':'var(--red)'};font-family:var(--mono);font-weight:600;">${fmt(a.v)}</span>
+        </div>`).join('')}
+      <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:700;">
+        <span>Total Assets</span>
+        <span style="color:var(--cyan);font-family:var(--mono);">${fmt(totA)}</span>
+      </div>
+    </div>
+    <div class="card card-pad">
+      <div class="sec-title">Liabilities & Equity — ${MONTHS[E]} ${state.year}</div>
+      ${liabs.map(a=>`
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bs);">
+          <span style="color:var(--tm)">${a.label}</span>
+          <span style="color:${a.v>=0?'var(--t)':'var(--red)'};font-family:var(--mono);font-weight:600;">${fmt(a.v)}</span>
+        </div>`).join('')}
+      <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:700;">
+        <span>Total</span>
+        <span style="color:var(--cyan);font-family:var(--mono);">${fmt(totL)}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCashFlow(c) {
+  const rows = [
+    {label:'EBITDA',                     v:DATA.ebitda,                          color:'var(--amber)', bold:true},
+    {label:'  Δ Receivables',            v:MONTHS.map((_,i)=>i>0?DATA.receivables[i-1]-DATA.receivables[i]:0), color:'var(--slate)',indent:true},
+    {label:'  Δ Inventory',              v:MONTHS.map((_,i)=>i>0?DATA.inventory[i-1]-DATA.inventory[i]:0),    color:'var(--slate)',indent:true},
+    {label:'  Δ Payables',               v:MONTHS.map((_,i)=>i>0?DATA.payables[i]-DATA.payables[i-1]:0),      color:'var(--slate)',indent:true},
+    {label:'Operative CF',               v:MONTHS.map((_,i)=>DATA.ebitda[i]+(i>0?(DATA.receivables[i-1]-DATA.receivables[i])+(DATA.inventory[i-1]-DATA.inventory[i])+(DATA.payables[i]-DATA.payables[i-1]):0)), color:'var(--green)',bold:true},
+    {label:'Net Cash Change',            v:MONTHS.map((_,i)=>i>0?DATA.cash[i]-DATA.cash[i-1]:DATA.cash[0]),   color:'var(--blue)', bold:true},
+    {label:'Closing Cash',               v:DATA.cash,                                                          color:'var(--cyan)', bold:true},
+  ];
+  const visM = MONTHS.slice(c.S, c.E+1);
+  const totOp   = sum(sl(rows[4].v,c.S,c.E));
+  const closCash = DATA.cash[c.E];
+  return `
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div class="kpi-grid g4">
+      ${kpiCard('Operative CF',fmt(totOp),'','','var(--green)')}
+      ${kpiCard('Closing Cash',fmt(closCash),'','',closCash>=0?'var(--cyan)':'var(--red)')}
+      ${kpiCard('EBITDA',fmt(sum(sl(DATA.ebitda,c.S,c.E))),'','','var(--amber)')}
+      ${kpiCard('Net Profit',fmt(sum(sl(DATA.netProfit,c.S,c.E))),'','','var(--red)')}
+    </div>
+    <div class="card" style="overflow:hidden;">
+      <div style="padding:14px 22px;border-bottom:1px solid var(--b);font-size:13px;font-weight:600;color:var(--tm);">
+        Cash Flow Statement · ${MONTHS[c.S]}–${MONTHS[c.E]} ${state.year}
+      </div>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr class="tbl-head-row">
+            <th style="text-align:left;padding-left:20px;">Line Item</th>
+            ${visM.map((m,i)=>`<th style="color:${c.S+i<=state.actLast?'var(--ah)':'var(--amber)'}">${m}</th>`).join('')}
+            <th style="border-left:1px solid var(--b);">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(row=>{
+            const slice = sl(row.v,c.S,c.E);
+            const tot   = row.label==='Closing Cash' ? slice[slice.length-1] : sum(slice);
+            return `<tr class="${row.bold?'bold-row':''}">
+              <td style="color:${row.color};padding-left:${row.indent?'36px':'20px'}">${row.label}</td>
+              ${slice.map(v=>`<td style="color:${row.color}">${fmt(v)}</td>`).join('')}
+              <td style="border-left:1px solid var(--b);font-weight:700;color:${row.color}">${fmt(tot)}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── AI CHAT ───────────────────────────────────────────────────────────────
+async function sendMsg() {
+  const input = document.getElementById('aiInput');
+  const text  = input?.value?.trim();
+  if(!text || state.loading || state.credits <= 0) return;
+  input.value = '';
+  state.loading = true;
+  state.msgs.push({ role: 'user', text });
+  render();
+
+  // Show typing
+  const msgs = document.getElementById('msgs');
+  if(msgs) {
+    const typing = document.createElement('div');
+    typing.className = 'msg ai';
+    typing.id = 'typing';
+    typing.innerHTML = `<div class="msg-lbl">EBITDA-9000 · ${state.role}</div><div class="typing"><span></span><span></span><span></span></div>`;
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  try {
+    const c = computed();
+    const context = `
+Company: ${state.companyName} (demo data)
+Period: ${MONTHS[c.S]}–${MONTHS[c.E]} ${state.year}
+Revenue: ${fmt(c.rev)} (BUD: ${fmt(sum(sl(BUD.revenue,c.S,c.E)))})
+Gross Profit: ${fmt(c.gp)} (${c.gmPct}% margin)
+EBITDA: ${fmt(c.ebid)}
+EBIT: ${fmt(c.ebit)} (${c.emPct}% margin)
+Net Profit: ${fmt(c.net)}
+DSO: ${c.dso} days · DIO: ${c.dio} days · DPO: ${c.dpo} days
+Cash: ${fmt(DATA.cash[c.E])}
+Equity: ${fmt(DATA.equity[c.E])}`;
+
+    const ROLE_PERSONAS = {
+      CFO: 'You are a seasoned CFO. Focus on cash flow, margins, budget variances and financial risk.',
+      CEO: 'You are a strategic CEO. Focus on business performance, growth trajectory and key decisions.',
+      CMO: 'You are a data-driven CMO. Focus on revenue growth, customer metrics and marketing ROI.',
+      CRO: 'You are a revenue-focused CRO. Focus on revenue trends, pipeline and growth opportunities.',
+      CTO: 'You are a technical CTO. Focus on operational efficiency, tech costs and scalability.',
+      HR:  'You are an experienced HR Manager. Focus on personnel costs, headcount and workforce efficiency.',
+    };
+
+    const key = window.ANTHROPIC_KEY || ANTHROPIC_KEY;
+    if(!key || key === 'PASTE_YOUR_ANTHROPIC_KEY_HERE') {
+      throw new Error('no_key');
+    }
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        system: `${ROLE_PERSONAS[state.role] || ROLE_PERSONAS.CFO}
+You have access to this company's financial data. Be concise (max 4 sentences), insightful and specific.
+Use actual numbers from the data. This is a demo with sample data — be helpful but note it's illustrative.
+Financial context:
+${context}`,
+        messages: [{ role: 'user', content: text }],
+      }),
+    });
+
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'I could not generate a response. Please try again.';
+
+    // Deduct credit
+    state.credits = Math.max(0, state.credits - 1);
+    await sb.from('demo_credits').upsert(
+      { user_id: state.userId, user_email: state.userEmail, credits_used: DEMO_CREDITS - state.credits },
+      { onConflict: 'user_id' }
+    );
+
+    state.msgs.push({ role: 'ai', text: reply.replace(/\n/g,'<br/>') });
+
+  } catch(e) {
+    const fallback = e.message === 'no_key'
+      ? 'AI is not configured yet — add your Anthropic API key to Vercel environment variables as <code>VITE_ANTHROPIC_KEY</code>.'
+      : `Sorry, I ran into an error: ${e.message}. Please try again.`;
+    state.msgs.push({ role: 'ai', text: fallback });
+  }
+
+  state.loading = false;
+  render();
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────
+function setTab(t)   { state.tab = t; render(); }
+function setYear(y)  { state.year = y; state.actLast = y==='2026'?-1:11; render(); }
+function setRole(r)  { state.role = r; render(); }
+function setState(k,v){ state[k]=v; }
+function pillClick(i){
+  if(i < state.startM) state.startM = i;
+  else if(i > state.endM) state.endM = i;
+  else if(i === state.startM && i < state.endM) state.startM = i+1;
+  else if(i === state.endM && i > state.startM) state.endM = i-1;
+  else { state.startM=i; state.endM=i; }
+  render();
+}
+function toggleTheme() {
+  state.themeKey = state.themeKey === 'dark' ? 'light' : 'dark';
+  // Simple toggle — just re-render for now
+  render();
+}
+async function signOut() {
+  await sb.auth.signOut();
+  window.location.href = '/login';
+}
+
+// Expose to window for inline onclick
+window.setTab=setTab; window.setYear=setYear; window.setRole=setRole;
+window.setState=setState; window.pillClick=pillClick; window.sendMsg=sendMsg;
+window.signOut=signOut; window.toggleTheme=toggleTheme;
+</script>
+</body>
+</html>
