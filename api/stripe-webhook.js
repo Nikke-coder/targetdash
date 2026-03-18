@@ -1,4 +1,4 @@
-export const config = { runtime: 'edge' };
+export const config = { runtime: 'nodejs', api: { bodyParser: false } };
 
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 const SUPABASE_URL           = process.env.SUPABASE_URL || 'https://nghlvfngpfrhhigkoeem.supabase.co';
