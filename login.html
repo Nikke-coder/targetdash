@@ -402,7 +402,7 @@ document.getElementById('resetBack').onclick = () => {
 async function signInWithGoogle() {
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + ONBOARDING_URL }
+    options: { redirectTo: window.location.origin + '/login' }
   });
 }
 document.getElementById('googleBtn').onclick       = signInWithGoogle;
@@ -414,10 +414,10 @@ document.getElementById('signinBtn').onclick = async () => {
   const password = document.getElementById('signinPassword').value;
   if(!email || !password) { showMsg('signinMsg','Please fill in both fields.','error'); return; }
   setLoading('signinBtn', true, 'Sign in');
-  const { error } = await sb.auth.signInWithPassword({ email, password });
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
   setLoading('signinBtn', false, 'Sign in');
   if(error) { showMsg('signinMsg', error.message, 'error'); }
-  else      { await redirectAfterLogin(session); }
+  else      { await redirectAfterLogin(data.session); }
 };
 
 // allow Enter key
