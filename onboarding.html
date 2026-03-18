@@ -493,17 +493,44 @@ let userId = '';
 
     userEmail = session.user.email;
     userId    = session.user.id;
+    const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
 
     // Check if already onboarded → skip to dashboard
     try {
       const { data: profile } = await sb.from('user_profiles')
-        .select('onboarded').eq('user_id', userId).maybeSingle();
+        .select('onboarded, plan').eq('user_id', userId).maybeSingle();
+
       if(profile?.onboarded) {
         window.location.href = DASHBOARD_URL;
         return;
       }
-    } catch(e) {
-      // table might not exist yet — stay on onboarding
+    } catch(e) {}
+
+    // If demo mode — check if this email has already used demo
+    if(mode === 'demo') {
+      try {
+        const { data: cr } = await sb.from('demo_credits')
+          .select('credits_used').eq('user_id', userId).maybeSingle();
+        if(cr && cr.credits_used >= 5) {
+          // Already used demo — show upgrade message instead
+          document.getElementById('mainCard').innerHTML = `
+            <div style="text-align:center;padding:52px 40px;">
+              <div style="font-size:40px;margin-bottom:16px;">🎯</div>
+              <div style="font-family:var(--sans);font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;">Demo already used</div>
+              <div style="font-family:var(--ui);font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:28px;">
+                You've already explored the targetdash demo.<br/>
+                Ready to connect your own financial data?
+              </div>
+              <a href="/getstarted" style="display:inline-block;background:#7c3aed;color:#fff;padding:13px 28px;border-radius:10px;font-family:var(--ui);font-size:14px;font-weight:600;text-decoration:none;margin-bottom:12px;">
+                Subscribe now →
+              </a><br/>
+              <a href="/dashboard" style="font-family:var(--ui);font-size:12px;color:var(--mid);text-decoration:none;">
+                Go to dashboard
+              </a>
+            </div>`;
+          return;
+        }
+      } catch(e) {}
     }
 
     // Pre-fill name from Google if available
