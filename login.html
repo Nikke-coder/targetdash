@@ -425,10 +425,9 @@ document.getElementById('resetBack').onclick  = () => { hide('resetView'); show(
 // ── GOOGLE SSO ───────────────────────────────────────────────────────────
 async function signInWithGoogle() {
   const mode = new URLSearchParams(window.location.search).get('mode');
-  if(mode) sessionStorage.setItem('td_mode', mode);
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + '/login' }
+    options: { redirectTo: window.location.origin + '/login' + (mode ? '?mode=' + mode : '') }
   });
 }
 document.getElementById('googleBtn').onclick       = signInWithGoogle;
