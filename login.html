@@ -357,27 +357,25 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 // ── REDIRECT HELPER ──────────────────────────────────────────────────────
 async function redirectAfterLogin(session) {
   try {
-    const mode = new URLSearchParams(window.location.search).get('mode') || sessionStorage.getItem('td_mode') || '';
-    sessionStorage.removeItem('td_mode');
+    const mode = new URLSearchParams(window.location.search).get('mode') || '';
 
-    const { data: profile } = await sb
-      .from('user_profiles')
-      .select('onboarded, plan')
-      .eq('user_id', session.user.id)
-      .maybeSingle();
-
-    // Already onboarded → always go to dashboard
-    if(profile?.onboarded) {
+    // No mode = came from Sign in button → always go straight to dashboard
+    if(!mode) {
       window.location.href = DASHBOARD_URL; return;
     }
 
-    // Not onboarded + came from getstarted → onboarding with mode
-    if(mode) {
-      window.location.href = '/onboarding?mode=' + mode; return;
-    }
+    // Has mode = came from Get started → check onboarding
+    const { data: profile } = await sb
+      .from('user_profiles')
+      .select('onboarded')
+      .eq('user_id', session.user.id)
+      .maybeSingle();
 
-    // Sign in directly with no account → send to getstarted
-    window.location.href = '/getstarted';
+    if(profile?.onboarded) {
+      window.location.href = DASHBOARD_URL;
+    } else {
+      window.location.href = '/onboarding?mode=' + mode;
+    }
   } catch(e) {
     window.location.href = DASHBOARD_URL;
   }
