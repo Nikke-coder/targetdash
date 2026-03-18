@@ -348,14 +348,26 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 <script>
 const SUPABASE_URL  = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-const DASHBOARD_URL = '/dashboard';
+const DASHBOARD_URL  = '/dashboard';
+const ONBOARDING_URL = '/onboarding';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ── REDIRECT HELPER ──────────────────────────────────────────────────────
+async function redirectAfterLogin(session) {
+  const { data: profile } = await sb
+    .from('user_profiles')
+    .select('onboarded')
+    .eq('user_id', session.user.id)
+    .maybeSingle();
+
+  window.location.href = profile?.onboarded ? DASHBOARD_URL : ONBOARDING_URL;
+}
+
 // ── CHECK SESSION ────────────────────────────────────────────────────────
-sb.auth.getSession().then(({ data: { session } }) => {
-  if(session) window.location.href = DASHBOARD_URL;
+sb.auth.getSession().then(async ({ data: { session } }) => {
+  if(session) await redirectAfterLogin(session);
 });
 
 // ── VIEW HELPERS ─────────────────────────────────────────────────────────
@@ -390,7 +402,7 @@ document.getElementById('resetBack').onclick = () => {
 async function signInWithGoogle() {
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + DASHBOARD_URL }
+    options: { redirectTo: window.location.origin + ONBOARDING_URL }
   });
 }
 document.getElementById('googleBtn').onclick       = signInWithGoogle;
@@ -405,7 +417,7 @@ document.getElementById('signinBtn').onclick = async () => {
   const { error } = await sb.auth.signInWithPassword({ email, password });
   setLoading('signinBtn', false, 'Sign in');
   if(error) { showMsg('signinMsg', error.message, 'error'); }
-  else      { window.location.href = DASHBOARD_URL; }
+  else      { await redirectAfterLogin(session); }
 };
 
 // allow Enter key
@@ -440,7 +452,7 @@ document.getElementById('resetBtn').onclick = async () => {
 // ── AUTH STATE CHANGE ─────────────────────────────────────────────────────
 sb.auth.onAuthStateChange((event, session) => {
   if(event === 'SIGNED_IN' && session) {
-    window.location.href = DASHBOARD_URL;
+    await redirectAfterLogin(session);
   }
 });
 </script>
