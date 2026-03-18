@@ -357,14 +357,24 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 // ── REDIRECT HELPER ──────────────────────────────────────────────────────
 async function redirectAfterLogin(session) {
   try {
-    const { data: profile, error } = await sb
+    const mode = new URLSearchParams(window.location.search).get('mode') || sessionStorage.getItem('td_mode') || 'subscribe';
+    sessionStorage.removeItem('td_mode');
+
+    const { data: profile } = await sb
       .from('user_profiles')
-      .select('onboarded')
+      .select('onboarded, plan')
       .eq('user_id', session.user.id)
       .maybeSingle();
-    window.location.href = (error || !profile || !profile.onboarded) ? ONBOARDING_URL : DASHBOARD_URL;
+
+    // Already onboarded → go to dashboard
+    if(profile?.onboarded) {
+      window.location.href = DASHBOARD_URL; return;
+    }
+
+    // Not onboarded → go to onboarding with mode
+    window.location.href = '/onboarding?mode=' + mode;
   } catch(e) {
-    window.location.href = ONBOARDING_URL;
+    window.location.href = '/onboarding';
   }
 }
 
@@ -409,6 +419,8 @@ document.getElementById('resetBack').onclick  = () => { hide('resetView'); show(
 
 // ── GOOGLE SSO ───────────────────────────────────────────────────────────
 async function signInWithGoogle() {
+  const mode = new URLSearchParams(window.location.search).get('mode');
+  if(mode) sessionStorage.setItem('td_mode', mode);
   await sb.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: window.location.origin + '/login' }

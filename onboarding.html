@@ -487,25 +487,33 @@ let userId = '';
 
 // ── INIT — check session ─────────────────────────────────────────────────
 (async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if(!session) { window.location.href = '/login'; return; }
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session) { window.location.href = '/login'; return; }
 
-  userEmail = session.user.email;
-  userId    = session.user.id;
+    userEmail = session.user.email;
+    userId    = session.user.id;
 
-  // Check if already onboarded → skip to dashboard
-  const { data: profile } = await sb.from('user_profiles')
-    .select('onboarded').eq('user_id', userId).maybeSingle();
+    // Check if already onboarded → skip to dashboard
+    try {
+      const { data: profile } = await sb.from('user_profiles')
+        .select('onboarded').eq('user_id', userId).maybeSingle();
+      if(profile?.onboarded) {
+        window.location.href = DASHBOARD_URL;
+        return;
+      }
+    } catch(e) {
+      // table might not exist yet — stay on onboarding
+    }
 
-  if(profile?.onboarded) {
-    window.location.href = DASHBOARD_URL;
-    return;
+    // Pre-fill name from Google if available
+    const meta = session.user.user_metadata;
+    if(meta?.full_name) document.getElementById('fullName').value = meta.full_name;
+    else if(meta?.name) document.getElementById('fullName').value = meta.name;
+
+  } catch(e) {
+    window.location.href = '/login';
   }
-
-  // Pre-fill name from Google if available
-  const meta = session.user.user_metadata;
-  if(meta?.full_name) document.getElementById('fullName').value = meta.full_name;
-  if(meta?.name)      document.getElementById('fullName').value = meta.name;
 })();
 
 // ── STEP NAVIGATION ──────────────────────────────────────────────────────
@@ -574,6 +582,8 @@ document.getElementById('btn3').addEventListener('click', async () => {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Setting up your dashboard…';
 
+  const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
+
   const payload = {
     user_id:      userId,
     email:        userEmail,
@@ -584,6 +594,7 @@ document.getElementById('btn3').addEventListener('click', async () => {
     country:      document.getElementById('country').value,
     currency:     document.getElementById('currency').value,
     primary_role: selectedRole,
+    plan:         mode,
     agreed_terms: true,
     agreed_dpa:   true,
     agreed_at:    new Date().toISOString(),
@@ -595,7 +606,8 @@ document.getElementById('btn3').addEventListener('click', async () => {
     if(error) throw error;
 
     // Success!
-    currentStep = 'x'; // prevent back navigation
+    const redirectTo = mode === 'demo' ? DASHBOARD_URL + '?demo=1' : DASHBOARD_URL;
+    currentStep = 'x';
     document.getElementById('step3').classList.remove('active');
     document.getElementById('stepDone').classList.add('active');
     document.getElementById('progressFill').style.width = '100%';
@@ -605,7 +617,7 @@ document.getElementById('btn3').addEventListener('click', async () => {
       `Welcome, ${payload.full_name.split(' ')[0]}! Your dashboard is ready. Time to be a financial hero.`;
 
     document.getElementById('btnLaunch').addEventListener('click', () => {
-      window.location.href = DASHBOARD_URL;
+      window.location.href = redirectTo;
     });
 
   } catch(e) {
