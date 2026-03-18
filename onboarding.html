@@ -607,6 +607,31 @@ document.getElementById('btn3').addEventListener('click', async () => {
 
     // Success!
     const redirectTo = mode === 'demo' ? '/demo' : DASHBOARD_URL;
+
+    if(mode === 'subscribe') {
+      // Launch Stripe checkout
+      btn.innerHTML = '<span class="spinner"></span>Redirecting to payment…';
+      try {
+        const res = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id:      userId,
+            user_email:   userEmail,
+            company_name: payload.company_name,
+          }),
+        });
+        const { url, error } = await res.json();
+        if(error) throw new Error(error);
+        window.location.href = url;
+        return;
+      } catch(e) {
+        showMsg('step3Msg', 'Payment error: ' + e.message);
+        btn.disabled = false;
+        btn.textContent = 'Activate my dashboard →';
+        return;
+      }
+    }
     currentStep = 'x';
     document.getElementById('step3').classList.remove('active');
     document.getElementById('stepDone').classList.add('active');
