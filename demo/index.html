@@ -170,6 +170,10 @@ tr:hover td{background:rgba(124,58,237,0.04);}
   .g5{grid-template-columns:1fr 1fr!important;}
 }
 </style>
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -429,7 +433,7 @@ function renderMsg(m) {
   </div>`;
 }
 
-// ── TAB CONTENT ───────────────────────────────────────────────────────────
+// ── TAB CONTENT ───────────────────────────────────────────���───────────────
 function renderTab(c) {
   if(state.tab === 'kpis')     return renderKPIs(c);
   if(state.tab === 'pl')       return renderPL(c);
