@@ -454,16 +454,14 @@ async function redirectAfterLogin(session) {
 
 // ── INIT ─────────────────────────────────────────────────────────────────
 (async () => {
-  if(!window.location.hash.includes('access_token')) {
-    const { data: { session } } = await sb.auth.getSession();
-    if(session) { await afterGoogleLogin(session); return; }
-  }
+  if(window.location.hash.includes('access_token')) return; // OAuth callback — wait for onAuthStateChange
+  const { data: { session } } = await sb.auth.getSession();
+  if(session) await afterGoogleLogin(session); // Already logged in — check MFA
+  // No session — just show the sign in button, do nothing
 })();
 
 sb.auth.onAuthStateChange((event, session) => {
-  if((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
-    afterGoogleLogin(session);
-  }
+  if(event === 'SIGNED_IN' && session) afterGoogleLogin(session);
 });
 
 // ── GOOGLE SSO ────────────────────────────────────────────────────────────
