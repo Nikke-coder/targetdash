@@ -357,7 +357,7 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 // ── REDIRECT HELPER ──────────────────────────────────────────────────────
 async function redirectAfterLogin(session) {
   try {
-    const mode = new URLSearchParams(window.location.search).get('mode') || sessionStorage.getItem('td_mode') || 'subscribe';
+    const mode = new URLSearchParams(window.location.search).get('mode') || sessionStorage.getItem('td_mode') || '';
     sessionStorage.removeItem('td_mode');
 
     const { data: profile } = await sb
@@ -366,15 +366,20 @@ async function redirectAfterLogin(session) {
       .eq('user_id', session.user.id)
       .maybeSingle();
 
-    // Already onboarded → go to dashboard
+    // Already onboarded → always go to dashboard
     if(profile?.onboarded) {
       window.location.href = DASHBOARD_URL; return;
     }
 
-    // Not onboarded → go to onboarding with mode
-    window.location.href = '/onboarding?mode=' + mode;
+    // Not onboarded + came from getstarted → onboarding with mode
+    if(mode) {
+      window.location.href = '/onboarding?mode=' + mode; return;
+    }
+
+    // Sign in directly with no account → send to getstarted
+    window.location.href = '/getstarted';
   } catch(e) {
-    window.location.href = '/onboarding';
+    window.location.href = DASHBOARD_URL;
   }
 }
 
