@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>targetdash › COMMAND</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#03040a;--bg:#060810;--bg2:#080b14;--bg3:#0c1020;
+  --panel:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--bhi:rgba(255,255,255,0.12);
+  --neon:#00ffe7;--neon-lo:rgba(0,255,231,0.08);--neon-glow:0 0 20px rgba(0,255,231,0.3),0 0 60px rgba(0,255,231,0.1);
+  --violet:#7c3aed;--vhi:#a78bfa;
+  --amber:#f59e0b;--amber-lo:rgba(245,158,11,0.1);
+  --green:#10b981;--green-lo:rgba(16,185,129,0.1);
+  --red:#ef4444;--red-lo:rgba(239,68,68,0.08);
+  --text:#e2e8f0;--mid:#64748b;--dim:#334155;
+  --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
+}
+html,body{min-height:100vh;background:var(--black);color:var(--text);font-family:var(--mono);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(0,255,231,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,231,0.015) 1px,transparent 1px);background-size:40px 40px;}
+.tg{position:fixed;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon),transparent);box-shadow:var(--neon-glow);z-index:100;}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(6,8,16,0.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nl{display:flex;align-items:center;gap:20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.lm{width:26px;height:26px;border-radius:5px;background:linear-gradient(135deg,#5b21b6,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;}
+.lt2{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--text);}
+.nd{width:1px;height:20px;background:var(--border);}
+.nlb{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--neon);text-shadow:0 0 10px var(--neon);}
+.nr{display:flex;align-items:center;gap:14px;}
+.ss2{display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:.1em;color:var(--mid);}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 8px var(--neon);animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--neon);}50%{opacity:.5;box-shadow:0 0 20px var(--neon);}}
+.sout{background:none;border:1px solid var(--border);border-radius:5px;padding:5px 12px;font-family:var(--mono);font-size:10px;color:var(--mid);cursor:pointer;letter-spacing:.05em;transition:all .2s;}
+.sout:hover{border-color:var(--red);color:var(--red);}
+.main{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:36px 40px;}
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:36px;}
+.ey{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--neon);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.ey::before{content:'';width:20px;height:1px;background:var(--neon);box-shadow:0 0 6px var(--neon);}
+.ptit{font-family:var(--sans);font-size:32px;font-weight:800;color:var(--text);letter-spacing:-.04em;line-height:1;margin-bottom:6px;}
+.psub{font-size:11px;color:var(--dim);letter-spacing:.02em;}
+.htim{text-align:right;}
+.tlb{font-size:9px;letter-spacing:.15em;color:var(--dim);margin-bottom:4px;}
+.tv{font-size:12px;color:var(--neon);text-shadow:0 0 8px var(--neon);}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:28px;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color .2s;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;opacity:0;transition:opacity .2s;}
+.sc:hover{border-color:var(--bhi);}
+.sc:hover::before{opacity:1;}
+.sn::before{background:linear-gradient(90deg,transparent,var(--neon),transparent);}
+.sg::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.sa::before{background:linear-gradient(90deg,transparent,var(--amber),transparent);}
+.sl{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
+.sv{font-size:28px;font-weight:700;line-height:1;margin-bottom:6px;}
+.ss3{font-size:9px;color:var(--dim);letter-spacing:.05em;}
+.scr{position:absolute;top:12px;right:14px;font-size:8px;letter-spacing:.1em;opacity:.3;}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.fb{background:none;border:1px solid var(--border);border-radius:5px;padding:6px 14px;font-family:var(--mono);font-size:10px;color:var(--mid);cursor:pointer;letter-spacing:.05em;transition:all .15s;}
+.fb:hover{color:var(--text);border-color:var(--bhi);}
+.fa{background:var(--neon-lo);border-color:var(--neon);color:var(--neon);}
+.fga{background:var(--green-lo);border-color:var(--green);color:var(--green);}
+.faa{background:var(--amber-lo);border-color:var(--amber);color:var(--amber);}
+.sw{margin-left:auto;position:relative;}
+.sw::before{content:'›';position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--neon);font-size:14px;pointer-events:none;}
+.si{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:7px 14px 7px 28px;font-family:var(--mono);font-size:11px;color:var(--text);outline:none;width:240px;letter-spacing:.02em;transition:border-color .2s;}
+.si:focus{border-color:var(--neon);box-shadow:0 0 0 1px rgba(0,255,231,.1);}
+.si::placeholder{color:var(--dim);}
+.tw{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead tr{border-bottom:1px solid var(--border);background:var(--bg3);}
+th{padding:10px 20px;text-align:left;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);font-weight:400;}
+tbody tr{border-bottom:1px solid rgba(255,255,255,0.03);transition:background .15s;cursor:pointer;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(0,255,231,0.02);}
+tbody tr:hover .ar{opacity:1;transform:translateX(0);}
+td{padding:14px 20px;vertical-align:middle;}
+.ccn{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.cce{font-size:10px;color:var(--dim);letter-spacing:.02em;}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:4px;padding:3px 9px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.bpd{background:var(--green-lo);color:var(--green);border:1px solid rgba(16,185,129,.25);}
+.bdm{background:var(--amber-lo);color:var(--amber);border:1px solid rgba(245,158,11,.25);}
+.bca{background:var(--red-lo);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.bno{background:var(--panel);color:var(--dim);border:1px solid var(--border);}
+.mp{font-size:13px;font-weight:700;color:var(--green);text-shadow:0 0 12px rgba(16,185,129,.4);}
+.mz{font-size:13px;font-weight:700;color:var(--dim);}
+.cw{display:flex;align-items:center;gap:8px;}
+.ctr{width:52px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.cfl{height:100%;border-radius:2px;background:var(--neon);box-shadow:0 0 6px var(--neon);}
+.cfl.full{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+.cn3{font-size:10px;color:var(--mid);}
+.dv{font-size:10px;color:var(--mid);letter-spacing:.02em;}
+.ar{font-size:14px;color:var(--neon);opacity:0;transform:translateX(-4px);transition:all .15s;}
+.empty{text-align:center;padding:72px;color:var(--dim);font-size:11px;letter-spacing:.1em;text-transform:uppercase;}
+.ls{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--black);gap:16px;}
+.ll{font-family:var(--sans);font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:4px;}
+.lb{width:200px;height:1px;background:var(--border);border-radius:1px;overflow:hidden;}
+.lbf{height:100%;background:var(--neon);box-shadow:0 0 8px var(--neon);animation:lba 1.2s ease forwards;}
+@keyframes lba{from{width:0}to{width:100%}}
+.ltx{font-size:9px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.fi{opacity:0;animation:fu .5s ease forwards;}
+.f1{animation-delay:.05s}.f2{animation-delay:.1s}.f3{animation-delay:.15s}
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr;}.main{padding:20px;}nav{padding:0 20px;}}
+</style>
+</head>
+<body>
+<div class="tg"></div>
+<div class="ls" id="ls">
+  <div class="ll">targetdash<span style="color:var(--vhi)">›</span></div>
+  <div class="lb"><div class="lbf"></div></div>
+  <div class="ltx">Initialising command centre…</div>
+</div>
+<div id="app" style="display:none"></div>
+<script>
+const SU='https://nghlvfngpfrhhigkoeem.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
+const SUPERS=['niklas.isaksson@targetflow.fi'];
+const {createClient}=supabase;
+const sb=createClient(SU,SK);
+let cl=[],fil='all',srch='';
+
+function clk(){const n=new Date(),p=x=>String(x).padStart(2,'0');return `${n.toISOString().split('T')[0]} · ${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())} UTC`;}
+
+(async()=>{
+  await new Promise(r=>setTimeout(r,1300));
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='/login';return;}
+  if(!SUPERS.includes(session.user.email)){window.location.href='/dashboard';return;}
+  const [{data:prof},{data:cred}]=await Promise.all([
+    sb.from('user_profiles').select('*').order('created_at',{ascending:false}),
+    sb.from('demo_credits').select('user_id,credits_used'),
+  ]);
+  const cm={};(cred||[]).forEach(c=>cm[c.user_id]=c.credits_used);
+  cl=(prof||[]).map(p=>({...p,credits_used:cm[p.user_id]||0}));
+  document.getElementById('ls').style.display='none';
+  document.getElementById('app').style.display='';
+  render();
+  setInterval(()=>{const e=document.getElementById('lc');if(e)e.textContent=clk();},1000);
+})();
+
+function render(){
+  const rows=cl.filter(c=>{
+    if(fil==='paid'&&c.plan!=='mainuser')return false;
+    if(fil==='demo'&&c.plan!=='demo')return false;
+    if(fil==='cancelled'&&c.plan!=='cancelled')return false;
+    if(srch){const q=srch.toLowerCase();if(!c.company_name?.toLowerCase().includes(q)&&!c.email?.toLowerCase().includes(q))return false;}
+    return true;
+  });
+  const tot=cl.length,paid=cl.filter(c=>c.plan==='mainuser').length,
+    dem=cl.filter(c=>c.plan==='demo').length,can=cl.filter(c=>c.plan==='cancelled').length,
+    mrr=paid*80,conv=dem>0?Math.round(paid/dem*100):0;
+
+  document.getElementById('app').innerHTML=`
+  <nav>
+    <div class="nl">
+      <a href="/" class="logo"><div class="lm">T</div><span class="lt2">targetdash<span style="color:var(--vhi)">›</span></span></a>
+      <div class="nd"></div><span class="nlb">Command Centre</span>
+    </div>
+    <div class="nr">
+      <div class="ss2"><div class="pulse"></div>SYS ONLINE</div>
+      <button class="sout" onclick="so()">[ EXIT ]</button>
+    </div>
+  </nav>
+  <div class="main">
+    <div class="hdr fi f1">
+      <div>
+        <div class="ey">Superuser access granted</div>
+        <div class="ptit">Client Overview</div>
+        <div class="psub">targetdash.ai · all registered accounts</div>
+      </div>
+      <div class="htim"><div class="tlb">SYSTEM TIME</div><div class="tv" id="lc">${clk()}</div></div>
+    </div>
+    <div class="stats fi f2">
+      <div class="sc sn"><div class="sl">Total accounts</div><div class="sv" style="color:var(--text)">${tot}</div><div class="ss3">All time</div><div class="scr">ACC</div></div>
+      <div class="sc sg"><div class="sl">Active subscriptions</div><div class="sv" style="color:var(--green);text-shadow:0 0 20px rgba(16,185,129,.4)">${paid}</div><div class="ss3">MainUser plan</div><div class="scr">SUB</div></div>
+      <div class="sc sg"><div class="sl">Monthly revenue</div><div class="sv" style="color:var(--green);text-shadow:0 0 20px rgba(16,185,129,.4)">€${mrr.toLocaleString()}</div><div class="ss3">${paid}×€80/mo</div><div class="scr">MRR</div></div>
+      <div class="sc sa"><div class="sl">Demo accounts</div><div class="sv" style="color:var(--amber);text-shadow:0 0 20px rgba(245,158,11,.3)">${dem}</div><div class="ss3">Free tier</div><div class="scr">DEM</div></div>
+      <div class="sc sn"><div class="sl">Conversion rate</div><div class="sv" style="color:var(--neon);text-shadow:0 0 20px rgba(0,255,231,.3)">${conv}<span style="font-size:14px;color:var(--dim)">%</span></div><div class="ss3">Demo→paid</div><div class="scr">CVR</div></div>
+    </div>
+    <div class="toolbar fi f3">
+      <button class="fb${fil==='all'?' fa':''}" onclick="sf('all')">ALL (${tot})</button>
+      <button class="fb${fil==='paid'?' fga':''}" onclick="sf('paid')">PAID (${paid})</button>
+      <button class="fb${fil==='demo'?' faa':''}" onclick="sf('demo')">DEMO (${dem})</button>
+      <button class="fb${fil==='cancelled'?' fa':''}" onclick="sf('cancelled')">CANCELLED (${can})</button>
+      <div class="sw"><input class="si" placeholder="Search client or email…" value="${srch}" oninput="ss(this.value)" autocomplete="off"/></div>
+    </div>
+    <div class="tw fi f3">
+      <table>
+        <thead><tr><th>Client</th><th>Plan</th><th>MRR</th><th>AI credits</th><th>Registered</th><th>Last activity</th><th></th></tr></thead>
+        <tbody>${rows.length===0?`<tr><td colspan="7"><div class="empty">// NO RECORDS MATCH FILTER</div></td></tr>`:rows.map(rr).join('')}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function rr(c){
+  const b=c.plan==='mainuser'?'<span class="badge bpd">● PAID</span>':c.plan==='demo'?'<span class="badge bdm">◆ DEMO</span>':c.plan==='cancelled'?'<span class="badge bca">✕ CANCELLED</span>':'<span class="badge bno">— PENDING</span>';
+  const m=c.plan==='mainuser'?'<span class="mp">€80</span>':'<span class="mz">—</span>';
+  const u=c.credits_used||0,p=Math.min(100,u/5*100),f=u>=5;
+  const cr=`<div class="cw"><div class="ctr"><div class="cfl${f?' full':''}" style="width:${p}%"></div></div><span class="cn3">${u}/5</span></div>`;
+  const fd=d=>d?new Date(d).toLocaleDateString('fi-FI'):'—';
+  const url=c.plan==='demo'?'/demo':'/dashboard';
+  return `<tr onclick="go('${url}')"><td><div class="ccn">${c.company_name||'—'}</div><div class="cce">${c.email||''}</div></td><td>${b}</td><td>${m}</td><td>${cr}</td><td><span class="dv">${fd(c.created_at)}</span></td><td><span class="dv">${fd(c.agreed_at)}</span></td><td><span class="ar">→</span></td></tr>`;
+}
+
+function sf(f){fil=f;render();}
+function ss(s){srch=s;render();}
+function go(u){window.location.href=u;}
+async function so(){await sb.auth.signOut();window.location.href='/login';}
+window.sf=sf;window.ss=ss;window.go=go;window.so=so;
+</script>
+</body>
+</html>
