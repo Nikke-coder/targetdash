@@ -181,7 +181,6 @@ tr:hover td{background:rgba(124,58,237,0.04);}
 // ── CONFIG ──────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-const ANTHROPIC_KEY = 'PASTE_YOUR_ANTHROPIC_KEY_HERE'; // set as Vercel env var
 const DEMO_CREDITS  = 5;
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -682,22 +681,10 @@ Equity: ${fmt(DATA.equity[c.E])}`;
       HR:  'You are an experienced HR Manager. Focus on personnel costs, headcount and workforce efficiency.',
     };
 
-    const key = window.ANTHROPIC_KEY || ANTHROPIC_KEY;
-    if(!key || key === 'PASTE_YOUR_ANTHROPIC_KEY_HERE') {
-      throw new Error('no_key');
-    }
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/ai-chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 400,
         system: `${ROLE_PERSONAS[state.role] || ROLE_PERSONAS.CFO}
 You have access to this company's financial data. Be concise (max 4 sentences), insightful and specific.
 Use actual numbers from the data. This is a demo with sample data — be helpful but note it's illustrative.
@@ -708,7 +695,8 @@ ${context}`,
     });
 
     const data = await res.json();
-    const reply = data.content?.[0]?.text || 'I could not generate a response. Please try again.';
+    if(!res.ok) throw new Error(data.error || 'AI error');
+    const reply = data.text;
 
     // Deduct credit
     state.credits = Math.max(0, state.credits - 1);
@@ -720,10 +708,7 @@ ${context}`,
     state.msgs.push({ role: 'ai', text: reply.replace(/\n/g,'<br/>') });
 
   } catch(e) {
-    const fallback = e.message === 'no_key'
-      ? 'AI is not configured yet — add your Anthropic API key to Vercel environment variables as <code>VITE_ANTHROPIC_KEY</code>.'
-      : `Sorry, I ran into an error: ${e.message}. Please try again.`;
-    state.msgs.push({ role: 'ai', text: fallback });
+    state.msgs.push({ role: 'ai', text: `Sorry, I ran into an error: ${e.message}. Please try again.` });
   }
 
   state.loading = false;
