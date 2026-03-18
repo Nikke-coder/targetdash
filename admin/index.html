@@ -192,7 +192,7 @@ setInterval(()=>{const e=document.getElementById('clock');if(!e)return;const n=n
   if(!SUPERS.includes(session.user.email)){window.location.href='/dashboard';return;}
   await load();
   document.getElementById('entry').classList.add('out');
-  setTimeout(()=>{document.getElementById('entry').style.display='none';document.getElementById('ui').style.display='';render();},1400);
+  setTimeout(()=>{document.getElementById('entry').style.display='none';document.getElementById('c').style.display='none';document.getElementById('ui').style.display='';render();},1400);
 })();
 
 async function load(){
