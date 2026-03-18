@@ -4,747 +4,809 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>targetdash › Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,300&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.7/Recharts.umd.cjs"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0e0c18; --bg2:#13111f; --bg3:#1c1a2e; --bgr:#161424;
-  --b:#2d2845; --bs:#231f3a; --br:#1a1728;
-  --t:#f0ecff; --tm:#8a85a8; --td:#5a4f8a;
-  --a:#9333ea; --ah:#c084fc; --al:#7c3aed;
-  --blue:#818cf8; --green:#34d399; --amber:#fbbf24; --red:#fb7185; --purple:#a78bfa; --cyan:#a78bfa; --slate:#6e6a8a;
-  --logo:linear-gradient(135deg,#6d28d9,#9333ea);
-  --sans:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
-  --r:14px;
+  --bg:#0a0a0f;--bg2:#0e0e16;--bg3:#12121c;--s2:#111;
+  --panel:rgba(255,255,255,0.04);--panel-hi:rgba(255,255,255,0.07);
+  --glass:rgba(14,14,22,0.85);
+  --border:rgba(255,255,255,0.08);--bhi:rgba(255,255,255,0.14);
+  --violet:#7c3aed;--vhi:#9d5ffc;--vlo:#5b21b6;
+  --vglow:rgba(124,58,237,0.25);--vdim:rgba(124,58,237,0.12);
+  --lilac:#c4b5fd;
+  --white:#fff;--text:#f1f0f5;--mid:#8b8a9a;--dim:#3d3c52;
+  --green:#34d399;--amber:#fbbf24;--red:#f87171;--blue:#60a5fa;
+  --sans:'Plus Jakarta Sans',sans-serif;
+  --serif:'Fraunces',serif;
 }
-html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px;}
-*::-webkit-scrollbar{width:4px;height:4px;}
-*::-webkit-scrollbar-track{background:var(--bg);}
-*::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px;}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.5;}
 
-/* ── TOPBAR ── */
-.topbar{
-  border-bottom:1px solid var(--b);
-  padding:0 32px;
-  display:flex;align-items:center;justify-content:space-between;
-  height:56px; position:sticky;top:0;z-index:100;
-  background:var(--bg);
-}
-.tb-left{display:flex;align-items:center;gap:12px;}
-.logo-mark{width:28px;height:28px;background:var(--logo);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
-.company-name{font-size:14px;font-weight:600;}
-.company-sub{font-size:10px;color:var(--td);font-family:var(--mono);}
-.tb-right{display:flex;align-items:center;gap:8px;}
-.yr-btn{background:none;border:1px solid var(--b);border-radius:8px;padding:4px 12px;cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--tm);transition:all .18s;}
-.yr-btn:hover{border-color:var(--al);color:var(--ah);}
-.yr-btn.active{background:#2d1f5e;border-color:var(--al);color:var(--a);}
-.icon-btn{background:transparent;border:1px solid var(--b);border-radius:10px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--tm);transition:all .2s;flex-shrink:0;}
-.icon-btn:hover{border-color:var(--a);color:var(--a);}
-.credits-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(124,58,237,0.12);border:1px solid rgba(167,139,250,0.25);border-radius:20px;padding:4px 12px;font-size:11px;font-family:var(--mono);color:var(--a);cursor:pointer;}
-.demo-badge{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:20px;padding:3px 10px;font-size:10px;font-family:var(--mono);color:var(--amber);}
-
-/* ── TABS ── */
-.tabbar{border-bottom:1px solid var(--b);padding:0 32px;display:flex;gap:0;overflow-x:auto;background:var(--bg);}
-.tabbar::-webkit-scrollbar{display:none;}
-.tab-btn{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--tm);padding:14px 16px;border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap;}
-.tab-btn:hover{color:var(--t);}
-.tab-btn.active{color:var(--a);border-bottom-color:var(--a);}
-
-/* ── PERIOD BAR ── */
-.periodbar{border-bottom:1px solid var(--b);background:var(--bg2);padding:8px 32px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-.psel{background:var(--bg3);border:1px solid var(--b);border-radius:6px;padding:4px 8px;color:var(--t);font-family:var(--mono);font-size:11px;outline:none;cursor:pointer;}
-.mpill{background:transparent;border:1px solid var(--b);border-radius:8px;padding:3px 6px;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;gap:1px;transition:all .15s;min-width:38px;}
-.mpill:hover{border-color:var(--al);}
-.mpill.act{background:#2d1f5e;border-color:var(--al);}
-.mpill.rng{background:var(--bgr);border-color:var(--bs);}
-.pill-m{font-size:10px;line-height:1;}
-.pill-t{font-size:8px;line-height:1;font-weight:700;}
-
-/* ── CONTENT ── */
-.content{padding:24px 32px;min-height:calc(100vh - 160px);}
-
-/* ── CARDS ── */
-.card{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);}
-.card-pad{padding:18px 20px;}
-.sec-title{font-size:11px;font-weight:600;color:var(--slate);font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--b);}
-
-/* KPI GAUGE */
-.kpi-grid{display:grid;gap:14px;margin-bottom:14px;}
-.g3{grid-template-columns:repeat(3,1fr);}
-.g4{grid-template-columns:repeat(4,1fr);}
-.g2{grid-template-columns:1fr 1fr;}
-.g5{grid-template-columns:repeat(5,1fr);}
-.gauge{background:var(--bg3);border:1px solid var(--b);border-radius:14px;padding:18px 20px;transition:transform .18s;}
-.gauge:hover{transform:translateY(-2px);}
-.g-label{font-size:10px;color:var(--slate);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
-.g-value{font-size:26px;font-weight:700;font-family:var(--mono);margin-bottom:4px;}
-.g-status{display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:6px;}
-.g-dot{width:6px;height:6px;border-radius:50%;}
-.g-desc{font-size:10px;color:var(--td);}
-
-/* TABLE */
-.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-table{width:100%;border-collapse:collapse;font-size:11px;font-family:var(--mono);}
-th{padding:8px 10px;text-align:right;font-size:9px;font-weight:600;letter-spacing:.05em;color:var(--slate);}
-th:first-child{text-align:left;position:sticky;left:0;background:var(--bg3);z-index:2;min-width:180px;padding-left:20px;}
-td{padding:7px 8px;text-align:right;white-space:nowrap;}
-td:first-child{text-align:left;position:sticky;left:0;background:var(--bg3);z-index:1;padding-left:20px;padding-right:16px;}
-tr{border-bottom:1px solid #080f1a;}
-tr:hover td{background:rgba(124,58,237,0.04);}
-.tbl-head-row{border-bottom:1px solid var(--b);background:var(--bgr);}
-.bold-row td{font-weight:700;}
-
-/* ── AI SIDEBAR ── */
+/* ── LAYOUT ── */
+.app{display:flex;min-height:100vh;}
 .sidebar{
-  position:fixed;top:0;right:0;bottom:0;width:380px;
-  background:var(--bg2);border-left:1px solid var(--b);
-  display:flex;flex-direction:column;z-index:50;
+  width:220px;flex-shrink:0;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;
+  padding:24px 0;
 }
-.sb-header{padding:16px 18px;border-bottom:1px solid var(--b);background:var(--bg2);flex-shrink:0;}
-.sb-agent{display:flex;align-items:center;gap:10px;}
-.sb-avatar{width:36px;height:36px;border-radius:10px;background:var(--logo);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;font-family:var(--mono);}
-.sb-name{font-size:13px;font-weight:700;}
-.sb-role{font-size:10px;color:var(--a);margin-top:2px;display:flex;align-items:center;gap:5px;}
-.sb-role::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);display:inline-block;}
-.role-tabs{display:flex;gap:4px;padding:8px 18px;border-bottom:1px solid var(--b);flex-wrap:wrap;}
-.role-tab{background:none;border:1px solid var(--b);border-radius:6px;padding:3px 10px;font-family:var(--mono);font-size:10px;color:var(--tm);cursor:pointer;transition:all .15s;}
-.role-tab:hover{border-color:var(--al);color:var(--ah);}
-.role-tab.active{background:#2d1f5e;border-color:var(--al);color:var(--a);}
-.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-.msg{display:flex;flex-direction:column;gap:3px;max-width:90%;}
-.msg.user{align-self:flex-end;align-items:flex-end;}
-.msg.ai{align-self:flex-start;align-items:flex-start;}
-.msg-lbl{font-size:9px;color:var(--slate);letter-spacing:.03em;font-family:var(--mono);}
-.msg.user .msg-lbl{color:rgba(167,139,250,0.5);}
-.bubble{padding:9px 12px;border-radius:10px;font-size:12px;line-height:1.55;}
-.msg.user .bubble{background:var(--a);color:#fff;border-radius:10px 10px 3px 10px;}
-.msg.ai .bubble{background:rgba(255,255,255,0.05);border:1px solid var(--b);color:var(--t);border-radius:10px 10px 10px 3px;}
-.typing{padding:10px 14px;border-radius:10px 10px 10px 3px;background:rgba(255,255,255,0.05);border:1px solid var(--b);display:flex;gap:4px;align-items:center;width:fit-content;}
-.typing span{width:5px;height:5px;border-radius:50%;background:var(--ah);opacity:.5;}
-.typing span:nth-child(1){animation:td .9s ease infinite 0s}
-.typing span:nth-child(2){animation:td .9s ease infinite .18s}
-.typing span:nth-child(3){animation:td .9s ease infinite .36s}
-@keyframes td{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-4px);opacity:1}}
-.sb-input-row{border-top:1px solid var(--b);padding:10px 12px;display:flex;gap:8px;flex-shrink:0;}
-.sb-input{flex:1;background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:8px 12px;color:var(--t);font-size:12px;outline:none;font-family:var(--sans);}
-.sb-input:focus{border-color:var(--al);}
-.sb-input::placeholder{color:var(--td);}
-.sb-send{width:34px;height:34px;border-radius:8px;background:var(--a);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.sb-send:hover{background:var(--ah);}
-.sb-send:disabled{opacity:.4;cursor:not-allowed;}
-.credits-row{padding:8px 18px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.cr-info{font-size:10px;font-family:var(--mono);color:var(--tm);}
-.cr-num{color:var(--a);font-weight:700;}
+.main{flex:1;overflow:auto;padding:32px 36px;}
 
-/* ── DEMO BANNER ── */
-.demo-banner{background:rgba(251,191,36,0.06);border-bottom:1px solid rgba(251,191,36,0.2);padding:8px 32px;font-size:11px;color:var(--amber);font-family:var(--mono);display:flex;align-items:center;gap:8px;}
-
-/* ── LOADING ── */
-.loading{display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:12px;}
-.spin{width:32px;height:32px;border:3px solid var(--b);border-top-color:var(--a);border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── MAIN LAYOUT ── */
-.main-wrap{margin-right:380px;}
-
-/* chart area */
-.chart-card{background:var(--bg3);border:1px solid var(--b);border-radius:14px;padding:20px;}
-.chart-lbl{font-size:11px;color:var(--slate);font-family:var(--mono);margin-bottom:12px;}
-
-/* sign out */
-.signout-btn{background:none;border:1px solid var(--b);border-radius:8px;padding:5px 12px;font-family:var(--mono);font-size:10px;color:var(--tm);cursor:pointer;}
-.signout-btn:hover{border-color:var(--red);color:var(--red);}
-
-/* used up */
-.used-up{text-align:center;padding:32px 20px;}
-.used-up-icon{font-size:32px;margin-bottom:12px;}
-.used-up-title{font-size:14px;font-weight:600;color:var(--t);margin-bottom:6px;}
-.used-up-sub{font-size:12px;color:var(--tm);line-height:1.6;}
-
-@media(max-width:900px){
-  .main-wrap{margin-right:0;}
-  .sidebar{display:none;}
-  .g3,.g4{grid-template-columns:1fr 1fr!important;}
-  .g5{grid-template-columns:1fr 1fr!important;}
+/* SIDEBAR */
+.sb-logo{
+  padding:0 20px 24px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
 }
+.sb-logo-mark{
+  width:28px;height:28px;border-radius:7px;
+  background:linear-gradient(135deg,var(--vlo),var(--vhi));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;
+}
+.sb-logo-text{font-size:14px;font-weight:600;color:var(--white);letter-spacing:-.02em;}
+.sb-logo-gt{color:var(--vhi);}
+
+.sb-section{padding:20px 12px 8px;font-size:9px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 20px;font-size:12px;font-weight:500;
+  color:var(--mid);cursor:pointer;transition:all .15s;
+  border-left:2px solid transparent;
+}
+.sb-item:hover{color:var(--text);background:var(--panel);}
+.sb-item.active{color:var(--lilac);background:var(--vdim);border-left-color:var(--violet);}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;}
+
+.sb-client{
+  margin:auto 12px 0;
+  background:var(--vdim);border:1px solid rgba(124,58,237,.2);
+  border-radius:8px;padding:12px 14px;
+}
+.sb-client-name{font-size:12px;font-weight:600;color:var(--white);}
+.sb-client-sub{font-size:10px;color:var(--mid);margin-top:2px;}
+
+/* TOPBAR */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;
+}
+.page-title{font-size:20px;font-weight:700;color:var(--white);letter-spacing:-.03em;}
+.page-sub{font-size:12px;color:var(--mid);margin-top:2px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:600;
+  background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);
+  color:var(--lilac);border-radius:100px;padding:4px 12px;
+}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);}
+.btn-export{
+  font-family:var(--sans);font-size:11px;font-weight:500;
+  color:var(--mid);background:var(--panel);border:1px solid var(--bhi);
+  border-radius:7px;padding:7px 14px;cursor:pointer;transition:all .2s;
+}
+.btn-export:hover{color:var(--text);border-color:rgba(124,58,237,.3);}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.kpi{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:20px;position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.kpi:hover{border-color:rgba(124,58,237,.3);}
+.kpi::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--violet),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.kpi:hover::before{opacity:.5;}
+.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:10px;}
+.kpi-value{font-size:26px;font-weight:700;color:var(--white);letter-spacing:-.04em;line-height:1;}
+.kpi-value .unit{font-size:14px;color:var(--mid);font-weight:400;}
+.kpi-delta{margin-top:8px;font-size:11px;font-weight:500;}
+.kpi-delta.pos{color:var(--green);}
+.kpi-delta.neg{color:var(--red);}
+.kpi-delta.neu{color:var(--mid);}
+.kpi-bud{font-size:10px;color:var(--dim);margin-top:3px;}
+
+/* ── GRID LAYOUT ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;}
+.grid-1-2{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:16px;}
+.full{margin-bottom:16px;}
+
+/* ── PANELS ── */
+.panel{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+}
+.panel-title{font-size:12px;font-weight:600;color:var(--white);letter-spacing:-.01em;}
+.panel-sub{font-size:10px;color:var(--dim);margin-top:1px;}
+.panel-badge{
+  font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;
+  background:rgba(124,58,237,.12);color:var(--lilac);
+  border:1px solid rgba(124,58,237,.2);
+}
+.panel-badge.green{background:rgba(52,211,153,.1);color:var(--green);border-color:rgba(52,211,153,.25);}
+.panel-badge.amber{background:rgba(251,191,36,.1);color:var(--amber);border-color:rgba(251,191,36,.25);}
+.panel-body{padding:20px;}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{
+  font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);padding:0 12px 10px;text-align:right;
+}
+.tbl th:first-child{text-align:left;}
+.tbl td{
+  font-size:12px;color:var(--mid);
+  padding:9px 12px;border-top:1px solid var(--border);
+  text-align:right;
+}
+.tbl td:first-child{text-align:left;color:var(--text);}
+.tbl tr.subtotal td{color:var(--text);font-weight:600;}
+.tbl tr.total td{color:var(--white);font-weight:700;background:var(--panel);}
+.tbl tr.margin td{color:var(--lilac);font-size:11px;font-style:italic;}
+.tbl tr.section td{
+  color:var(--dim);font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;
+  padding-top:14px;border-top:1px solid rgba(124,58,237,.15);
+  background:rgba(124,58,237,.03);
+}
+.tbl .pos{color:var(--green)!important;}
+.tbl .neg{color:var(--red)!important;}
+.tbl .muted{color:var(--dim)!important;}
+
+/* ── MINI BARS ── */
+.sparkbar{display:flex;align-items:flex-end;gap:3px;height:32px;}
+.sb{flex:1;background:var(--vdim);border-radius:2px 2px 0 0;position:relative;min-height:2px;}
+.sb::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--violet);border-radius:1px;box-shadow:0 0 4px var(--violet);}
+.sb.hi{background:linear-gradient(to top,var(--vdim),rgba(124,58,237,.35));}
+
+/* ── CASHFLOW BARS ── */
+.cf-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+.cf-label{font-size:12px;color:var(--mid);}
+.cf-bar-wrap{flex:1;margin:0 16px;height:6px;background:var(--panel);border-radius:3px;overflow:hidden;}
+.cf-bar{height:100%;border-radius:3px;transition:width 1s ease;}
+.cf-bar.pos{background:linear-gradient(90deg,var(--violet),var(--vhi));}
+.cf-bar.neg{background:linear-gradient(90deg,var(--red),#f87171);}
+.cf-val{font-size:12px;font-weight:600;color:var(--white);min-width:70px;text-align:right;}
+
+/* ── DEADLINES ── */
+.dl-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.dl-item:last-child{border-bottom:none;}
+.dl-period{font-size:11px;font-weight:600;color:var(--white);min-width:36px;}
+.dl-dates{display:flex;gap:12px;flex:1;justify-content:flex-end;}
+.dl-chip{
+  font-size:9px;font-weight:500;padding:3px 8px;border-radius:5px;
+  background:var(--panel);color:var(--mid);white-space:nowrap;
+}
+.dl-chip.past{background:rgba(52,211,153,.08);color:var(--green);}
+.dl-chip.soon{background:rgba(251,191,36,.08);color:var(--amber);}
+.dl-chip.future{background:var(--panel);color:var(--dim);}
+
+/* ── COMMENTARY ── */
+.comment-block{padding:0;}
+.comment-item{padding:12px 20px;border-bottom:1px solid var(--border);}
+.comment-item:last-child{border-bottom:none;}
+.comment-area{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);margin-bottom:4px;}
+.comment-text{font-size:12px;color:var(--mid);line-height:1.6;}
+
+/* ── BONUS ── */
+.bonus-verdict{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+}
+.verdict-icon{font-size:20px;}
+.verdict-text{font-size:12px;color:var(--mid);}
+.verdict-text b{color:var(--text);}
+
+/* ── AUDIT ── */
+.audit-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.audit-row:last-child{border-bottom:none;}
+.audit-area{font-size:10px;font-weight:600;text-transform:uppercase;color:var(--lilac);min-width:80px;}
+.audit-period{font-size:10px;color:var(--dim);}
+.audit-amount{font-size:13px;font-weight:700;min-width:70px;text-align:right;}
+.audit-comment{font-size:11px;color:var(--mid);flex:1;}
+
+/* ── RISK CHIPS ── */
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:20px;}
+.risk-col-label{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
+.risk-chip{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:10px 12px;border-radius:8px;margin-bottom:8px;
+  font-size:11px;line-height:1.4;
+}
+.risk-chip.risk{background:rgba(248,113,113,.07);color:rgba(248,113,113,.9);}
+.risk-chip.opp{background:rgba(52,211,153,.07);color:rgba(52,211,153,.9);}
+.risk-chip::before{content:'•';flex-shrink:0;margin-top:1px;}
+
+/* ── YOY TABLE ── */
+.yoy-bar-cell{display:flex;align-items:center;gap:8px;}
+.yoy-bar-bg{flex:1;height:4px;background:var(--panel);border-radius:2px;}
+.yoy-bar-fill{height:100%;border-radius:2px;background:var(--violet);}
+
+/* ── PAYROLL ── */
+.payroll-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.payroll-dept{font-size:10px;font-weight:600;color:var(--lilac);min-width:130px;}
+.payroll-total{font-size:13px;font-weight:700;color:var(--white);min-width:80px;text-align:right;}
+.payroll-bar-wrap{flex:1;height:5px;background:var(--panel);border-radius:3px;overflow:hidden;}
+.payroll-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--vlo),var(--vhi));}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(2,1fr);}.grid-2,.grid-1-2{grid-template-columns:1fr;}.grid-3{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){.sidebar{display:none;}.main{padding:20px;}.kpi-grid{grid-template-columns:1fr 1fr;}.grid-3{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
+<div class="app">
 
-<div id="app">
-  <div class="loading"><div class="spin"></div><span style="color:var(--tm);font-family:var(--mono);font-size:11px;">Loading your dashboard…</span></div>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">T</div>
+    <span class="sb-logo-text">targetdash<span class="sb-logo-gt">›</span></span>
+  </div>
+  <div class="sb-section">Dashboard</div>
+  <div class="sb-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Overview
+  </div>
+  <div class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg>
+    P&amp;L Detail
+  </div>
+  <div class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    Cash Flow
+  </div>
+  <div class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    Payroll
+  </div>
+  <div class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Risk
+  </div>
+  <div class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    Deadlines
+  </div>
+  <div class="sb-client">
+    <div class="sb-client-name" id="sbClientName">Loading…</div>
+    <div class="sb-client-sub" id="sbClientSub">FY2026</div>
+  </div>
+  <div style="padding:12px;">
+    <button onclick="signOut()" style="width:100%;background:none;border:1px solid rgba(255,255,255,0.08);border-radius:7px;padding:8px;font-family:var(--sans);font-size:11px;color:var(--mid);cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='#f87171';this.style.color='#f87171'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='var(--mid)'">Sign out</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <div class="page-title">Board Financial Dashboard</div>
+      <div class="page-sub" id="pageSubtitle">Loading…</div>
+    </div>
+    <div class="topbar-right">
+      <div class="badge"><span class="badge-dot"></span>Live data</div>
+      <button class="btn-export">Export PDF</button>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Revenue (EST FY)</div>
+      <div class="kpi-value">€3.60<span class="unit">M</span></div>
+      <div class="kpi-delta pos">▲ vs BUD: +€28K (+0.8%)</div>
+      <div class="kpi-bud">vs 2025 ACT: €2.96M (+21.5%)</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">EBIT (EST FY)</div>
+      <div class="kpi-value">-€7<span class="unit">K</span></div>
+      <div class="kpi-delta pos">▲ vs BUD: +€24K improvement</div>
+      <div class="kpi-bud">BUD EBIT: -€32K</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Gross Margin</div>
+      <div class="kpi-value">70.3<span class="unit">%</span></div>
+      <div class="kpi-delta neu">BUD: 70.6%</div>
+      <div class="kpi-bud">2025 ACT: 68.8%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Personnel Costs</div>
+      <div class="kpi-value">€1.84<span class="unit">M</span></div>
+      <div class="kpi-delta pos">▲ vs BUD: +€3K (0.2%) favorable</div>
+      <div class="kpi-bud">Total OPEX: €2.53M</div>
+    </div>
+  </div>
+
+  <!-- P&L TABLE + CASHFLOW -->
+  <div class="grid-1-2">
+
+    <!-- CASH FLOW -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Cash Flow Summary</div>
+          <div class="panel-sub">FY2026 EST</div>
+        </div>
+        <span class="panel-badge green">+€83K net</span>
+      </div>
+      <div class="panel-body" style="padding:16px 20px;">
+        <div class="cf-row">
+          <span class="cf-label">Opening cash (Dec 2025)</span>
+          <div class="cf-bar-wrap"><div class="cf-bar pos" style="width:54%"></div></div>
+          <span class="cf-val">€157,827</span>
+        </div>
+        <div class="cf-row">
+          <span class="cf-label">EBITDA</span>
+          <div class="cf-bar-wrap"><div class="cf-bar pos" style="width:12%"></div></div>
+          <span class="cf-val pos" style="color:var(--green)">+€35,944</span>
+        </div>
+        <div class="cf-row">
+          <span class="cf-label">Working capital Δ</span>
+          <div class="cf-bar-wrap"><div class="cf-bar pos" style="width:28%"></div></div>
+          <span class="cf-val pos" style="color:var(--green)">+€82,969</span>
+        </div>
+        <div class="cf-row">
+          <span class="cf-label">Operative CF</span>
+          <div class="cf-bar-wrap"><div class="cf-bar pos" style="width:40%"></div></div>
+          <span class="cf-val pos" style="color:var(--green)">+€118,913</span>
+        </div>
+        <div class="cf-row">
+          <span class="cf-label">Financial items</span>
+          <div class="cf-bar-wrap"><div class="cf-bar neg" style="width:1%"></div></div>
+          <span class="cf-val neg" style="color:var(--red)">-€1,873</span>
+        </div>
+        <div class="cf-row">
+          <span class="cf-label">Financing CF</span>
+          <div class="cf-bar-wrap"><div class="cf-bar pos" style="width:5%"></div></div>
+          <span class="cf-val pos" style="color:var(--green)">+€15,880</span>
+        </div>
+        <div class="cf-row" style="border-bottom:none;">
+          <span class="cf-label" style="color:var(--white);font-weight:600;">Closing cash (Dec 2026)</span>
+          <div class="cf-bar-wrap"><div class="cf-bar pos" style="width:100%"></div></div>
+          <span class="cf-val" style="color:var(--lilac);font-size:14px;">€290,747</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- P&L TABLE -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">P&amp;L Comparison — Full Year 2026 (€)</div>
+          <div class="panel-sub">ACT = YTD Jan · EST = Full year estimate · BUD = Approved budget</div>
+        </div>
+      </div>
+      <div class="panel-body" style="padding:0 20px 16px;">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th></th>
+              <th>ACT (Jan)</th>
+              <th>EST (FY)</th>
+              <th>BUD (FY)</th>
+              <th>EST vs BUD</th>
+              <th>Δ%</th>
+              <th>2025 ACT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="subtotal"><td>Revenue</td><td>282,350</td><td>3,595,936</td><td>3,568,205</td><td class="pos">+27,731</td><td class="pos">+0.8%</td><td>2,960,567</td></tr>
+            <tr><td>Materials &amp; Services</td><td>(91,824)</td><td>(1,069,515)</td><td>(1,047,817)</td><td class="neg">(21,698)</td><td class="neg">-2.1%</td><td>(924,966)</td></tr>
+            <tr class="subtotal"><td>Gross Profit</td><td>190,526</td><td>2,526,421</td><td>2,520,388</td><td class="pos">+6,033</td><td class="pos">+0.2%</td><td>2,035,601</td></tr>
+            <tr class="margin"><td>  Gross Margin %</td><td>67.5%</td><td>70.3%</td><td>70.6%</td><td class="muted">—</td><td class="muted">—</td><td>68.8%</td></tr>
+            <tr class="section"><td colspan="7">Operating Expenses</td></tr>
+            <tr><td>Personnel Costs</td><td>(145,414)</td><td>(1,841,593)</td><td>(1,845,090)</td><td class="pos">+3,497</td><td class="pos">+0.2%</td><td>(1,823,417)</td></tr>
+            <tr><td>Depreciation</td><td>(3,415)</td><td>(43,372)</td><td>(43,850)</td><td class="pos">+478</td><td class="pos">+1.1%</td><td>(41,827)</td></tr>
+            <tr><td>Other Operating Exp.</td><td>(46,898)</td><td>(648,883)</td><td>(663,124)</td><td class="pos">+14,241</td><td class="pos">+2.1%</td><td>(474,595)</td></tr>
+            <tr class="subtotal"><td>Total OPEX</td><td>(195,727)</td><td>(2,533,848)</td><td>(2,552,064)</td><td class="pos">+18,216</td><td class="pos">+0.7%</td><td>(2,339,839)</td></tr>
+            <tr class="total"><td>EBIT</td><td>(5,201)</td><td>(7,427)</td><td>(31,676)</td><td class="pos">+24,249</td><td class="muted">n/a</td><td>(304,238)</td></tr>
+            <tr class="margin"><td>  EBIT Margin %</td><td>-1.8%</td><td>-0.2%</td><td>-0.9%</td><td class="muted">—</td><td class="muted">—</td><td>-10.3%</td></tr>
+            <tr><td>Net Income (after tax)</td><td>(7,030)</td><td>(9,302)</td><td>(31,677)</td><td class="pos">+22,375</td><td class="muted">—</td><td class="muted">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPEX BRIDGE + PAYROLL -->
+  <div class="grid-2">
+
+    <!-- OPEX BRIDGE -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">OPEX Bridge — EST vs BUD</div>
+          <div class="panel-sub">Full year variance breakdown (€)</div>
+        </div>
+        <span class="panel-badge green">+€18K favorable</span>
+      </div>
+      <div class="panel-body" style="padding:0 20px 16px;">
+        <table class="tbl">
+          <thead>
+            <tr><th>Category</th><th>EST</th><th>BUD</th><th>Variance</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Personnel costs</td><td>(1,841,593)</td><td>(1,845,090)</td><td class="pos">+3,497</td></tr>
+            <tr><td style="padding-left:20px;color:var(--dim);font-size:11px;">of which: Jul–Aug</td><td style="color:var(--dim)">(272,704)</td><td style="color:var(--dim)">(272,704)</td><td class="muted">0</td></tr>
+            <tr><td>Premises (720)</td><td>(96,555)</td><td>(95,057)</td><td class="neg">(1,498)</td></tr>
+            <tr><td>IT &amp; Software (764)</td><td>(114,909)</td><td>(118,280)</td><td class="pos">+3,371</td></tr>
+            <tr><td>Marketing (805)</td><td>(92,462)</td><td>(97,710)</td><td class="pos">+5,248</td></tr>
+            <tr><td>Admin services (837)</td><td>(244,360)</td><td>(252,108)</td><td class="pos">+7,748</td></tr>
+            <tr><td>Other OPEX</td><td>(100,597)</td><td>(99,970)</td><td class="neg">(627)</td></tr>
+            <tr><td>Depreciation</td><td>(43,372)</td><td>(43,850)</td><td class="pos">+478</td></tr>
+            <tr class="total"><td>Total OPEX</td><td>(2,533,848)</td><td>(2,552,064)</td><td class="pos">+18,216</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAYROLL BY DEPT -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Payroll by Department</div>
+          <div class="panel-sub">FY2026 total personnel costs (€)</div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div style="margin-bottom:8px;font-size:10px;color:var(--dim);display:flex;justify-content:space-between;"><span>Department</span><span>FY Total</span></div>
+        <div class="payroll-row">
+          <span class="payroll-dept">CC10 Tekniikka</span>
+          <div class="payroll-bar-wrap"><div class="payroll-bar" style="width:100%"></div></div>
+          <span class="payroll-total">€499,138</span>
+        </div>
+        <div class="payroll-row">
+          <span class="payroll-dept">CC20 Tuotanto</span>
+          <div class="payroll-bar-wrap"><div class="payroll-bar" style="width:84%"></div></div>
+          <span class="payroll-total">€418,611</span>
+        </div>
+        <div class="payroll-row">
+          <span class="payroll-dept">CC30 Myynti</span>
+          <div class="payroll-bar-wrap"><div class="payroll-bar" style="width:73%"></div></div>
+          <span class="payroll-total">€363,464</span>
+        </div>
+        <div class="payroll-row">
+          <span class="payroll-dept">CC31 Myynti Kumppanit</span>
+          <div class="payroll-bar-wrap"><div class="payroll-bar" style="width:31%"></div></div>
+          <span class="payroll-total">€155,707</span>
+        </div>
+        <div class="payroll-row">
+          <span class="payroll-dept">CC32 Myynti Uudet</span>
+          <div class="payroll-bar-wrap"><div class="payroll-bar" style="width:25%"></div></div>
+          <span class="payroll-total">€123,011</span>
+        </div>
+        <div class="payroll-row">
+          <span class="payroll-dept">CC40 Tuki</span>
+          <div class="payroll-bar-wrap"><div class="payroll-bar" style="width:47%"></div></div>
+          <span class="payroll-total">€235,368</span>
+        </div>
+        <div class="payroll-row" style="border-bottom:none;">
+          <span class="payroll-dept">CC50 Hallinto</span>
+          <div class="payroll-bar-wrap"><div class="payroll-bar" style="width:35%"></div></div>
+          <span class="payroll-total">€173,072</span>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;">
+          <span style="font-size:11px;font-weight:600;color:var(--text);">Total (EST)</span>
+          <span style="font-size:13px;font-weight:700;color:var(--lilac);">€1,968,371</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BONUS + BALANCE SHEET -->
+  <div class="grid-2">
+
+    <!-- BONUS TRACKING -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Bonus Follow-up — EBITDA vs Budget</div>
+          <div class="panel-sub">H1 payout: August · H2 payout: January +1</div>
+        </div>
+      </div>
+      <div class="bonus-verdict">
+        <span class="verdict-icon">✅</span>
+        <div class="verdict-text"><b>H1 ON TRACK</b> — ACT+EST exceeds BUD by €24K. Jan actual: €21K above budget.</div>
+      </div>
+      <div class="bonus-verdict" style="border-bottom:none;">
+        <span class="verdict-icon">➖</span>
+        <div class="verdict-text"><b>H2 NEUTRAL</b> — H2 EST = BUD exactly. H2 EBITDA est. €103K.</div>
+      </div>
+      <div class="panel-body" style="padding:0 20px 16px;">
+        <table class="tbl">
+          <thead>
+            <tr><th>H1 Month</th><th>BUD EBITDA</th><th>ACT+EST</th><th>Δ cum.</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Jan ●</td><td>(23,094)</td><td class="pos">(1,786)</td><td class="pos">+21,308</td></tr>
+            <tr><td>Feb</td><td>(22,904)</td><td>(20,443)</td><td class="pos">+23,769</td></tr>
+            <tr><td>Mar</td><td>(21,496)</td><td>(21,496)</td><td class="pos">+23,769</td></tr>
+            <tr><td>Apr</td><td>(22,172)</td><td>(22,172)</td><td class="pos">+23,769</td></tr>
+            <tr><td>May</td><td>(6,184)</td><td>(6,184)</td><td class="pos">+23,769</td></tr>
+            <tr><td>Jun</td><td>4,894</td><td>4,894</td><td class="pos">+23,769</td></tr>
+            <tr class="total"><td>H1 Total</td><td>(90,956)</td><td>(67,187)</td><td class="pos">+23,769</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BALANCE SHEET -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Balance Sheet &amp; Cash Position</div>
+          <div class="panel-sub">Dec 25 · Jan 26 · Feb 26 · EST Dec 26</div>
+        </div>
+      </div>
+      <div class="panel-body" style="padding:0 20px 16px;">
+        <table class="tbl">
+          <thead>
+            <tr><th></th><th>Dec 25</th><th>Jan 26</th><th>Feb 26</th><th>EST Dec 26</th></tr>
+          </thead>
+          <tbody>
+            <tr class="section"><td colspan="5">Assets</td></tr>
+            <tr><td>Cash &amp; bank</td><td>306,530</td><td>169,490</td><td>110,903</td><td class="pos">290,747</td></tr>
+            <tr><td>Trade receivables</td><td>360,391</td><td>260,829</td><td>402,800</td><td>257,235</td></tr>
+            <tr><td>Inventory</td><td>24,404</td><td>9,748</td><td>9,748</td><td>9,748</td></tr>
+            <tr><td>Fixed assets (net)</td><td>247,585</td><td>209,243</td><td>205,828</td><td>165,871</td></tr>
+            <tr class="subtotal"><td>Total assets</td><td>1,138,709</td><td>849,110</td><td>929,078</td><td>1,138,692</td></tr>
+            <tr class="section"><td colspan="5">Liabilities &amp; Equity</td></tr>
+            <tr><td>Trade payables</td><td>240,655</td><td>178,733</td><td>268,668</td><td>462,578</td></tr>
+            <tr><td>Accrued liabilities</td><td>332,333</td><td>395,432</td><td>392,497</td><td>432,377</td></tr>
+            <tr><td>Total equity</td><td>565,671</td><td>274,944</td><td>572,792</td><td>243,738</td></tr>
+            <tr class="subtotal"><td>Working capital</td><td class="neg">(89,776)</td><td class="neg">(196,691)</td><td class="neg">(145,641)</td><td class="neg">(333,047)</td></tr>
+            <tr class="total"><td>Current ratio</td><td>1.21x</td><td>0.77x</td><td>0.79x</td><td>1.09x</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- YOY TRENDS + AUDIT TRAIL -->
+  <div class="grid-2">
+
+    <!-- YOY TRENDS -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Year-over-Year Trends</div>
+          <div class="panel-sub">2026 ACT+EST vs 2025 ACT</div>
+        </div>
+      </div>
+      <div class="panel-body" style="padding:0 20px 16px;">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:8px;">Revenue (€)</div>
+        <table class="tbl" style="margin-bottom:16px;">
+          <thead><tr><th></th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Full Year</th></tr></thead>
+          <tbody>
+            <tr><td>2025 ACT</td><td>760,293</td><td>718,704</td><td>725,732</td><td>755,838</td><td>2,960,567</td></tr>
+            <tr><td>2026 EST</td><td>837,616</td><td>862,923</td><td>904,107</td><td>991,289</td><td>3,595,936</td></tr>
+            <tr class="total">
+              <td>YoY %</td>
+              <td class="pos">+10.2%</td>
+              <td class="pos">+20.1%</td>
+              <td class="pos">+24.6%</td>
+              <td class="pos">+31.2%</td>
+              <td class="pos">+21.5%</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:8px;">EBITDA (€)</div>
+        <table class="tbl">
+          <thead><tr><th></th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Full Year</th></tr></thead>
+          <tbody>
+            <tr><td>2025 ACT</td><td class="neg">(77,242)</td><td class="neg">(72,121)</td><td class="neg">(23,276)</td><td class="neg">(89,772)</td><td class="neg">(262,411)</td></tr>
+            <tr><td>2026 EST</td><td class="neg">(43,724)</td><td class="neg">(23,462)</td><td class="pos">42,821</td><td class="pos">60,309</td><td class="pos">35,944</td></tr>
+            <tr class="total"><td>Δ YoY</td><td class="pos">+33,518</td><td class="pos">+48,659</td><td class="pos">+66,097</td><td class="pos">+150,081</td><td class="pos">+298,355</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px;font-size:11px;color:var(--mid);font-style:italic;">2025 EBITDA was €-262K. 2026 estimate €36K — a €298K improvement.</div>
+      </div>
+    </div>
+
+    <!-- AUDIT TRAIL + COMMENTARY -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Audit Trail</div>
+          <div class="panel-badge amber">3 adjustments</div>
+        </div>
+        <div class="panel-body">
+          <div class="audit-row">
+            <span class="audit-area">Payroll</span>
+            <div style="flex:1">
+              <div class="audit-period">Jan–Jun</div>
+              <div class="audit-comment">Irtisanomiset lykätään 1.7.2026 asti — selvitetään H1:n lopussa.</div>
+            </div>
+            <span class="audit-amount neg">-€12,500</span>
+          </div>
+          <div class="audit-row">
+            <span class="audit-area">Premises</span>
+            <div style="flex:1">
+              <div class="audit-period">May–Dec</div>
+              <div class="audit-comment">Toukokuusta eteenpäin pienemmät vuokrat.</div>
+            </div>
+            <span class="audit-amount pos" style="color:var(--green)">+€2,219</span>
+          </div>
+          <div class="audit-row" style="border-bottom:none;">
+            <span class="audit-area">Revenue</span>
+            <div style="flex:1">
+              <div class="audit-period">Mar</div>
+              <div class="audit-comment">Lennun lisäys maaliskuu.</div>
+            </div>
+            <span class="audit-amount pos" style="color:var(--green)">+€6,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Management Commentary</div></div>
+        <div class="comment-block">
+          <div class="comment-item">
+            <div class="comment-area">Revenue</div>
+            <div class="comment-text">Jan actual €282K vs BUD €264K (+6.8%). FY estimate €3.60M, +0.8% vs budget. Revenue uses BUD for Feb–Dec.</div>
+          </div>
+          <div class="comment-item">
+            <div class="comment-area">OPEX</div>
+            <div class="comment-text">Full year OPEX estimate €2.53M is €18K below budget. Personnel: EST €1.84M vs BUD €1.85M — €3K favorable.</div>
+          </div>
+          <div class="comment-item" style="border-bottom:none;">
+            <div class="comment-area">Profitability</div>
+            <div class="comment-text">EST shows EBIT €-7K (-0.2% margin) vs BUD €-32K — improved €24K. 2025 EBIT was €-304K — significant YoY improvement.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISKS & DEADLINES -->
+  <div class="grid-2">
+
+    <!-- RISKS & OPPORTUNITIES -->
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">Risks &amp; Opportunities</div></div>
+      <div class="risk-grid">
+        <div>
+          <div class="risk-col-label">▲ Risks</div>
+          <div class="risk-chip risk">EBIT still negative (€-7K) for full year</div>
+          <div class="risk-chip risk">Only 1 month actuals — high forecast uncertainty</div>
+          <div class="risk-chip risk">BUD mode: Feb–Dec uses approved budget</div>
+          <div class="risk-chip risk">Material costs trending slightly above BUD</div>
+        </div>
+        <div>
+          <div class="risk-col-label">◆ Opportunities</div>
+          <div class="risk-chip opp">Revenue +6.8% vs Jan budget</div>
+          <div class="risk-chip opp">EBIT €24K better than budget</div>
+          <div class="risk-chip opp">Gross margin improving through the year</div>
+          <div class="risk-chip opp">21.5% YoY revenue growth vs 2025</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCOUNTING DEADLINES -->
+    <div class="panel">
+      <div class="panel-header">
+        <div><div class="panel-title">Accounting Calendar 2026</div><div class="panel-sub">Key deadlines per period</div></div>
+      </div>
+      <div class="panel-body" style="padding:12px 20px;">
+        <div style="display:grid;grid-template-columns:40px 1fr 1fr 1fr 1fr;gap:4px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+          <span></span><span>Board report</span><span>Deadline</span><span>AP closed</span><span>Invoicing</span>
+        </div>
+        <div class="dl-item">
+          <span class="dl-period">JAN</span>
+          <div class="dl-dates">
+            <span class="dl-chip past">17 Feb</span>
+            <span class="dl-chip past">16 Feb</span>
+            <span class="dl-chip past">11 Feb</span>
+            <span class="dl-chip past">6 Feb</span>
+          </div>
+        </div>
+        <div class="dl-item">
+          <span class="dl-period">FEB</span>
+          <div class="dl-dates">
+            <span class="dl-chip past">17 Mar</span>
+            <span class="dl-chip past">16 Mar</span>
+            <span class="dl-chip past">11 Mar</span>
+            <span class="dl-chip past">6 Mar</span>
+          </div>
+        </div>
+        <div class="dl-item">
+          <span class="dl-period">MAR</span>
+          <div class="dl-dates">
+            <span class="dl-chip soon">16 Apr</span>
+            <span class="dl-chip soon">15 Apr</span>
+            <span class="dl-chip soon">10 Apr</span>
+            <span class="dl-chip soon">5 Apr</span>
+          </div>
+        </div>
+        <div class="dl-item">
+          <span class="dl-period">APR</span>
+          <div class="dl-dates">
+            <span class="dl-chip future">16 May</span>
+            <span class="dl-chip future">15 May</span>
+            <span class="dl-chip future">10 May</span>
+            <span class="dl-chip future">5 May</span>
+          </div>
+        </div>
+        <div class="dl-item">
+          <span class="dl-period">MAY</span>
+          <div class="dl-dates">
+            <span class="dl-chip future">16 Jun</span>
+            <span class="dl-chip future">15 Jun</span>
+            <span class="dl-chip future">10 Jun</span>
+            <span class="dl-chip future">5 Jun</span>
+          </div>
+        </div>
+        <div class="dl-item" style="border-bottom:none;">
+          <span class="dl-period">JUN</span>
+          <div class="dl-dates">
+            <span class="dl-chip future">8 Aug</span>
+            <span class="dl-chip future">7 Aug</span>
+            <span class="dl-chip future">2 Aug</span>
+            <span class="dl-chip future">28 Jul</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;font-size:10px;color:var(--dim);padding:16px 0 8px;">
+    Sources: ACT = Accounting actuals · EST = Management estimate · BUD = Approved budget · Prepared for Board of Directors · Confidential
+  </div>
+
+</main>
 </div>
-
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-const ANTHROPIC_KEY = 'PASTE_YOUR_ANTHROPIC_KEY_HERE'; // set as Vercel env var
-const DEMO_CREDITS  = 5;
-const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ── DEMO FINANCIAL DATA (2025 actuals) ──────────────────────────────────
-const DATA = {
-  revenue:     [204006,216592,246792,273432,277300,329288,228912,265383,320762,345892,316703,394939],
-  cogs:        [61202,64978,74038,82030,83190,98786,68674,79615,96229,103768,95011,118482],
-  opex:        [258236,198189,184957,193827,208612,194475,178463,201646,206297,217189,215692,292417],
-  depAmort:    [9200,9200,9200,9200,9200,9200,9200,9200,9200,9200,9200,9200],
-  finExp:      [2857,2161,4122,2870,2166,1837,1884,3066,3603,2602,1938,2827],
-  netProfit:   [-127489,-57936,-25525,-14495,-25868,19992,-29309,-28144,4346,10506,-5138,-27987],
-  grossProfit: [142804,151614,172754,191402,194110,230502,160238,185768,224533,242124,221692,276457],
-  ebitda:      [-115432,-46575,-12203,-2425,-14502,36027,-18225,-15878,18236,24935,6000,-15960],
-  ebit:        [-124632,-55775,-21403,-11625,-23702,26827,-27425,-25078,9036,15735,-3200,-25160],
-  inventory:   [15928,11544,19566,17983,21949,8233,8931,14591,13913,14791,12861,16702],
-  receivables: [410181,401512,398422,400367,412962,422395,413884,423052,431310,431910,448932,442003],
-  cash:        [35098,-1242,-29358,-29491,-36894,-26859,-43394,-56646,-69038,-52240,-46034,-68556],
-  equity:      [-108378,-166314,-191839,-206334,-232202,-212210,-241519,-269663,-265317,-254811,-259949,-287936],
-  payables:    [180365,174896,184296,196816,178836,189722,188098,187771,195949,193733,196322,201666],
-  otherCL:     [16397,26877,27579,30853,33631,31522,39207,38695,44948,38405,39928,41968],
-  tangibles:   [164653,161374,162030,162985,158286,154833,153882,157829,154430,151547,153598,154329],
-  otherCA:     [20039,21889,25285,26950,31026,17375,26317,22357,22145,19941,27680,17389],
-};
-const BUD = {
-  revenue:     [270196,274398,333213,321555,365291,362239,285869,327908,375467,417403,390085,476376],
-  cogs:        [75655,76831,93300,90035,102281,101427,80043,91814,105131,116873,109224,133385],
-  opex:        [257691,241920,240460,230056,229327,247588,224990,225302,243373,261098,243192,305004],
-  grossProfit: [194541,197567,239913,231520,263010,260812,205826,236094,270336,300530,280861,342991],
-  ebitda:      [-63150,-44353,-547,1464,33683,13224,-19164,10792,26963,39432,37669,37987],
-};
-
-const sum  = a => a.reduce((s,v)=>s+v,0);
-const sl   = (a,s,e) => a.slice(s,e+1);
-const fmt  = v => { const a=Math.abs(v),s=v<0?"-":""; return a>=1e6?s+"€"+(a/1e6).toFixed(2)+"M":a>=1e3?s+"€"+(a/1e3).toFixed(0)+"K":s+"€"+a.toFixed(0); };
-const pct  = (a,b) => b ? (a/b*100).toFixed(1) : "0.0";
-const vc   = v => v>=0 ? 'var(--green)' : 'var(--red)';
-
-// ── STATE ────────────────────────────────────────────────────────────────
-let state = {
-  year: "2025", tab: "kpis", role: "CFO",
-  startM: 0, endM: 11, actLast: 11,
-  credits: DEMO_CREDITS, msgs: [],
-  companyName: "Demo Company", userName: "User",
-  userEmail: "", userId: "", loading: false,
-  themeKey: "dark",
-};
-
-// ── INIT ─────────────────────────────────────────────────────────────────
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if(!session) { window.location.href = '/login'; return; }
 
-  state.userEmail = session.user.email;
-  state.userId    = session.user.id;
-
-  // Load profile
-  const { data: profile } = await sb.from('user_profiles')
-    .select('company_name, full_name, primary_role')
+  const { data: profile } = await sb
+    .from('user_profiles')
+    .select('company_name, full_name, fiscal_year, primary_role')
     .eq('user_id', session.user.id)
     .maybeSingle();
 
-  if(profile) {
-    state.companyName = profile.company_name || state.companyName;
-    state.userName    = (profile.full_name || '').split(' ')[0] || 'User';
-    state.role        = profile.primary_role || 'CFO';
-  }
+  const company = profile?.company_name || 'My Company';
+  const year    = profile?.fiscal_year  || new Date().getFullYear();
+  const name    = (profile?.full_name   || '').split(' ')[0] || 'User';
 
-  // Load or initialise demo credits from Supabase
-  const { data: cr } = await sb.from('demo_credits')
-    .select('credits_used')
-    .eq('user_id', session.user.id)
-    .maybeSingle();
-
-  if(cr) {
-    state.credits = Math.max(0, DEMO_CREDITS - (cr.credits_used || 0));
-  } else {
-    // First visit — create record
-    await sb.from('demo_credits').insert({ user_id: session.user.id, user_email: state.userEmail, credits_used: 0 });
-    state.credits = DEMO_CREDITS;
-  }
-
-  // Greet
-  state.msgs = [{
-    role: 'ai',
-    text: `Welcome to targetdash, ${state.userName}! I'm EBITDA-9000, your AI financial advisor. You have <strong>${state.credits} demo credits</strong> — each question uses 1 credit. Ask me anything about the demo financials.`
-  }];
-
-  render();
+  document.getElementById('sbClientName').textContent  = company;
+  document.getElementById('sbClientSub').textContent   = 'FY' + year;
+  document.getElementById('pageSubtitle').textContent  = company + ' · FY' + year + ' · Board financial dashboard';
+  document.title = company + ' — targetdash';
 })();
 
-// ── COMPUTED ──────────────────────────────────────────────────────────────
-function computed() {
-  const S = state.startM, E = state.endM;
-  const rev  = sum(sl(DATA.revenue,S,E));
-  const gp   = sum(sl(DATA.grossProfit,S,E));
-  const ebit = sum(sl(DATA.ebit,S,E));
-  const ebid = sum(sl(DATA.ebitda,S,E));
-  const net  = sum(sl(DATA.netProfit,S,E));
-  const eq   = DATA.equity[E];
-  const rec  = DATA.receivables[E];
-  const inv  = DATA.inventory[E];
-  const pay  = DATA.payables[E];
-  const ann  = rev / (E-S+1) * 12;
-  return {
-    S,E,rev,gp,ebit,ebid,net,eq,rec,inv,pay,ann,
-    gmPct:  pct(gp,rev),
-    emPct:  pct(ebit,rev),
-    roePct: eq ? pct(net,eq) : "—",
-    dso:    ann ? (rec/(ann/365)).toFixed(0) : 0,
-    dio:    ann ? (inv/(ann/365)).toFixed(0) : 0,
-    dpo:    ann ? (pay/(ann/365)).toFixed(0) : 0,
-  };
-}
-
-// ── RENDER ────────────────────────────────────────────────────────────────
-function render() {
-  const c = computed();
-  const TABS = [
-    {id:'kpis',     label:'KPIs'},
-    {id:'pl',       label:'P&L'},
-    {id:'balance',  label:'Balance Sheet'},
-    {id:'cashflow', label:'Cash Flow'},
-  ];
-
-  document.getElementById('app').innerHTML = `
-  <div class="main-wrap">
-    <!-- DEMO BANNER -->
-    <div class="demo-banner">
-      ⚡ Demo mode — ${state.companyName} · Sample data · ${state.credits} AI credits remaining
-    </div>
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="tb-left">
-        <div class="logo-mark">TF</div>
-        <div>
-          <div class="company-name">${state.companyName}</div>
-          <div class="company-sub">targetdash› · ${state.year}</div>
-        </div>
-      </div>
-      <div class="tb-right">
-        ${['2023','2024','2025','2026'].map(y=>`<button class="yr-btn${state.year===y?' active':''}" onclick="setYear('${y}')">${y}</button>`).join('')}
-        <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">${state.themeKey==='dark'?'☀':'🌙'}</button>
-        <button class="signout-btn" onclick="signOut()">Sign out</button>
-      </div>
-    </div>
-
-    <!-- TABBAR -->
-    <div class="tabbar">
-      ${TABS.map(t=>`<button class="tab-btn${state.tab===t.id?' active':''}" onclick="setTab('${t.id}')">${t.label}</button>`).join('')}
-    </div>
-
-    <!-- PERIOD BAR -->
-    <div class="periodbar">
-      <span style="font-size:10px;color:var(--tm);font-family:var(--mono)">From</span>
-      <select class="psel" onchange="setState('startM',+this.value);render()">
-        ${MONTHS.map((m,i)=>`<option value="${i}"${state.startM===i?' selected':''}>${m}</option>`).join('')}
-      </select>
-      <span style="font-size:10px;color:var(--tm);font-family:var(--mono)">To</span>
-      <select class="psel" onchange="setState('endM',+this.value);render()">
-        ${MONTHS.map((m,i)=>`<option value="${i}"${state.endM===i?' selected':''}>${m}</option>`).join('')}
-      </select>
-      <div style="display:flex;gap:3px;flex-wrap:wrap;">
-        ${MONTHS.map((m,i)=>{
-          const inRange=i>=state.startM&&i<=state.endM;
-          const isAct=i<=state.actLast;
-          const cls='mpill'+(i===state.startM||i===state.endM?(' '+(isAct?'act':'')):(inRange?' rng':''));
-          return `<button class="${cls}" onclick="pillClick(${i})">
-            <span class="pill-m" style="color:${(i===state.startM||i===state.endM)?(isAct?'var(--ah)':'var(--amber)'):(inRange?'var(--tm)':'var(--td)')">${m}</span>
-            <span class="pill-t" style="color:${isAct?'var(--blue)':'var(--amber)'}">${isAct?'ACT':'BUD'}</span>
-          </button>`;
-        }).join('')}
-      </div>
-      <span style="font-size:10px;font-family:var(--mono);color:var(--td)">${MONTHS[state.startM]} – ${MONTHS[state.endM]}</span>
-    </div>
-
-    <!-- TAB CONTENT -->
-    <div class="content" id="tabContent">
-      ${renderTab(c)}
-    </div>
-  </div>
-
-  <!-- AI SIDEBAR -->
-  <div class="sidebar">
-    <div class="sb-header">
-      <div class="sb-agent">
-        <div class="sb-avatar">E·9K</div>
-        <div>
-          <div class="sb-name">EBITDA-9000</div>
-          <div class="sb-role">Responding as ${state.role}</div>
-        </div>
-      </div>
-    </div>
-    <div class="role-tabs">
-      ${['CFO','CEO','CMO','CRO','CTO','HR'].map(r=>`<button class="role-tab${state.role===r?' active':''}" onclick="setRole('${r}')">${r}</button>`).join('')}
-    </div>
-    <div class="credits-row">
-      <span class="cr-info">Demo credits: <span class="cr-num">${state.credits}</span> / ${DEMO_CREDITS}</span>
-      <span style="font-size:9px;color:var(--td);font-family:var(--mono)">1 credit = 1 answer</span>
-    </div>
-    <div class="msgs" id="msgs">
-      ${state.msgs.map(m=>renderMsg(m)).join('')}
-    </div>
-    ${state.credits > 0 ? `
-    <div class="sb-input-row">
-      <input class="sb-input" id="aiInput" placeholder="Ask about the demo financials…" onkeydown="if(event.key==='Enter')sendMsg()"/>
-      <button class="sb-send" id="sendBtn" onclick="sendMsg()" ${state.loading?'disabled':''}>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 2L11 13M22 2l-7 19-4-9-9-4 19-7z"/></svg>
-      </button>
-    </div>` : `
-    <div class="sb-input-row">
-      <div class="used-up">
-        <div class="used-up-icon">🎯</div>
-        <div class="used-up-title">Demo credits used</div>
-        <div class="used-up-sub">You've explored all 5 demo questions. Sign up for a full account to get 100 credits/month.</div>
-        <a href="/onboarding" style="display:inline-block;margin-top:14px;background:var(--a);color:#fff;padding:10px 20px;border-radius:8px;font-size:12px;text-decoration:none;font-weight:600;">Get full access →</a>
-      </div>
-    </div>`}
-  </div>
-  `;
-
-  // Scroll msgs to bottom
-  const msgs = document.getElementById('msgs');
-  if(msgs) msgs.scrollTop = msgs.scrollHeight;
-}
-
-function renderMsg(m) {
-  return `<div class="msg ${m.role}">
-    <div class="msg-lbl">${m.role==='ai'?'EBITDA-9000 · '+state.role:'You'}</div>
-    <div class="bubble">${m.text}</div>
-  </div>`;
-}
-
-// ── TAB CONTENT ───────────────────────────────────────────────────────────
-function renderTab(c) {
-  if(state.tab === 'kpis')     return renderKPIs(c);
-  if(state.tab === 'pl')       return renderPL(c);
-  if(state.tab === 'balance')  return renderBalance(c);
-  if(state.tab === 'cashflow') return renderCashFlow(c);
-  return '';
-}
-
-function gauge(label, value, unit, target, targetLabel, color, desc, flip=false) {
-  const hit = flip ? +value <= target : +value >= target;
-  return `<div class="gauge">
-    <div class="g-label">${label}</div>
-    <div class="g-value" style="color:${color}">${value}${unit||''}</div>
-    <div class="g-status">
-      <div class="g-dot" style="background:${hit?'var(--green)':'var(--red)'}"></div>
-      <span style="font-size:11px;color:${hit?'var(--green)':'var(--red)'}">${hit?'On target':'Off target'} · ${targetLabel}: ${target}${unit||''}</span>
-    </div>
-    <div class="g-desc">${desc}</div>
-  </div>`;
-}
-
-function renderKPIs(c) {
-  const revBud = sum(sl(BUD.revenue, c.S, c.E));
-  const gpBud  = sum(sl(BUD.grossProfit, c.S, c.E));
-  const ebBud  = sum(sl(BUD.ebitda, c.S, c.E));
-  return `
-  <div style="display:flex;flex-direction:column;gap:24px;">
-    <div>
-      <div class="sec-title">Profitability</div>
-      <div class="kpi-grid g3" style="margin-bottom:14px;">
-        ${gauge('Gross Margin',c.gmPct,'%',65,'Target','var(--cyan)','(Revenue − COGS) / Revenue')}
-        ${gauge('EBIT Margin',c.emPct,'%',15,'Target','var(--blue)','EBIT / Revenue')}
-        ${gauge('ROE',c.roePct,'%',12,'Min','var(--purple)','Net Profit / Equity')}
-      </div>
-      <div class="kpi-grid g4">
-        ${kpiCard('Revenue',fmt(c.rev),fmt(c.rev-revBud),'vs Budget','var(--blue)')}
-        ${kpiCard('Gross Profit',fmt(c.gp),fmt(c.gp-gpBud),'vs Budget','var(--cyan)')}
-        ${kpiCard('EBITDA',fmt(c.ebid),fmt(c.ebid-ebBud),'vs Budget','var(--amber)')}
-        ${kpiCard('Net Profit',fmt(c.net),'','','var(--red)')}
-      </div>
-    </div>
-    <div>
-      <div class="sec-title">Efficiency</div>
-      <div class="kpi-grid g3">
-        ${gauge('DSO (AR days)',c.dso,' days',45,'Max','var(--cyan)','Receivables / (Revenue/365)',true)}
-        ${gauge('DIO (Inv days)',c.dio,' days',60,'Max','var(--purple)','Inventory / (Revenue/365)',true)}
-        ${gauge('DPO (AP days)',c.dpo,' days',30,'Min','var(--amber)','Payables / (Revenue/365)')}
-      </div>
-    </div>
-  </div>`;
-}
-
-function kpiCard(label, value, delta, deltaLabel, color) {
-  const pos = delta && !delta.startsWith('-');
-  return `<div class="gauge">
-    <div class="g-label">${label}</div>
-    <div class="g-value" style="color:${color};font-size:22px;">${value}</div>
-    ${delta ? `<div style="font-size:11px;color:${pos?'var(--green)':'var(--red)'};">${delta} ${deltaLabel}</div>` : ''}
-  </div>`;
-}
-
-function renderPL(c) {
-  const rows = [
-    {label:'Revenue',         act:DATA.revenue,     bud:BUD.revenue,     color:'var(--blue)', bold:true},
-    {label:'  Cost of Goods', act:DATA.cogs.map(v=>-v), bud:BUD.cogs.map(v=>-v), color:'var(--slate)',indent:true},
-    {label:'Gross Profit',    act:DATA.grossProfit, bud:BUD.grossProfit, color:'var(--cyan)', bold:true},
-    {label:'  OPEX',          act:DATA.opex.map(v=>-v), bud:BUD.opex.map(v=>-v), color:'var(--slate)',indent:true},
-    {label:'EBITDA',          act:DATA.ebitda,      bud:BUD.ebitda,      color:'var(--amber)',bold:true},
-    {label:'  Depreciation',  act:DATA.depAmort.map(v=>-v), bud:null,   color:'var(--slate)',indent:true},
-    {label:'EBIT',            act:DATA.ebit,        bud:null,            color:'var(--blue)', bold:true},
-    {label:'  Finance costs', act:DATA.finExp.map(v=>-v), bud:null,     color:'var(--slate)',indent:true},
-    {label:'Net Profit',      act:DATA.netProfit,   bud:null,            color:'var(--red)',  bold:true},
-  ];
-  const visM = MONTHS.slice(c.S, c.E+1);
-  return `
-  <div class="card" style="overflow:hidden;">
-    <div style="padding:14px 22px;border-bottom:1px solid var(--b);font-size:13px;font-weight:600;color:var(--tm);">
-      P&L Statement · ${MONTHS[c.S]}–${MONTHS[c.E]} ${state.year}
-    </div>
-    <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr class="tbl-head-row">
-          <th style="text-align:left;padding-left:20px;">Line Item</th>
-          ${visM.map((m,i)=>`<th style="color:${c.S+i<=state.actLast?'var(--ah)':'var(--amber)'}">${m}</th>`).join('')}
-          <th style="border-left:1px solid var(--b);">Total</th>
-          <th style="color:var(--amber);">BUD</th>
-          <th style="color:var(--red);">VAR</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows.map(row=>{
-          const aSlice = sl(row.act,c.S,c.E);
-          const bSlice = row.bud ? sl(row.bud,c.S,c.E) : null;
-          const totA = sum(aSlice);
-          const totB = bSlice ? sum(bSlice) : null;
-          const totV = totB !== null ? totA - totB : null;
-          return `<tr class="${row.bold?'bold-row':''}">
-            <td style="color:${row.color};padding-left:${row.indent?'36px':'20px'}">${row.label}</td>
-            ${aSlice.map((v,i)=>`<td style="color:${c.S+i<=state.actLast?row.color:'var(--amber)'}">${fmt(v)}</td>`).join('')}
-            <td style="color:${row.color};border-left:1px solid var(--b);font-weight:700;">${fmt(totA)}</td>
-            <td style="color:var(--amber);">${totB!==null?fmt(totB):'—'}</td>
-            <td style="color:${totV!==null?vc(totV):'var(--slate)'};">${totV!==null?fmt(totV):'—'}</td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>
-    </div>
-  </div>`;
-}
-
-function renderBalance(c) {
-  const E = state.endM;
-  const assets = [
-    {label:'Tangible Assets',  v:DATA.tangibles[E]},
-    {label:'Inventory',        v:DATA.inventory[E]},
-    {label:'Trade Receivables',v:DATA.receivables[E]},
-    {label:'Cash & Bank',      v:DATA.cash[E]},
-    {label:'Other Current',    v:DATA.otherCA[E]},
-  ];
-  const liabs = [
-    {label:'Equity',           v:DATA.equity[E]},
-    {label:'Trade Payables',   v:DATA.payables[E]},
-    {label:'Other Liabilities',v:DATA.otherCL[E]},
-  ];
-  const totA = assets.reduce((s,a)=>s+a.v,0);
-  const totL = liabs.reduce((s,a)=>s+a.v,0);
-  return `
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-    <div class="card card-pad">
-      <div class="sec-title">Assets — ${MONTHS[E]} ${state.year}</div>
-      ${assets.map(a=>`
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bs);">
-          <span style="color:var(--tm)">${a.label}</span>
-          <span style="color:${a.v>=0?'var(--t)':'var(--red)'};font-family:var(--mono);font-weight:600;">${fmt(a.v)}</span>
-        </div>`).join('')}
-      <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:700;">
-        <span>Total Assets</span>
-        <span style="color:var(--cyan);font-family:var(--mono);">${fmt(totA)}</span>
-      </div>
-    </div>
-    <div class="card card-pad">
-      <div class="sec-title">Liabilities & Equity — ${MONTHS[E]} ${state.year}</div>
-      ${liabs.map(a=>`
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bs);">
-          <span style="color:var(--tm)">${a.label}</span>
-          <span style="color:${a.v>=0?'var(--t)':'var(--red)'};font-family:var(--mono);font-weight:600;">${fmt(a.v)}</span>
-        </div>`).join('')}
-      <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:700;">
-        <span>Total</span>
-        <span style="color:var(--cyan);font-family:var(--mono);">${fmt(totL)}</span>
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderCashFlow(c) {
-  const rows = [
-    {label:'EBITDA',                     v:DATA.ebitda,                          color:'var(--amber)', bold:true},
-    {label:'  Δ Receivables',            v:MONTHS.map((_,i)=>i>0?DATA.receivables[i-1]-DATA.receivables[i]:0), color:'var(--slate)',indent:true},
-    {label:'  Δ Inventory',              v:MONTHS.map((_,i)=>i>0?DATA.inventory[i-1]-DATA.inventory[i]:0),    color:'var(--slate)',indent:true},
-    {label:'  Δ Payables',               v:MONTHS.map((_,i)=>i>0?DATA.payables[i]-DATA.payables[i-1]:0),      color:'var(--slate)',indent:true},
-    {label:'Operative CF',               v:MONTHS.map((_,i)=>DATA.ebitda[i]+(i>0?(DATA.receivables[i-1]-DATA.receivables[i])+(DATA.inventory[i-1]-DATA.inventory[i])+(DATA.payables[i]-DATA.payables[i-1]):0)), color:'var(--green)',bold:true},
-    {label:'Net Cash Change',            v:MONTHS.map((_,i)=>i>0?DATA.cash[i]-DATA.cash[i-1]:DATA.cash[0]),   color:'var(--blue)', bold:true},
-    {label:'Closing Cash',               v:DATA.cash,                                                          color:'var(--cyan)', bold:true},
-  ];
-  const visM = MONTHS.slice(c.S, c.E+1);
-  const totOp   = sum(sl(rows[4].v,c.S,c.E));
-  const closCash = DATA.cash[c.E];
-  return `
-  <div style="display:flex;flex-direction:column;gap:16px;">
-    <div class="kpi-grid g4">
-      ${kpiCard('Operative CF',fmt(totOp),'','','var(--green)')}
-      ${kpiCard('Closing Cash',fmt(closCash),'','',closCash>=0?'var(--cyan)':'var(--red)')}
-      ${kpiCard('EBITDA',fmt(sum(sl(DATA.ebitda,c.S,c.E))),'','','var(--amber)')}
-      ${kpiCard('Net Profit',fmt(sum(sl(DATA.netProfit,c.S,c.E))),'','','var(--red)')}
-    </div>
-    <div class="card" style="overflow:hidden;">
-      <div style="padding:14px 22px;border-bottom:1px solid var(--b);font-size:13px;font-weight:600;color:var(--tm);">
-        Cash Flow Statement · ${MONTHS[c.S]}–${MONTHS[c.E]} ${state.year}
-      </div>
-      <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr class="tbl-head-row">
-            <th style="text-align:left;padding-left:20px;">Line Item</th>
-            ${visM.map((m,i)=>`<th style="color:${c.S+i<=state.actLast?'var(--ah)':'var(--amber)'}">${m}</th>`).join('')}
-            <th style="border-left:1px solid var(--b);">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows.map(row=>{
-            const slice = sl(row.v,c.S,c.E);
-            const tot   = row.label==='Closing Cash' ? slice[slice.length-1] : sum(slice);
-            return `<tr class="${row.bold?'bold-row':''}">
-              <td style="color:${row.color};padding-left:${row.indent?'36px':'20px'}">${row.label}</td>
-              ${slice.map(v=>`<td style="color:${row.color}">${fmt(v)}</td>`).join('')}
-              <td style="border-left:1px solid var(--b);font-weight:700;color:${row.color}">${fmt(tot)}</td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>
-      </div>
-    </div>
-  </div>`;
-}
-
-// ── AI CHAT ───────────────────────────────────────────────────────────────
-async function sendMsg() {
-  const input = document.getElementById('aiInput');
-  const text  = input?.value?.trim();
-  if(!text || state.loading || state.credits <= 0) return;
-  input.value = '';
-  state.loading = true;
-  state.msgs.push({ role: 'user', text });
-  render();
-
-  // Show typing
-  const msgs = document.getElementById('msgs');
-  if(msgs) {
-    const typing = document.createElement('div');
-    typing.className = 'msg ai';
-    typing.id = 'typing';
-    typing.innerHTML = `<div class="msg-lbl">EBITDA-9000 · ${state.role}</div><div class="typing"><span></span><span></span><span></span></div>`;
-    msgs.appendChild(typing);
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  try {
-    const c = computed();
-    const context = `
-Company: ${state.companyName} (demo data)
-Period: ${MONTHS[c.S]}–${MONTHS[c.E]} ${state.year}
-Revenue: ${fmt(c.rev)} (BUD: ${fmt(sum(sl(BUD.revenue,c.S,c.E)))})
-Gross Profit: ${fmt(c.gp)} (${c.gmPct}% margin)
-EBITDA: ${fmt(c.ebid)}
-EBIT: ${fmt(c.ebit)} (${c.emPct}% margin)
-Net Profit: ${fmt(c.net)}
-DSO: ${c.dso} days · DIO: ${c.dio} days · DPO: ${c.dpo} days
-Cash: ${fmt(DATA.cash[c.E])}
-Equity: ${fmt(DATA.equity[c.E])}`;
-
-    const ROLE_PERSONAS = {
-      CFO: 'You are a seasoned CFO. Focus on cash flow, margins, budget variances and financial risk.',
-      CEO: 'You are a strategic CEO. Focus on business performance, growth trajectory and key decisions.',
-      CMO: 'You are a data-driven CMO. Focus on revenue growth, customer metrics and marketing ROI.',
-      CRO: 'You are a revenue-focused CRO. Focus on revenue trends, pipeline and growth opportunities.',
-      CTO: 'You are a technical CTO. Focus on operational efficiency, tech costs and scalability.',
-      HR:  'You are an experienced HR Manager. Focus on personnel costs, headcount and workforce efficiency.',
-    };
-
-    const key = window.ANTHROPIC_KEY || ANTHROPIC_KEY;
-    if(!key || key === 'PASTE_YOUR_ANTHROPIC_KEY_HERE') {
-      throw new Error('no_key');
-    }
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 400,
-        system: `${ROLE_PERSONAS[state.role] || ROLE_PERSONAS.CFO}
-You have access to this company's financial data. Be concise (max 4 sentences), insightful and specific.
-Use actual numbers from the data. This is a demo with sample data — be helpful but note it's illustrative.
-Financial context:
-${context}`,
-        messages: [{ role: 'user', content: text }],
-      }),
-    });
-
-    const data = await res.json();
-    const reply = data.content?.[0]?.text || 'I could not generate a response. Please try again.';
-
-    // Deduct credit
-    state.credits = Math.max(0, state.credits - 1);
-    await sb.from('demo_credits').upsert(
-      { user_id: state.userId, user_email: state.userEmail, credits_used: DEMO_CREDITS - state.credits },
-      { onConflict: 'user_id' }
-    );
-
-    state.msgs.push({ role: 'ai', text: reply.replace(/\n/g,'<br/>') });
-
-  } catch(e) {
-    const fallback = e.message === 'no_key'
-      ? 'AI is not configured yet — add your Anthropic API key to Vercel environment variables as <code>VITE_ANTHROPIC_KEY</code>.'
-      : `Sorry, I ran into an error: ${e.message}. Please try again.`;
-    state.msgs.push({ role: 'ai', text: fallback });
-  }
-
-  state.loading = false;
-  render();
-}
-
-// ── ACTIONS ───────────────────────────────────────────────────────────────
-function setTab(t)   { state.tab = t; render(); }
-function setYear(y)  { state.year = y; state.actLast = y==='2026'?-1:11; render(); }
-function setRole(r)  { state.role = r; render(); }
-function setState(k,v){ state[k]=v; }
-function pillClick(i){
-  if(i < state.startM) state.startM = i;
-  else if(i > state.endM) state.endM = i;
-  else if(i === state.startM && i < state.endM) state.startM = i+1;
-  else if(i === state.endM && i > state.startM) state.endM = i-1;
-  else { state.startM=i; state.endM=i; }
-  render();
-}
-function toggleTheme() {
-  state.themeKey = state.themeKey === 'dark' ? 'light' : 'dark';
-  // Simple toggle — just re-render for now
-  render();
-}
 async function signOut() {
   await sb.auth.signOut();
   window.location.href = '/login';
 }
-
-// Expose to window for inline onclick
-window.setTab=setTab; window.setYear=setYear; window.setRole=setRole;
-window.setState=setState; window.pillClick=pillClick; window.sendMsg=sendMsg;
-window.signOut=signOut; window.toggleTheme=toggleTheme;
 </script>
 </body>
 </html>
