@@ -443,7 +443,14 @@ function checkVerifyBtn() {
 // ── REDIRECT ─────────────────────────────────────────────────────────────
 async function redirectAfterLogin(session) {
   try {
+    const SUPERUSERS = ['niklas.isaksson@targetflow.fi'];
     const mode = new URLSearchParams(window.location.search).get('mode') || '';
+
+    // Superuser → always go to admin
+    if(SUPERUSERS.includes(session.user.email)) {
+      window.location.href = '/admin'; return;
+    }
+
     if(!mode) { window.location.href = DASHBOARD_URL; return; }
     const { data: profile } = await sb.from('user_profiles').select('onboarded').eq('user_id', session.user.id).maybeSingle();
     window.location.href = profile?.onboarded ? DASHBOARD_URL : (ONBOARDING_URL + '?mode=' + mode);
