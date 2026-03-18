@@ -356,18 +356,27 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── REDIRECT HELPER ──────────────────────────────────────────────────────
 async function redirectAfterLogin(session) {
-  const { data: profile } = await sb
-    .from('user_profiles')
-    .select('onboarded')
-    .eq('user_id', session.user.id)
-    .maybeSingle();
-
-  window.location.href = profile?.onboarded ? DASHBOARD_URL : ONBOARDING_URL;
+  try {
+    const { data: profile, error } = await sb
+      .from('user_profiles')
+      .select('onboarded')
+      .eq('user_id', session.user.id)
+      .maybeSingle();
+    window.location.href = (error || !profile || !profile.onboarded) ? ONBOARDING_URL : DASHBOARD_URL;
+  } catch(e) {
+    window.location.href = ONBOARDING_URL;
+  }
 }
 
-// ── CHECK SESSION ────────────────────────────────────────────────────────
-sb.auth.getSession().then(async ({ data: { session } }) => {
-  if(session) await redirectAfterLogin(session);
+// ── INIT ─────────────────────────────────────────────────────────────────
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if(session) { await redirectAfterLogin(session); return; }
+})();
+
+// ── AUTH STATE CHANGE ─────────────────────────────────────────────────────
+sb.auth.onAuthStateChange((event, session) => {
+  if(event === 'SIGNED_IN' && session) redirectAfterLogin(session);
 });
 
 // ── VIEW HELPERS ─────────────────────────────────────────────────────────
@@ -385,18 +394,10 @@ function setLoading(btnId, loading, label) {
 }
 
 // ── VIEW TOGGLES ─────────────────────────────────────────────────────────
-document.getElementById('toSignup').onclick = () => {
-  hide('signinView'); show('signupView');
-};
-document.getElementById('toSignin').onclick = () => {
-  hide('signupView'); show('signinView');
-};
-document.getElementById('forgotLink').onclick = e => {
-  e.preventDefault(); hide('signinView'); show('resetView');
-};
-document.getElementById('resetBack').onclick = () => {
-  hide('resetView'); show('signinView');
-};
+document.getElementById('toSignup').onclick   = () => { hide('signinView'); show('signupView'); };
+document.getElementById('toSignin').onclick   = () => { hide('signupView'); show('signinView'); };
+document.getElementById('forgotLink').onclick = e  => { e.preventDefault(); hide('signinView'); show('resetView'); };
+document.getElementById('resetBack').onclick  = () => { hide('resetView'); show('signinView'); };
 
 // ── GOOGLE SSO ───────────────────────────────────────────────────────────
 async function signInWithGoogle() {
@@ -416,11 +417,10 @@ document.getElementById('signinBtn').onclick = async () => {
   setLoading('signinBtn', true, 'Sign in');
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
   setLoading('signinBtn', false, 'Sign in');
-  if(error) { showMsg('signinMsg', error.message, 'error'); }
-  else      { await redirectAfterLogin(data.session); }
+  if(error) showMsg('signinMsg', error.message, 'error');
+  else      await redirectAfterLogin(data.session);
 };
 
-// allow Enter key
 document.getElementById('signinPassword').addEventListener('keydown', e => {
   if(e.key === 'Enter') document.getElementById('signinBtn').click();
 });
@@ -432,10 +432,10 @@ document.getElementById('signupBtn').onclick = async () => {
   if(!email || !password) { showMsg('signupMsg','Please fill in both fields.','error'); return; }
   if(password.length < 8)  { showMsg('signupMsg','Password must be at least 8 characters.','error'); return; }
   setLoading('signupBtn', true, 'Create account');
-  const { error } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + DASHBOARD_URL } });
+  const { error } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + '/login' } });
   setLoading('signupBtn', false, 'Create account');
-  if(error) { showMsg('signupMsg', error.message, 'error'); }
-  else      { showMsg('signupMsg', 'Check your email — we sent you a confirmation link.', 'success'); }
+  if(error) showMsg('signupMsg', error.message, 'error');
+  else      showMsg('signupMsg', 'Check your email — we sent you a confirmation link.', 'success');
 };
 
 // ── PASSWORD RESET ────────────────────────────────────────────────────────
@@ -445,16 +445,10 @@ document.getElementById('resetBtn').onclick = async () => {
   setLoading('resetBtn', true, 'Send reset link');
   const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset-password' });
   setLoading('resetBtn', false, 'Send reset link');
-  if(error) { showMsg('resetMsg', error.message, 'error'); }
-  else      { showMsg('resetMsg', 'Reset link sent — check your inbox.', 'success'); }
+  if(error) showMsg('resetMsg', error.message, 'error');
+  else      showMsg('resetMsg', 'Reset link sent — check your inbox.', 'success');
 };
-
-// ── AUTH STATE CHANGE ─────────────────────────────────────────────────────
-sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'SIGNED_IN' && session) {
-    await redirectAfterLogin(session);
-  }
-});
 </script>
+
 </body>
 </html>
