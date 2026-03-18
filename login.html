@@ -369,14 +369,22 @@ async function redirectAfterLogin(session) {
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────
+// After Google OAuth, Supabase returns with #access_token in the URL.
+// onAuthStateChange fires when Supabase processes it — that's the reliable hook.
 (async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if(session) { await redirectAfterLogin(session); return; }
+  // If no hash fragment, check for existing session
+  if(!window.location.hash.includes('access_token')) {
+    const { data: { session } } = await sb.auth.getSession();
+    if(session) { await redirectAfterLogin(session); return; }
+  }
+  // Otherwise wait for onAuthStateChange to fire (handles OAuth callback)
 })();
 
 // ── AUTH STATE CHANGE ─────────────────────────────────────────────────────
 sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'SIGNED_IN' && session) redirectAfterLogin(session);
+  if((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
+    redirectAfterLogin(session);
+  }
 });
 
 // ── VIEW HELPERS ─────────────────────────────────────────────────────────
