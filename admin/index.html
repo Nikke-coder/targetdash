@@ -9,139 +9,110 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#03040a; --bg2:#07080f; --bg3:#0c0d15;
-  --border:rgba(79,195,247,0.12); --bhi:rgba(79,195,247,0.2);
-  --violet:#7c3aed; --vhi:#9d5ffc; --lilac:#c4b5fd;
-  --ion:#4fc3f7; --ion-lo:rgba(79,195,247,0.08);
+  --bg:#03040a;--bg2:#07080f;--bg3:#0c0d15;
+  --b:rgba(79,195,247,0.1);--bhi:rgba(79,195,247,0.2);
+  --ion:#4fc3f7;--ion-lo:rgba(79,195,247,0.07);
   --ion-glow:0 0 40px rgba(79,195,247,0.4),0 0 100px rgba(79,195,247,0.15);
-  --text:#e8f4fc; --mid:#4a6278; --dim:#1e2d3d;
-  --green:#34d399; --amber:#fbbf24; --red:#f87171;
-  --sans:'Outfit',sans-serif; --ui:'Instrument Sans',sans-serif;
+  --t:#e8f4fc;--mid:#4a6278;--dim:#1e2d3d;
+  --green:#34d399;--amber:#fbbf24;--red:#f87171;--violet:#a78bfa;
+  --sans:'Outfit',sans-serif;--ui:'Instrument Sans',sans-serif;
 }
-html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--sans);}
+html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(--sans);}
 
-/* ── ENTRY ── */
-#entry{
-  position:fixed;inset:0;z-index:200;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:var(--bg);
-}
+/* ENTRY */
+#entry{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);}
 #entry canvas{position:absolute;inset:0;z-index:0;}
-.entry-content{position:relative;z-index:1;text-align:center;}
-.eg{
-  font-family:var(--sans);font-size:64px;font-weight:700;
-  color:var(--ion);letter-spacing:-.04em;line-height:1;
-  text-shadow:var(--ion-glow);
-  opacity:0;animation:gin 1.6s ease forwards 0.3s;
-  margin-bottom:12px;
-}
-.et{
-  font-family:var(--ui);font-size:13px;letter-spacing:.25em;text-transform:uppercase;
-  color:rgba(79,195,247,0.5);
-  opacity:0;animation:gin 1s ease forwards 1.2s;
-}
+.ec{position:relative;z-index:1;text-align:center;}
+.eg{font-family:var(--sans);font-size:68px;font-weight:700;color:var(--ion);letter-spacing:-.04em;line-height:1;text-shadow:var(--ion-glow);opacity:0;animation:gin 1.6s ease forwards .3s;margin-bottom:12px;}
+.et{font-family:var(--ui);font-size:13px;letter-spacing:.25em;text-transform:uppercase;color:rgba(79,195,247,0.5);opacity:0;animation:gin 1s ease forwards 1.2s;}
 @keyframes gin{0%{opacity:0;filter:blur(10px);}70%{opacity:1;filter:blur(0);}100%{opacity:1;}}
 
-/* ── DASHBOARD ── */
+/* DASH */
 #dash{display:none;}
-
-/* ── NAV ── */
-.nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 40px;height:60px;
-  border-bottom:1px solid var(--border);
-  background:var(--bg2);
-  position:sticky;top:0;z-index:10;
-  box-shadow:0 1px 0 rgba(79,195,247,0.08);
-}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;border-bottom:1px solid var(--b);background:var(--bg2);position:sticky;top:0;z-index:10;}
 .brand{display:flex;align-items:center;text-decoration:none;}
-.brand-name{font-family:var(--ui);font-size:15px;font-weight:600;color:var(--text);}
-.brand-gt{color:var(--ion);font-size:16px;text-shadow:0 0 10px var(--ion);}
-.brand-mode{font-family:var(--ui);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ion);margin-left:10px;text-shadow:0 0 8px var(--ion);}
-.nav-r{display:flex;align-items:center;gap:20px;}
+.bn{font-family:var(--ui);font-size:15px;font-weight:600;color:var(--t);}
+.bg{color:var(--ion);font-size:16px;text-shadow:0 0 10px var(--ion);}
+.bm{font-family:var(--ui);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ion);margin-left:10px;text-shadow:0 0 8px var(--ion);}
+.nr{display:flex;align-items:center;gap:20px;}
 #clock{font-size:11px;color:var(--mid);font-family:var(--ui);letter-spacing:.04em;}
-.exit{background:none;border:1px solid var(--border);border-radius:7px;padding:5px 14px;font-family:var(--ui);font-size:11px;color:var(--mid);cursor:pointer;transition:all .2s;}
-.exit:hover{border-color:var(--red);color:var(--red);}
+.xbtn{background:none;border:1px solid var(--b);border-radius:7px;padding:5px 14px;font-family:var(--ui);font-size:11px;color:var(--mid);cursor:pointer;transition:all .2s;}
+.xbtn:hover{border-color:var(--red);color:var(--red);}
 
-/* ── CONTENT ── */
-.wrap{max-width:1280px;margin:0 auto;padding:40px;}
+.wrap{max-width:1360px;margin:0 auto;padding:36px 40px;}
 
-/* ── METRICS ── */
-.met-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:36px;}
-.met{background:var(--bg);padding:24px 20px;transition:background .2s;}
+/* METRICS */
+.mets{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--b);border:1px solid var(--b);margin-bottom:40px;}
+.met{background:var(--bg);padding:22px 20px;transition:background .2s;}
 .met:hover{background:var(--bg2);}
-.met-k{font-family:var(--ui);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--mid);margin-bottom:10px;}
-.met-v{font-size:36px;font-weight:700;line-height:1;margin-bottom:4px;letter-spacing:-.04em;}
-.met-s{font-family:var(--ui);font-size:11px;color:var(--dim);}
+.mk{font-family:var(--ui);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--mid);margin-bottom:10px;}
+.mv{font-size:34px;font-weight:700;line-height:1;margin-bottom:4px;letter-spacing:-.04em;}
+.ms{font-family:var(--ui);font-size:10px;color:var(--dim);}
 
-/* ── TWO COL ── */
-.two{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:36px;}
-.panel{background:var(--bg);padding:24px;}
-.panel-title{font-size:13px;font-weight:600;color:var(--ion);text-shadow:0 0 8px rgba(79,195,247,0.3);margin-bottom:16px;letter-spacing:.02em;}
-.row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(79,195,247,0.06);}
-.row:last-child{border-bottom:none;}
-.rl{font-family:var(--ui);font-size:12px;color:var(--text);}
-.rsub{font-family:var(--ui);font-size:10px;color:var(--mid);margin-top:2px;}
-.rtag{font-family:var(--ui);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
-.pip{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+/* SECTION HEADER */
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;margin-top:36px;}
+.sh-title{font-size:13px;font-weight:600;color:var(--ion);text-shadow:0 0 8px rgba(79,195,247,0.3);letter-spacing:.01em;}
+.sh-count{font-family:var(--ui);font-size:10px;color:var(--mid);}
+.sh-desc{font-family:var(--ui);font-size:10px;color:var(--dim);margin-left:auto;}
 
-/* ── USER TABLE ── */
-.sec{font-family:var(--ui);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--ion);margin-bottom:14px;text-shadow:0 0 6px rgba(79,195,247,0.3);}
-.search-row{margin-bottom:16px;}
-.search-input{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-family:var(--ui);font-size:12px;color:var(--text);outline:none;width:260px;transition:border-color .2s;}
-.search-input:focus{border-color:var(--ion);}
-.search-input::placeholder{color:var(--dim);}
-
-.tbl-wrap{border:1px solid var(--border);overflow:hidden;}
+/* TABLES */
+.tw{border:1px solid var(--b);overflow:hidden;margin-bottom:4px;}
 table{width:100%;border-collapse:collapse;}
-thead tr{border-bottom:1px solid var(--border);background:var(--bg2);}
-th{padding:10px 16px;text-align:left;font-family:var(--ui);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--mid);}
-tbody tr{border-bottom:1px solid rgba(79,195,247,0.05);}
+thead tr{border-bottom:1px solid var(--b);background:var(--bg2);}
+th{padding:9px 14px;text-align:left;font-family:var(--ui);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--mid);}
+th:not(:first-child){text-align:right;}
+tbody tr{border-bottom:1px solid rgba(79,195,247,0.04);}
 tbody tr:last-child{border-bottom:none;}
-tbody tr:hover td{background:rgba(79,195,247,0.03);}
-td{padding:13px 16px;vertical-align:middle;background:var(--bg);}
-.uname{font-size:13px;font-weight:600;color:var(--text);}
-.uemail{font-family:var(--ui);font-size:10px;color:var(--mid);margin-top:2px;}
+tbody tr:hover td{background:rgba(79,195,247,0.025);}
+td{padding:11px 14px;vertical-align:middle;background:var(--bg);font-family:var(--ui);font-size:11px;color:var(--mid);}
+td:not(:first-child){text-align:right;}
+.tname{font-size:13px;font-weight:600;color:var(--t);font-family:var(--sans);margin-bottom:1px;}
+.temail{font-size:10px;color:var(--dim);}
+.trole{font-size:10px;color:var(--mid);}
 
-.rsel{
-  background:var(--bg2);border:1px solid var(--border);border-radius:5px;
-  font-family:var(--ui);font-size:11px;color:var(--text);
-  padding:5px 10px;outline:none;cursor:pointer;transition:border-color .2s;
-  appearance:none;-webkit-appearance:none;
-}
+/* STAT CELLS */
+.val-hi{color:var(--t);font-weight:600;}
+.val-green{color:var(--green);}
+.val-amber{color:var(--amber);}
+.val-red{color:var(--red);}
+.val-ion{color:var(--ion);}
+.val-dim{color:var(--dim);}
+
+/* STATUS PIP */
+.pip{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+
+/* ROLE + PLAN SELECTS */
+.rsel{background:var(--bg2);border:1px solid var(--b);border-radius:4px;font-family:var(--ui);font-size:10px;color:var(--t);padding:4px 8px;outline:none;cursor:pointer;transition:border-color .2s;appearance:none;}
 .rsel:focus{border-color:var(--ion);}
 .rsel option{background:var(--bg2);}
 
-/* CREDIT CONTROLS */
-.cw{display:flex;align-items:center;gap:6px;}
-.cnum{font-family:var(--ui);font-size:12px;color:var(--text);min-width:24px;text-align:center;}
-.cbtn{background:var(--bg2);border:1px solid var(--border);width:24px;height:24px;border-radius:4px;font-size:14px;color:var(--mid);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;}
+/* CREDIT BTN */
+.cw{display:flex;align-items:center;gap:5px;justify-content:flex-end;}
+.cnum{font-size:11px;color:var(--t);min-width:20px;text-align:center;}
+.cbtn{background:var(--bg2);border:1px solid var(--b);width:20px;height:20px;border-radius:3px;font-size:12px;color:var(--mid);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;padding:0;}
 .cbtn:hover{border-color:var(--ion);color:var(--ion);}
 .cbtn.m:hover{border-color:var(--red);color:var(--red);}
+.gobtn{background:none;border:none;font-size:13px;color:var(--ion);cursor:pointer;text-shadow:0 0 6px rgba(79,195,247,0.4);padding:0;transition:opacity .2s;}
+.gobtn:hover{opacity:.6;}
 
-.go-btn{background:none;border:none;font-family:var(--ui);font-size:13px;color:var(--ion);cursor:pointer;padding:0;transition:opacity .2s;text-shadow:0 0 8px rgba(79,195,247,0.4);}
-.go-btn:hover{opacity:.6;}
+.empty{padding:32px;text-align:center;font-family:var(--ui);font-size:11px;color:var(--dim);background:var(--bg);border:1px solid var(--b);}
 
-.empty{padding:48px;text-align:center;font-family:var(--ui);font-size:12px;color:var(--mid);}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-family:var(--ui);font-size:12px;color:var(--ion);opacity:0;transform:translateY(6px);transition:all .3s;pointer-events:none;}
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:10px 18px;font-family:var(--ui);font-size:12px;color:var(--ion);opacity:0;transform:translateY(6px);transition:all .3s;pointer-events:none;}
 .toast.show{opacity:1;transform:none;}
 
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .fi{opacity:0;animation:fu .4s ease forwards;}
-.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}.d5{animation-delay:.25s}
 
-@media(max-width:1100px){.met-grid{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}}
-@media(max-width:700px){.wrap{padding:20px;}.nav{padding:0 20px;}}
+@media(max-width:1100px){.mets{grid-template-columns:1fr 1fr;}.wrap{padding:20px;}.nav{padding:0 20px;}}
 </style>
 </head>
 <body>
 
-<!-- ENTRY with particles -->
+<!-- ENTRY -->
 <div id="entry">
   <canvas id="ec"></canvas>
-  <div class="entry-content">
+  <div class="ec">
     <div class="eg">God Mode</div>
     <div class="et">Don't be evil.</div>
   </div>
@@ -151,34 +122,32 @@ td{padding:13px 16px;vertical-align:middle;background:var(--bg);}
 <div id="dash">
   <div class="nav">
     <div style="display:flex;align-items:center;">
-      <a href="/" class="brand"><span class="brand-name">targetdash</span><span class="brand-gt">&gt;</span></a>
-      <span class="brand-mode">god mode</span>
+      <a href="/" class="brand"><span class="bn">targetdash</span><span class="bg">&gt;</span></a>
+      <span class="bm">god mode</span>
     </div>
-    <div class="nav-r">
+    <div class="nr">
       <span id="clock"></span>
-      <button class="exit" onclick="so()">Sign out</button>
+      <button class="xbtn" onclick="so()">Sign out</button>
     </div>
   </div>
   <div class="wrap" id="wrap"></div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
 // ── ENTRY PARTICLES ────────────────────────────────────────────────────────
 const ec=document.getElementById('ec');
 const ex=ec.getContext('2d');
-let eW,eH,ePts=[];
-function eResize(){eW=ec.width=ec.offsetWidth;eH=ec.height=ec.offsetHeight;}
-eResize();window.addEventListener('resize',eResize);
-ePts=Array.from({length:60},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vy:-(Math.random()*.35+.08),vx:(Math.random()-.5)*.12,r:Math.random()*1.2+.4,ph:Math.random()*Math.PI*2}));
-let animId;
-(function eFrame(){
-  animId=requestAnimationFrame(eFrame);
+let eW=ec.width=innerWidth,eH=ec.height=innerHeight;
+window.addEventListener('resize',()=>{eW=ec.width=innerWidth;eH=ec.height=innerHeight;});
+const ePts=Array.from({length:60},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vy:-(Math.random()*.35+.08),vx:(Math.random()-.5)*.12,r:Math.random()*1.2+.4,ph:Math.random()*Math.PI*2}));
+let eAnim;
+(function eF(){
+  eAnim=requestAnimationFrame(eF);
   ex.clearRect(0,0,eW,eH);
   ePts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.ph+=.016;if(p.y<-10){p.y=eH+10;p.x=Math.random()*eW;}if(p.x<0)p.x=eW;if(p.x>eW)p.x=0;});
-  for(let i=0;i<ePts.length;i++)for(let j=i+1;j<ePts.length;j++){const dx=ePts[i].x-ePts[j].x,dy=ePts[i].y-ePts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<130){ex.beginPath();ex.strokeStyle=`rgba(79,195,247,${(1-d/130)*.14})`;ex.lineWidth=.4;ex.moveTo(ePts[i].x,ePts[i].y);ex.lineTo(ePts[j].x,ePts[j].y);ex.stroke();}}
-  ePts.forEach(p=>{const a=.25+.2*Math.sin(p.ph);ex.beginPath();ex.arc(p.x,p.y,p.r,0,Math.PI*2);ex.fillStyle=`rgba(79,195,247,${a})`;ex.fill();});
+  for(let i=0;i<ePts.length;i++)for(let j=i+1;j<ePts.length;j++){const dx=ePts[i].x-ePts[j].x,dy=ePts[i].y-ePts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<130){ex.beginPath();ex.strokeStyle=`rgba(79,195,247,${(1-d/130)*.13})`;ex.lineWidth=.4;ex.moveTo(ePts[i].x,ePts[i].y);ex.lineTo(ePts[j].x,ePts[j].y);ex.stroke();}}
+  ePts.forEach(p=>{ex.beginPath();ex.arc(p.x,p.y,p.r,0,Math.PI*2);ex.fillStyle=`rgba(79,195,247,${.25+.2*Math.sin(p.ph)})`;ex.fill();});
 })();
 
 // ── SUPABASE ──────────────────────────────────────────────────────────────
@@ -187,27 +156,30 @@ const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6I
 const SUPERS=['niklas.isaksson@targetflow.fi'];
 const {createClient}=supabase;
 const sb=createClient(SU,SK);
-let cl=[],srch='';
+let cl=[],stats={},srch='';
+const thisMonth=new Date().toISOString().slice(0,7);
 
 setInterval(()=>{const e=document.getElementById('clock');if(!e)return;const n=new Date(),p=x=>String(x).padStart(2,'0');e.textContent=`${n.toISOString().split('T')[0]} · ${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;},1000);
 
 (async()=>{
-  // Show entry for 2.4s then switch to dashboard
   await new Promise(r=>setTimeout(r,2400));
-
   const {data:{session}}=await sb.auth.getSession();
   if(!session){window.location.href='/login';return;}
   if(!SUPERS.includes(session.user.email)){window.location.href='/dashboard';return;}
 
-  const [{data:prof},{data:cred}]=await Promise.all([
+  const [{data:prof},{data:cred},{data:ums}]=await Promise.all([
     sb.from('user_profiles').select('*').order('created_at',{ascending:false}),
     sb.from('demo_credits').select('user_id,credits_used'),
+    sb.from('user_monthly_stats').select('*').eq('month',thisMonth).catch(()=>({data:[]})),
   ]);
-  const cm={};(cred||[]).forEach(c=>cm[c.user_id]=c.credits_used);
-  cl=(prof||[]).map(p=>({...p,credits_used:cm[p.user_id]||0}));
 
-  // Stop particles, hide entry, show dashboard
-  cancelAnimationFrame(animId);
+  const cm={};(cred||[]).forEach(c=>cm[c.user_id]=c.credits_used);
+  // Build stats map by user_id
+  (ums||[]).forEach(s=>stats[s.user_id]=s);
+
+  cl=(prof||[]).map(p=>({...p,credits_used:cm[p.user_id]||0,stats:stats[p.user_id]||null}));
+
+  cancelAnimationFrame(eAnim);
   document.getElementById('entry').style.display='none';
   document.getElementById('dash').style.display='block';
   render();
@@ -215,91 +187,206 @@ setInterval(()=>{const e=document.getElementById('clock');if(!e)return;const n=n
 
 // ── HELPERS ───────────────────────────────────────────────────────────────
 const fmt=d=>d?new Date(d).toLocaleDateString('fi-FI'):'—';
-const ago=d=>{if(!d)return'—';const s=Math.floor((Date.now()-new Date(d))/1000);if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';};
+const fmtMin=s=>{if(!s)return'—';const m=Math.round(s/60);if(m<60)return m+'min';return Math.floor(m/60)+'h '+(m%60)+'min';};
+const ago=d=>{if(!d)return null;const s=Math.floor((Date.now()-new Date(d))/1000);if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';};
+const daysSince=d=>{if(!d)return 999;return Math.floor((Date.now()-new Date(d))/(1000*60*60*24));};
 const pc=p=>p==='mainuser'?'var(--green)':p==='demo'?'var(--amber)':p==='inactive'?'var(--red)':p==='superuser'?'var(--ion)':'var(--dim)';
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);};
 
 // ── RENDER ────────────────────────────────────────────────────────────────
 function render(){
-  const paid=cl.filter(c=>c.plan==='mainuser');
-  const demo=cl.filter(c=>c.plan==='demo');
-  const demoEx=demo.filter(c=>(c.credits_used||0)>=5);
-  const demoAc=demo.filter(c=>(c.credits_used||0)<5);
-  const recent=[...cl].slice(0,6);
-  const mrr=paid.length*80;
-  const conv=demo.length>0?Math.round(paid.length/demo.length*100):0;
-  const pend=cl.filter(c=>!c.plan||c.plan==='subscribe').length;
-  const inac=cl.filter(c=>c.plan==='inactive').length;
-  const filtered=cl.filter(c=>{
-    if(!srch)return true;
-    const q=srch.toLowerCase();
-    return c.company_name?.toLowerCase().includes(q)||c.email?.toLowerCase().includes(q);
+  const now=Date.now();
+  const oneWeek=7*24*60*60*1000;
+
+  // COMPANIES (mainuser plan)
+  const companies=cl.filter(c=>c.plan==='mainuser');
+
+  // ACTIVE PAID USERS — paid and opened within 30 days
+  const activePaid=companies.filter(c=>{
+    const lo=c.stats?.last_opened;
+    return !lo || daysSince(lo)<=30;
   });
 
+  // HOT PROSPECTS — demo, signed up within last 7 days
+  const hotProspects=cl.filter(c=>c.plan==='demo'&&daysSince(c.created_at)<=7);
+
+  // INACTIVE DEMO — demo, signed up more than 7 days ago OR credits exhausted
+  const inactiveDemo=cl.filter(c=>c.plan==='demo'&&(daysSince(c.created_at)>7||(c.credits_used||0)>=5));
+
+  // METRICS
+  const mrr=companies.length*80;
+  const conv=hotProspects.length+inactiveDemo.length>0?Math.round(companies.length/(hotProspects.length+inactiveDemo.length)*100):0;
+  const totalAI=Object.values(stats).reduce((s,x)=>s+(x.ai_questions||0),0);
+  const totalTime=Object.values(stats).reduce((s,x)=>s+(x.time_spent_sec||0),0);
+
   document.getElementById('wrap').innerHTML=`
-  <div class="met-grid fi d1">
-    <div class="met"><div class="met-k">MRR</div><div class="met-v" style="color:var(--green)">€${mrr.toLocaleString()}</div><div class="met-s">${paid.length} × €80/month</div></div>
-    <div class="met"><div class="met-k">Active clients</div><div class="met-v" style="color:var(--green)">${paid.length}</div><div class="met-s">paid MainUser plan</div></div>
-    <div class="met"><div class="met-k">Demo pipeline</div><div class="met-v" style="color:var(--amber)">${demo.length}</div><div class="met-s">${demoEx.length} credits exhausted</div></div>
-    <div class="met"><div class="met-k">Conversion</div><div class="met-v" style="color:var(--ion)">${conv}<span style="font-size:18px;color:var(--dim)">%</span></div><div class="met-s">demo → paid</div></div>
-    <div class="met"><div class="met-k">Total users</div><div class="met-v" style="color:var(--text)">${cl.length}</div><div class="met-s">${pend} pending · ${inac} inactive</div></div>
+
+  <!-- METRICS -->
+  <div class="mets fi d1">
+    <div class="met"><div class="mk">MRR</div><div class="mv" style="color:var(--green)">€${mrr.toLocaleString()}</div><div class="ms">${companies.length}×€80 this month</div></div>
+    <div class="met"><div class="mk">Companies</div><div class="mv" style="color:var(--t)">${companies.length}</div><div class="ms">${activePaid.length} active this month</div></div>
+    <div class="met"><div class="mk">Conversion</div><div class="mv" style="color:var(--ion)">${conv}<span style="font-size:18px;color:var(--dim)">%</span></div><div class="ms">demo → paid</div></div>
+    <div class="met"><div class="mk">AI questions</div><div class="mv" style="color:var(--violet)">${totalAI}</div><div class="ms">EBITDA-9000 this month</div></div>
+    <div class="met"><div class="mk">Time on platform</div><div class="mv" style="color:var(--ion)">${fmtMin(totalTime)}</div><div class="ms">all users this month</div></div>
   </div>
 
-  <div class="two fi d2">
-    <div class="panel">
-      <div class="panel-title">Demo pipeline</div>
-      ${demoEx.length===0&&demoAc.length===0?`<div class="row"><span class="rl" style="color:var(--dim)">No demo users yet</span></div>`:''}
-      ${demoEx.map(c=>`<div class="row"><div><div class="rl"><span class="pip" style="background:var(--amber)"></span>${c.company_name||c.email||'—'}</div><div class="rsub">Credits exhausted · ${fmt(c.created_at)}</div></div><span class="rtag" style="color:var(--amber)">upgrade now</span></div>`).join('')}
-      ${demoAc.map(c=>`<div class="row"><div><div class="rl"><span class="pip" style="background:var(--green)"></span>${c.company_name||c.email||'—'}</div><div class="rsub">${c.credits_used||0}/5 credits · ${fmt(c.created_at)}</div></div><span class="rtag" style="color:var(--green)">active</span></div>`).join('')}
+  <!-- COMPANIES -->
+  <div class="fi d2">
+    <div class="sh">
+      <span class="sh-title">Companies</span>
+      <span class="sh-count">${companies.length} paying clients</span>
+      <span class="sh-desc">€80/mo MainUser plan</span>
     </div>
-    <div class="panel">
-      <div class="panel-title">Recent signups</div>
-      ${recent.length===0?`<div class="row"><span class="rl" style="color:var(--dim)">No activity yet</span></div>`:
-        recent.map(c=>`<div class="row"><div><div class="rl"><span class="pip" style="background:${pc(c.plan)}"></span>${c.company_name||c.email||'—'}</div><div class="rsub">${c.email||''}</div></div><div style="text-align:right;"><div class="rtag" style="color:${pc(c.plan)}">${c.plan||'pending'}</div><div class="rsub">${ago(c.created_at)}</div></div></div>`).join('')}
-    </div>
+    ${companies.length===0
+      ?`<div class="empty">No paying companies yet</div>`
+      :`<div class="tw"><table>
+        <thead><tr>
+          <th>Company</th><th>Role</th><th>Plan</th>
+          <th>Views / month</th><th>AI credits used</th><th>Time / month</th>
+          <th>Last opened</th><th>Since</th><th></th>
+        </tr></thead>
+        <tbody>${companies.map(c=>compRow(c)).join('')}</tbody>
+      </table></div>`}
   </div>
 
+  <!-- ACTIVE PAID USERS -->
   <div class="fi d3">
-    <div class="sec">All users — role & credit management</div>
-    <div class="search-row"><input class="search-input" placeholder="Search name or email…" value="${srch}" oninput="ss(this.value)" autocomplete="off"/></div>
-    ${filtered.length===0
-      ?`<div class="tbl-wrap"><div class="empty">No users found</div></div>`
-      :`<div class="tbl-wrap"><table>
-        <thead><tr><th>Client</th><th>Plan</th><th>Role</th><th>AI credits</th><th>Joined</th><th>Activated</th><th></th></tr></thead>
-        <tbody>${filtered.map(urow).join('')}</tbody>
+    <div class="sh">
+      <span class="sh-title">Active paid users</span>
+      <span class="sh-count">${activePaid.length} users</span>
+      <span class="sh-desc">Opened dashboard within last 30 days</span>
+    </div>
+    ${activePaid.length===0
+      ?`<div class="empty">No active users this month</div>`
+      :`<div class="tw"><table>
+        <thead><tr>
+          <th>User</th><th>Primary role</th><th>Plan</th>
+          <th>Views / month</th><th>AI credits used</th><th>Time / month</th>
+          <th>Last opened</th><th>Activated</th><th></th>
+        </tr></thead>
+        <tbody>${activePaid.map(c=>userRow(c)).join('')}</tbody>
+      </table></div>`}
+  </div>
+
+  <!-- HOT PROSPECTS -->
+  <div class="fi d4">
+    <div class="sh">
+      <span class="sh-title" style="color:var(--amber)">Hot prospects</span>
+      <span class="sh-count">${hotProspects.length} users</span>
+      <span class="sh-desc">Demo users who signed up within the last 7 days</span>
+    </div>
+    ${hotProspects.length===0
+      ?`<div class="empty">No new demo users this week</div>`
+      :`<div class="tw"><table>
+        <thead><tr>
+          <th>User</th><th>Role</th><th>Plan</th>
+          <th>Credits used</th><th>AI questions</th><th>Time spent</th>
+          <th>Signed up</th><th>Last opened</th><th></th>
+        </tr></thead>
+        <tbody>${hotProspects.map(c=>demoRow(c,'amber')).join('')}</tbody>
+      </table></div>`}
+  </div>
+
+  <!-- INACTIVE DEMO -->
+  <div class="fi d5">
+    <div class="sh">
+      <span class="sh-title" style="color:var(--red)">Inactive demo users</span>
+      <span class="sh-count">${inactiveDemo.length} users</span>
+      <span class="sh-desc">Demoed but not converted — over 7 days old</span>
+    </div>
+    ${inactiveDemo.length===0
+      ?`<div class="empty">No inactive demo users</div>`
+      :`<div class="tw"><table>
+        <thead><tr>
+          <th>User</th><th>Role</th><th>Plan</th>
+          <th>Credits used</th><th>AI questions</th><th>Time spent</th>
+          <th>Signed up</th><th>Last opened</th><th></th>
+        </tr></thead>
+        <tbody>${inactiveDemo.map(c=>demoRow(c,'red')).join('')}</tbody>
       </table></div>`}
   </div>`;
 }
 
-function urow(c){
-  const uid=c.user_id;
-  const plans=['inactive','demo','subscribe','mainuser','superuser'];
-  const roles=['CEO','CFO','CMO','CRO','CTO','HR Manager'];
+function compRow(c){
+  const s=c.stats;
+  const lo=s?.last_opened;
+  const loAgo=lo?ago(lo):'never';
+  const loColor=!lo?'var(--dim)':daysSince(lo)<=7?'var(--green)':daysSince(lo)<=30?'var(--amber)':'var(--red)';
+  const plans=['inactive','demo','mainuser','superuser'];
   const planOpts=plans.map(p=>`<option value="${p}"${c.plan===p?' selected':''}>${p}</option>`).join('');
-  const roleOpts=roles.map(r=>`<option value="${r}"${c.primary_role===r?' selected':''}>${r}</option>`).join('');
-  const cred=c.credits_used||0;
   return `<tr>
-    <td><div class="uname">${c.company_name||'—'}</div><div class="uemail">${c.email||''}</div></td>
-    <td><select class="rsel" style="color:${pc(c.plan)}" onchange="updatePlan('${uid}',this.value)">${planOpts}</select></td>
-    <td><select class="rsel" onchange="updateRole('${uid}',this.value)">${roleOpts}</select></td>
-    <td><div class="cw"><button class="cbtn m" onclick="adjCredit('${uid}',-1)">−</button><span class="cnum">${cred}</span><button class="cbtn" onclick="adjCredit('${uid}',1)">+</button></div></td>
-    <td style="font-family:var(--ui);font-size:11px;color:var(--mid);">${fmt(c.created_at)}</td>
-    <td style="font-family:var(--ui);font-size:11px;color:var(--mid);">${fmt(c.plan_activated_at||c.agreed_at)}</td>
-    <td><button class="go-btn" onclick="go('/dashboard')">→</button></td>
+    <td><div class="tname">${c.company_name||'—'}</div><div class="temail">${c.email||''}</div></td>
+    <td><span class="trole">${c.primary_role||'—'}</span></td>
+    <td><select class="rsel" style="color:${pc(c.plan)}" onchange="updatePlan('${c.user_id}',this.value)">${planOpts}</select></td>
+    <td class="val-hi">${s?.opens||'—'}</td>
+    <td><div class="cw"><button class="cbtn m" onclick="adjCredit('${c.user_id}',-1)">−</button><span class="cnum">${c.credits_used||0}</span><button class="cbtn" onclick="adjCredit('${c.user_id}',1)">+</button></div></td>
+    <td class="val-hi">${fmtMin(s?.time_spent_sec)}</td>
+    <td style="color:${loColor}">${loAgo}</td>
+    <td class="val-dim">${fmt(c.plan_activated_at||c.created_at)}</td>
+    <td><button class="gobtn" onclick="go('/dashboard')">→</button></td>
   </tr>`;
 }
 
+function userRow(c){
+  const s=c.stats;
+  const lo=s?.last_opened;
+  const loAgo=lo?ago(lo):'never';
+  const loColor=!lo?'var(--dim)':daysSince(lo)<=7?'var(--green)':daysSince(lo)<=30?'var(--amber)':'var(--red)';
+  const roles=['CEO','CFO','CMO','CRO','CTO','HR Manager'];
+  const roleOpts=roles.map(r=>`<option value="${r}"${c.primary_role===r?' selected':''}>${r}</option>`).join('');
+  const plans=['inactive','demo','mainuser','superuser'];
+  const planOpts=plans.map(p=>`<option value="${p}"${c.plan===p?' selected':''}>${p}</option>`).join('');
+  return `<tr>
+    <td><div class="tname">${c.company_name||'—'}</div><div class="temail">${c.email||''}</div></td>
+    <td><select class="rsel" onchange="updateRole('${c.user_id}',this.value)">${roleOpts}</select></td>
+    <td><select class="rsel" style="color:${pc(c.plan)}" onchange="updatePlan('${c.user_id}',this.value)">${planOpts}</select></td>
+    <td class="val-hi">${s?.opens||'—'}</td>
+    <td><div class="cw"><button class="cbtn m" onclick="adjCredit('${c.user_id}',-1)">−</button><span class="cnum">${c.credits_used||0}</span><button class="cbtn" onclick="adjCredit('${c.user_id}',1)">+</button></div></td>
+    <td class="val-hi">${fmtMin(s?.time_spent_sec)}</td>
+    <td style="color:${loColor}">${loAgo}</td>
+    <td class="val-dim">${fmt(c.plan_activated_at||c.agreed_at)}</td>
+    <td><button class="gobtn" onclick="go('/dashboard')">→</button></td>
+  </tr>`;
+}
+
+function demoRow(c,accent){
+  const s=c.stats;
+  const lo=s?.last_opened;
+  const loAgo=lo?ago(lo):'never';
+  const daysOld=daysSince(c.created_at);
+  const plans=['inactive','demo','mainuser'];
+  const planOpts=plans.map(p=>`<option value="${p}"${c.plan===p?' selected':''}>${p}</option>`).join('');
+  const credBar=`<div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
+    <div style="width:36px;height:2px;background:var(--dim);border-radius:1px;overflow:hidden;">
+      <div style="width:${Math.min(100,(c.credits_used||0)/5*100)}%;height:100%;background:var(--${accent});"></div>
+    </div>
+    <span style="color:var(--t);font-size:11px;">${c.credits_used||0}/5</span>
+  </div>`;
+  return `<tr>
+    <td><div class="tname">${c.company_name||'—'}</div><div class="temail">${c.email||''}</div></td>
+    <td class="val-dim">${c.primary_role||'—'}</td>
+    <td><select class="rsel" style="color:${pc(c.plan)}" onchange="updatePlan('${c.user_id}',this.value)">${planOpts}</select></td>
+    <td>${credBar}</td>
+    <td class="val-hi">${s?.ai_questions||'—'}</td>
+    <td class="val-hi">${fmtMin(s?.time_spent_sec)}</td>
+    <td class="val-dim">${fmt(c.created_at)} <span style="color:var(--${accent});font-size:9px;">(${daysOld}d ago)</span></td>
+    <td style="color:${lo?'var(--mid)':'var(--dim)'}">${loAgo}</td>
+    <td><button class="gobtn" onclick="go('/demo')">→</button></td>
+  </tr>`;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────
 async function updatePlan(uid,plan){
   const {error}=await sb.from('user_profiles').update({plan,updated_at:new Date().toISOString()}).eq('user_id',uid);
   if(error){toast('Error: '+error.message);return;}
   const i=cl.findIndex(c=>c.user_id===uid);if(i>-1)cl[i].plan=plan;
-  toast('Plan updated');render();
+  toast('Plan updated → '+plan);render();
 }
 async function updateRole(uid,role){
   const {error}=await sb.from('user_profiles').update({primary_role:role,updated_at:new Date().toISOString()}).eq('user_id',uid);
   if(error){toast('Error: '+error.message);return;}
   const i=cl.findIndex(c=>c.user_id===uid);if(i>-1)cl[i].primary_role=role;
-  toast('Role updated');
+  toast('Role → '+role);
 }
 async function adjCredit(uid,delta){
   const i=cl.findIndex(c=>c.user_id===uid);if(i<0)return;
@@ -308,10 +395,9 @@ async function adjCredit(uid,delta){
   if(error){toast('Error: '+error.message);return;}
   cl[i].credits_used=next;toast(delta>0?'+1 credit':'−1 credit');render();
 }
-function ss(s){srch=s;render();}
 function go(u){window.location.href=u;}
 async function so(){await sb.auth.signOut();window.location.href='/login';}
-window.updatePlan=updatePlan;window.updateRole=updateRole;window.adjCredit=adjCredit;window.ss=ss;window.go=go;window.so=so;
+window.updatePlan=updatePlan;window.updateRole=updateRole;window.adjCredit=adjCredit;window.go=go;window.so=so;
 </script>
 </body>
 </html>
