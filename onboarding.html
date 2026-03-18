@@ -606,7 +606,7 @@ document.getElementById('btn3').addEventListener('click', async () => {
     if(error) throw error;
 
     // Success!
-    const redirectTo = mode === 'demo' ? DASHBOARD_URL + '?demo=1' : DASHBOARD_URL;
+    const redirectTo = mode === 'demo' ? '/demo' : DASHBOARD_URL;
     currentStep = 'x';
     document.getElementById('step3').classList.remove('active');
     document.getElementById('stepDone').classList.add('active');
