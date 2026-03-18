@@ -111,10 +111,91 @@ nav {
 ══════════════════════════════════ */
 .hero {
   min-height: 100vh;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 0 52px 80px; padding-top: 68px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 52px 60px; padding-top: 68px;
+  gap: 52px;
   position: relative;
+  overflow: hidden;
 }
+.hero-left { display: flex; flex-direction: column; }
+.hero-right {
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  opacity: 0; animation: fadeUp 1s ease forwards .8s;
+}
+.mockup-wrap { position: relative; width: 100%; max-width: 520px; }
+.mockup-desktop {
+  width: 100%; border-radius: 10px;
+  border: 1px solid rgba(124,58,237,0.3);
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.8),
+    0 0 0 1px rgba(124,58,237,0.15),
+    0 0 80px rgba(124,58,237,0.1);
+  overflow: hidden;
+  animation: floatDesktop 6s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+.mockup-mobile {
+  position: absolute; bottom: -24px; right: -20px;
+  width: 124px; border-radius: 16px;
+  border: 1px solid rgba(124,58,237,0.45);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(124,58,237,0.2),
+    0 0 30px rgba(124,58,237,0.12);
+  overflow: hidden;
+  animation: floatMobile 6s ease-in-out infinite .8s;
+}
+
+/* reflection strip on top of both mockups */
+.mockup-desktop::after, .mockup-mobile::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 40%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.04), transparent);
+  pointer-events: none; border-radius: inherit;
+}
+
+/* glow blob behind */
+.mockup-glow {
+  position: absolute; top: 45%; left: 38%; transform: translate(-50%,-50%);
+  width: 80%; height: 75%; pointer-events: none; z-index: -1;
+  background: radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, rgba(91,33,182,0.06) 45%, transparent 70%);
+  animation: glowPulse 4s ease-in-out infinite;
+  filter: blur(24px);
+}
+
+/* bottom reflection — mirror fade under desktop mockup */
+.mockup-reflection {
+  position: absolute; bottom: -60px; left: 0; right: 0; height: 60px;
+  background: linear-gradient(to bottom, rgba(124,58,237,0.06), transparent);
+  transform: scaleY(-1);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+  overflow: hidden; border-radius: 10px;
+  pointer-events: none;
+}
+
+@keyframes floatDesktop {
+  0%, 100% { transform: translateY(0px) rotate(-0.5deg); }
+  50%       { transform: translateY(-10px) rotate(0.5deg); }
+}
+@keyframes floatMobile {
+  0%, 100% { transform: translateY(0px) rotate(1deg); }
+  50%       { transform: translateY(-14px) rotate(-0.5deg); }
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
+  50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.1); }
+}
+
+@media(max-width:1100px){
+  .hero { grid-template-columns: 1fr; min-height: auto; padding-bottom: 60px; }
+  .hero-right { display: none; }
+}
+@media(max-width:768px){ .hero { padding-left:24px; padding-right:24px; } }
+
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: var(--ui); font-size: 12px; font-weight: 500; color: var(--lilac);
@@ -1068,52 +1149,357 @@ footer {
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">
-    <span class="badge-dot"></span>
-    Your business intelligence platform — now live
-  </div>
-  <div class="hero-headline">
-    <h1 class="hero-h1">
-      Your business finances,<br/>
-      <span class="hl">finally intelligent.</span>
-    </h1>
-  </div>
-  <p class="hero-sub">
-    targetdash &gt; unifies your KPIs, cash flows, budgets and risk signals in one place — with a built-in <b>AI assistant</b> that reads your data and talks back in the language of your role.
-  </p>
-  <div class="hero-actions">
-    <a href="#pricing" class="hero-btn-main">
-      Get started
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-    <a href="#ai" class="hero-btn-sec">See AI demo</a>
-  </div>
-  <div class="hero-stats">
-    <div class="hstat">
-      <span class="hstat-num">&lt;1<span>s</span></span>
-      <span class="hstat-lbl">Data sync latency</span>
+
+  <!-- LEFT COLUMN -->
+  <div class="hero-left">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Your business intelligence platform — now live
     </div>
-    <div class="hstat-div"></div>
-    <div class="hstat">
-      <span class="hstat-num">6<span>+</span></span>
-      <span class="hstat-lbl">AI advisor roles</span>
+    <div class="hero-headline">
+      <h1 class="hero-h1">
+        Your business finances,<br/>
+        <span class="hl">finally intelligent.</span>
+      </h1>
     </div>
-    <div class="hstat-div"></div>
-    <div class="hstat">
-      <span class="hstat-num">24<span>/7</span></span>
-      <span class="hstat-lbl">Always-on monitoring</span>
+    <p class="hero-sub">
+      targetdash &gt; unifies your KPIs, cash flows, budgets and risk signals in one place — with a built-in <b>AI assistant</b> that reads your data and talks back in the language of your role.
+    </p>
+    <div class="hero-actions">
+      <a href="#pricing" class="hero-btn-main">
+        Get started
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#ai" class="hero-btn-sec">See AI demo</a>
     </div>
-    <div class="hstat-div"></div>
-    <div class="hstat">
-      <span class="hstat-num">100<span>%</span></span>
-      <span class="hstat-lbl">Nordic-built</span>
+    <div class="hero-stats">
+      <div class="hstat">
+        <span class="hstat-num">&lt;1<span>s</span></span>
+        <span class="hstat-lbl">Data sync latency</span>
+      </div>
+      <div class="hstat-div"></div>
+      <div class="hstat">
+        <span class="hstat-num">6<span>+</span></span>
+        <span class="hstat-lbl">AI advisor roles</span>
+      </div>
+      <div class="hstat-div"></div>
+      <div class="hstat">
+        <span class="hstat-num">24<span>/7</span></span>
+        <span class="hstat-lbl">Always-on monitoring</span>
+      </div>
+      <div class="hstat-div"></div>
+      <div class="hstat">
+        <span class="hstat-num">100<span>%</span></span>
+        <span class="hstat-lbl">Nordic-built</span>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Scroll to explore
     </div>
   </div>
-  <div class="scroll-hint">
-    <div class="scroll-line"></div>
-    Scroll to explore
+
+  <!-- RIGHT COLUMN — MOCKUPS -->
+  <div class="hero-right">
+    <div class="mockup-glow"></div>
+    <div class="mockup-wrap">
+
+      <!-- DESKTOP MOCKUP -->
+      <div class="mockup-desktop">
+        <svg viewBox="0 0 520 320" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;">
+          <!-- Background -->
+          <rect width="520" height="320" fill="#0e0c18"/>
+
+          <!-- Top bar -->
+          <rect width="520" height="44" fill="#13111f"/>
+          <rect width="520" height="1" y="44" fill="#2d2845"/>
+
+          <!-- Logo mark -->
+          <rect x="16" y="12" width="20" height="20" rx="5" fill="url(#logoGrad)"/>
+          <text x="26" y="26" fill="#fff" font-family="monospace" font-size="8" font-weight="700" text-anchor="middle">TF</text>
+
+          <!-- Company name -->
+          <text x="44" y="21" fill="#f0ecff" font-family="sans-serif" font-size="11" font-weight="600">Custom Ltd</text>
+          <text x="44" y="33" fill="#5a4f8a" font-family="monospace" font-size="8">targetdash› · 2025</text>
+
+          <!-- Year tabs -->
+          <rect x="200" y="14" width="28" height="16" rx="4" fill="none" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="214" y="25" fill="#5a4f8a" font-family="monospace" font-size="8" text-anchor="middle">2023</text>
+          <rect x="232" y="14" width="28" height="16" rx="4" fill="none" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="246" y="25" fill="#5a4f8a" font-family="monospace" font-size="8" text-anchor="middle">2024</text>
+          <rect x="264" y="14" width="28" height="16" rx="4" fill="none" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="278" y="25" fill="#8a85a8" font-family="monospace" font-size="8" text-anchor="middle">2025</text>
+          <rect x="296" y="14" width="28" height="16" rx="4" fill="#2d1f5e" stroke="#7c3aed" stroke-width="0.8"/>
+          <text x="310" y="25" fill="#9333ea" font-family="monospace" font-size="8" text-anchor="middle">2026</text>
+
+          <!-- Theme + avatar icons -->
+          <rect x="450" y="13" width="22" height="18" rx="5" fill="none" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="461" y="25" fill="#8a85a8" font-size="11" text-anchor="middle">☀</text>
+          <rect x="478" y="13" width="22" height="18" rx="5" fill="rgba(124,58,237,0.15)" stroke="rgba(129,140,248,0.25)" stroke-width="0.8"/>
+          <text x="489" y="25" fill="#c4b5fd" font-family="monospace" font-size="7" font-weight="700" text-anchor="middle">9K</text>
+
+          <!-- Tab bar -->
+          <rect y="45" width="520" height="28" fill="#13111f"/>
+          <rect y="72" width="520" height="1" fill="#2d2845"/>
+
+          <!-- Tabs -->
+          <text x="16" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Group</text>
+          <text x="58" y="63" fill="#9333ea" font-family="sans-serif" font-size="9" font-weight="600">KPIs</text>
+          <rect x="56" y="70" width="22" height="2" rx="1" fill="#9333ea"/>
+          <text x="88" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Scenario</text>
+          <text x="136" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">P&amp;L</text>
+          <text x="158" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Balance</text>
+          <text x="202" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Cash Flow</text>
+          <text x="250" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Notifications</text>
+          <text x="306" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Sales Report</text>
+          <text x="358" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">+ My Tab</text>
+
+          <!-- Period bar -->
+          <rect y="73" width="520" height="24" fill="#13111f"/>
+          <rect y="96" width="520" height="1" fill="#2d2845"/>
+          <text x="16" y="88" fill="#8a85a8" font-family="monospace" font-size="7">From</text>
+          <rect x="34" y="79" width="22" height="12" rx="3" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="45" y="88" fill="#8a85a8" font-family="monospace" font-size="7" text-anchor="middle">Jan</text>
+          <text x="60" y="88" fill="#8a85a8" font-family="monospace" font-size="7">To</text>
+          <rect x="72" y="79" width="22" height="12" rx="3" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="83" y="88" fill="#8a85a8" font-family="monospace" font-size="7" text-anchor="middle">Dec</text>
+
+          <!-- Month pills -->
+          <rect x="102" y="80" width="18" height="11" rx="3" fill="#2d1f5e" stroke="#7c3aed" stroke-width="0.7"/>
+          <text x="111" y="88" fill="#9333ea" font-family="monospace" font-size="6" text-anchor="middle">Jan</text>
+          <rect x="122" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="131" y="88" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">Feb</text>
+          <rect x="142" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="151" y="88" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">Mar</text>
+          <rect x="162" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="171" y="88" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">Apr</text>
+          <rect x="182" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="191" y="88" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">May</text>
+          <rect x="202" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="211" y="88" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">Jun</text>
+          <rect x="222" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="231" y="88" fill="#8a85a8" font-family="monospace" font-size="6" text-anchor="middle">Jul</text>
+          <rect x="242" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="251" y="88" fill="#8a85a8" font-family="monospace" font-size="6" text-anchor="middle">Aug</text>
+          <rect x="262" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="271" y="88" fill="#8a85a8" font-family="monospace" font-size="6" text-anchor="middle">Sep</text>
+          <rect x="282" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="291" y="88" fill="#8a85a8" font-family="monospace" font-size="6" text-anchor="middle">Oct</text>
+          <rect x="302" y="80" width="18" height="11" rx="3" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="311" y="88" fill="#8a85a8" font-family="monospace" font-size="6" text-anchor="middle">Nov</text>
+          <rect x="322" y="80" width="18" height="11" rx="3" fill="#2d1f5e" stroke="#7c3aed" stroke-width="0.7"/>
+          <text x="331" y="88" fill="#9333ea" font-family="monospace" font-size="6" text-anchor="middle">Dec</text>
+
+          <!-- Legend -->
+          <circle cx="358" cy="86" r="2.5" fill="#818cf8"/>
+          <text x="364" y="88" fill="#6e6a8a" font-family="monospace" font-size="6">ACT</text>
+          <circle cx="386" cy="86" r="2.5" fill="#fbbf24"/>
+          <text x="392" y="88" fill="#6e6a8a" font-family="monospace" font-size="6">BUD</text>
+
+          <!-- MAIN CONTENT AREA -->
+          <!-- KPI Cards row -->
+          <rect x="12" y="104" width="115" height="54" rx="8" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="22" y="117" fill="#6e6a8a" font-family="monospace" font-size="7" letter-spacing="1">REVENUE</text>
+          <text x="22" y="133" fill="#f0ecff" font-family="monospace" font-size="16" font-weight="700">€3.42M</text>
+          <text x="22" y="148" fill="#34d399" font-family="monospace" font-size="8">+8.3% vs BUD</text>
+
+          <rect x="133" y="104" width="115" height="54" rx="8" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="143" y="117" fill="#6e6a8a" font-family="monospace" font-size="7" letter-spacing="1">GROSS PROFIT</text>
+          <text x="143" y="133" fill="#a78bfa" font-family="monospace" font-size="16" font-weight="700">€1.86M</text>
+          <text x="143" y="148" fill="#a78bfa" font-family="monospace" font-size="8">54.4% margin</text>
+
+          <rect x="254" y="104" width="115" height="54" rx="8" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="264" y="117" fill="#6e6a8a" font-family="monospace" font-size="7" letter-spacing="1">EBITDA</text>
+          <text x="264" y="133" fill="#fbbf24" font-family="monospace" font-size="16" font-weight="700">€284K</text>
+          <text x="264" y="148" fill="#34d399" font-family="monospace" font-size="8">+€142K vs BUD</text>
+
+          <rect x="375" y="104" width="133" height="54" rx="8" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="385" y="117" fill="#6e6a8a" font-family="monospace" font-size="7" letter-spacing="1">NET PROFIT</text>
+          <text x="385" y="133" fill="#fb7185" font-family="monospace" font-size="16" font-weight="700">-€219K</text>
+          <text x="385" y="148" fill="#34d399" font-family="monospace" font-size="8">+€109K vs BUD</text>
+
+          <!-- Chart area -->
+          <rect x="12" y="165" width="310" height="100" rx="8" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.8"/>
+          <text x="22" y="179" fill="#6e6a8a" font-family="monospace" font-size="7" letter-spacing="1">REVENUE &amp; GROSS PROFIT — MONTHLY</text>
+
+          <!-- Chart bars - revenue -->
+          <rect x="24" y="230" width="16" height="25" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="24" y="220" width="16" height="10" rx="2" fill="#818cf8"/>
+          <rect x="44" y="225" width="16" height="30" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="44" y="217" width="16" height="8" rx="2" fill="#818cf8"/>
+          <rect x="64" y="218" width="16" height="37" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="64" y="210" width="16" height="8" rx="2" fill="#818cf8"/>
+          <rect x="84" y="215" width="16" height="40" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="84" y="207" width="16" height="8" rx="2" fill="#818cf8"/>
+          <rect x="104" y="212" width="16" height="43" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="104" y="203" width="16" height="9" rx="2" fill="#818cf8"/>
+          <rect x="124" y="205" width="16" height="50" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="124" y="196" width="16" height="9" rx="2" fill="#818cf8"/>
+          <rect x="144" y="208" width="16" height="47" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="144" y="199" width="16" height="9" rx="2" fill="#818cf8"/>
+          <rect x="164" y="203" width="16" height="52" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="164" y="194" width="16" height="9" rx="2" fill="#818cf8"/>
+          <rect x="184" y="198" width="16" height="57" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="184" y="189" width="16" height="9" rx="2" fill="#818cf8"/>
+          <rect x="204" y="195" width="16" height="60" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="204" y="186" width="16" height="9" rx="2" fill="#818cf8"/>
+          <rect x="224" y="198" width="16" height="57" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="224" y="189" width="16" height="9" rx="2" fill="#818cf8"/>
+          <rect x="244" y="190" width="16" height="65" rx="2" fill="rgba(129,140,248,0.2)"/>
+          <rect x="244" y="181" width="16" height="9" rx="2" fill="#818cf8"/>
+
+          <!-- Gross margin line -->
+          <polyline points="32,226 52,222 72,217 92,214 112,211 132,205 152,208 172,203 192,198 212,195 232,198 252,188" fill="none" stroke="#34d399" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Legend -->
+          <rect x="22" y="258" width="8" height="4" rx="1" fill="#818cf8" opacity="0.5"/>
+          <text x="33" y="263" fill="#6e6a8a" font-family="monospace" font-size="6">Revenue</text>
+          <circle cx="74" cy="260" r="2" fill="#34d399"/>
+          <text x="79" y="263" fill="#6e6a8a" font-family="monospace" font-size="6">Gross Profit</text>
+
+          <!-- Right panel - EBITDA-9000 AI sidebar -->
+          <rect x="328" y="165" width="180" height="148" rx="8" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.8"/>
+          <!-- AI header -->
+          <rect x="328" y="165" width="180" height="28" rx="8" fill="#13111f"/>
+          <rect x="328" y="181" width="180" height="12" fill="#13111f"/>
+          <rect x="338" y="175" width="22" height="12" rx="4" fill="url(#logoGrad)"/>
+          <text x="349" y="184" fill="#fff" font-family="monospace" font-size="6" font-weight="700" text-anchor="middle">E9K</text>
+          <text x="366" y="181" fill="#f0ecff" font-family="sans-serif" font-size="8" font-weight="600">EBITDA-9000</text>
+          <text x="366" y="190" fill="#34d399" font-family="monospace" font-size="6">● CFO mode</text>
+
+          <!-- Role tabs in AI panel -->
+          <rect x="332" y="196" width="22" height="11" rx="3" fill="#2d1f5e" stroke="#7c3aed" stroke-width="0.7"/>
+          <text x="343" y="204" fill="#9333ea" font-family="monospace" font-size="6" text-anchor="middle">CFO</text>
+          <rect x="357" y="196" width="22" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="368" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">CEO</text>
+          <rect x="382" y="196" width="22" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="393" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">CMO</text>
+          <rect x="407" y="196" width="22" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="418" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">CRO</text>
+          <rect x="432" y="196" width="22" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="443" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">CTO</text>
+
+          <!-- Chat messages -->
+          <rect x="332" y="212" width="168" height="28" rx="5" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
+          <text x="340" y="222" fill="#8a85a8" font-family="sans-serif" font-size="7">Why did EBITDA improve vs budget?</text>
+          <text x="340" y="232" fill="#5a4f8a" font-family="sans-serif" font-size="6">OPEX came in -€142K below plan,</text>
+          <text x="340" y="240" fill="#5a4f8a" font-family="sans-serif" font-size="6">driven by lower marketing spend.</text>
+
+          <!-- AI bubble -->
+          <rect x="332" y="244" width="168" height="38" rx="5" fill="rgba(147,51,234,0.08)" stroke="rgba(147,51,234,0.25)" stroke-width="0.5"/>
+          <text x="340" y="255" fill="#a78bfa" font-family="sans-serif" font-size="7" font-weight="600">EBITDA-9000 · CFO</text>
+          <text x="340" y="265" fill="#8a85a8" font-family="sans-serif" font-size="6.5">Revenue +8.3% vs BUD. OPEX €142K</text>
+          <text x="340" y="274" fill="#8a85a8" font-family="sans-serif" font-size="6.5">below plan. Gross margin: 54.4%.</text>
+          <text x="340" y="282" fill="#34d399" font-family="sans-serif" font-size="6">Monitor receivables aging (DSO: 42d)</text>
+
+          <!-- Typing dots animation hint -->
+          <circle cx="340" cy="295" r="2" fill="#9333ea" opacity="0.6"/>
+          <circle cx="348" cy="295" r="2" fill="#9333ea" opacity="0.4"/>
+          <circle cx="356" cy="295" r="2" fill="#9333ea" opacity="0.2"/>
+
+          <!-- Gradient defs -->
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6d28d9"/>
+              <stop offset="100%" stop-color="#9333ea"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- MOBILE MOCKUP -->
+      <div class="mockup-mobile">        <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;">
+          <!-- BG -->
+          <rect width="120" height="220" fill="#0e0c18"/>
+
+          <!-- Status bar -->
+          <rect width="120" height="18" fill="#13111f"/>
+          <text x="10" y="13" fill="#5a4f8a" font-family="monospace" font-size="7">9:41</text>
+          <text x="95" y="13" fill="#5a4f8a" font-family="monospace" font-size="7">●●●</text>
+
+          <!-- Header -->
+          <rect y="18" width="120" height="30" fill="#13111f"/>
+          <rect y="47" width="120" height="1" fill="#2d2845"/>
+          <rect x="8" y="24" width="16" height="16" rx="4" fill="url(#mLogoGrad)"/>
+          <text x="16" y="35" fill="#fff" font-family="monospace" font-size="6" font-weight="700" text-anchor="middle">TF</text>
+          <text x="30" y="31" fill="#f0ecff" font-family="sans-serif" font-size="8" font-weight="600">Custom Ltd</text>
+          <text x="30" y="40" fill="#5a4f8a" font-family="monospace" font-size="6">2025</text>
+          <!-- hamburger + E9K -->
+          <rect x="88" y="25" width="24" height="14" rx="4" fill="rgba(124,58,237,0.15)" stroke="rgba(129,140,248,0.25)" stroke-width="0.7"/>
+          <text x="100" y="35" fill="#c4b5fd" font-family="monospace" font-size="6" font-weight="700" text-anchor="middle">9K</text>
+
+          <!-- Tab strip -->
+          <rect y="48" width="120" height="20" fill="#13111f"/>
+          <rect y="67" width="120" height="1" fill="#2d2845"/>
+          <text x="8" y="61" fill="#9333ea" font-family="sans-serif" font-size="7" font-weight="600">KPIs</text>
+          <rect x="6" y="66" width="18" height="1.5" rx="0.8" fill="#9333ea"/>
+          <text x="32" y="61" fill="#5a4f8a" font-family="sans-serif" font-size="7">P&amp;L</text>
+          <text x="54" y="61" fill="#5a4f8a" font-family="sans-serif" font-size="7">Balance</text>
+          <text x="85" y="61" fill="#5a4f8a" font-family="sans-serif" font-size="7">Cash</text>
+
+          <!-- KPI cards 2x2 -->
+          <rect x="6" y="72" width="52" height="38" rx="6" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="12" y="83" fill="#6e6a8a" font-family="monospace" font-size="5.5" letter-spacing="0.5">REVENUE</text>
+          <text x="12" y="95" fill="#f0ecff" font-family="monospace" font-size="10" font-weight="700">€3.4M</text>
+          <text x="12" y="105" fill="#34d399" font-family="monospace" font-size="5.5">+8.3%</text>
+
+          <rect x="62" y="72" width="52" height="38" rx="6" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="68" y="83" fill="#6e6a8a" font-family="monospace" font-size="5.5" letter-spacing="0.5">EBITDA</text>
+          <text x="68" y="95" fill="#fbbf24" font-family="monospace" font-size="10" font-weight="700">€284K</text>
+          <text x="68" y="105" fill="#34d399" font-family="monospace" font-size="5.5">+142K</text>
+
+          <rect x="6" y="114" width="52" height="38" rx="6" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="12" y="125" fill="#6e6a8a" font-family="monospace" font-size="5" letter-spacing="0.5">GROSS MARGIN</text>
+          <text x="12" y="137" fill="#a78bfa" font-family="monospace" font-size="10" font-weight="700">54.4%</text>
+          <text x="12" y="147" fill="#a78bfa" font-family="monospace" font-size="5.5">vs 52.1%</text>
+
+          <rect x="62" y="114" width="52" height="38" rx="6" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="68" y="125" fill="#6e6a8a" font-family="monospace" font-size="5" letter-spacing="0.5">NET PROFIT</text>
+          <text x="68" y="137" fill="#fb7185" font-family="monospace" font-size="10" font-weight="700">-219K</text>
+          <text x="68" y="147" fill="#34d399" font-family="monospace" font-size="5.5">+109K</text>
+
+          <!-- Mini chart -->
+          <rect x="6" y="156" width="108" height="56" rx="6" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="12" y="167" fill="#6e6a8a" font-family="monospace" font-size="5.5" letter-spacing="0.5">MONTHLY TREND</text>
+          <!-- bars -->
+          <rect x="14" y="188" width="6" height="16" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="14" y="185" width="6" height="3" rx="1" fill="#818cf8"/>
+          <rect x="23" y="186" width="6" height="18" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="23" y="183" width="6" height="3" rx="1" fill="#818cf8"/>
+          <rect x="32" y="183" width="6" height="21" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="32" y="180" width="6" height="3" rx="1" fill="#818cf8"/>
+          <rect x="41" y="180" width="6" height="24" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="41" y="177" width="6" height="3" rx="1" fill="#818cf8"/>
+          <rect x="50" y="177" width="6" height="27" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="50" y="174" width="6" height="3" rx="1" fill="#818cf8"/>
+          <rect x="59" y="175" width="6" height="29" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="59" y="172" width="6" height="3" rx="1" fill="#818cf8"/>
+          <rect x="68" y="178" width="6" height="26" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="68" y="175" width="6" height="3" rx="1" fill="#818cf8"/>
+          <rect x="77" y="173" width="6" height="31" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="77" y="170" width="6" height="3" rx="1" fill="#818cf8"/>
+          <rect x="86" y="170" width="6" height="34" rx="1" fill="rgba(129,140,248,0.3)"/>
+          <rect x="86" y="167" width="6" height="3" rx="1" fill="#818cf8"/>
+          <!-- margin line -->
+          <polyline points="17,193 26,191 35,188 44,185 53,183 62,181 71,183 80,179 89,176" fill="none" stroke="#34d399" stroke-width="1.2" stroke-linecap="round"/>
+
+          <defs>
+            <linearGradient id="mLogoGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6d28d9"/>
+              <stop offset="100%" stop-color="#9333ea"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- REFLECTION -->
+      <div class="mockup-reflection"></div>
+
+    </div>
   </div>
+
 </section>
+
 
 <!-- STRIP -->
 <div class="strip">
