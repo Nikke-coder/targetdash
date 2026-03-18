@@ -444,7 +444,9 @@ function checkVerifyBtn() {
 async function redirectAfterLogin(session) {
   try {
     const SUPERUSERS = ['niklas.isaksson@targetflow.fi'];
-    const mode = new URLSearchParams(window.location.search).get('mode') || '';
+    const params = new URLSearchParams(window.location.search);
+    const mode     = params.get('mode') || '';
+    const redirect = params.get('redirect') || '';
 
     // Superuser → always go to admin
     if(SUPERUSERS.includes(session.user.email)) {
@@ -452,8 +454,17 @@ async function redirectAfterLogin(session) {
     }
 
     if(!mode) { window.location.href = DASHBOARD_URL; return; }
+
     const { data: profile } = await sb.from('user_profiles').select('onboarded').eq('user_id', session.user.id).maybeSingle();
-    window.location.href = profile?.onboarded ? DASHBOARD_URL : (ONBOARDING_URL + '?mode=' + mode);
+
+    if(profile?.onboarded) {
+      // Already onboarded — send to demo or dashboard
+      window.location.href = mode === 'demo' ? 'https://demo.targetdash.ai' : DASHBOARD_URL;
+      return;
+    }
+
+    // Not yet onboarded — go through onboarding
+    window.location.href = ONBOARDING_URL + '?mode=' + mode;
   } catch(e) {
     window.location.href = DASHBOARD_URL;
   }
