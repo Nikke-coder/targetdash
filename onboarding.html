@@ -474,6 +474,7 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
 const SUPABASE_URL  = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 const DASHBOARD_URL = '/dashboard';
+const DEMO_URL      = 'https://demo.targetdash.ai';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -633,7 +634,7 @@ document.getElementById('btn3').addEventListener('click', async () => {
     if(error) throw error;
 
     // Success!
-    const redirectTo = mode === 'demo' ? '/demo' : DASHBOARD_URL;
+    const redirectTo = mode === 'demo' ? DEMO_URL : DASHBOARD_URL;
 
     if(mode === 'subscribe') {
       // Launch Stripe checkout
