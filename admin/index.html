@@ -32,14 +32,16 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
 .nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;border-bottom:1px solid var(--b);background:var(--bg2);position:sticky;top:0;z-index:10;}
 .brand{display:flex;align-items:center;text-decoration:none;}
 .bn{font-family:var(--ui);font-size:15px;font-weight:600;color:var(--t);}
-.bg{color:var(--ion);font-size:16px;text-shadow:0 0 10px var(--ion);}
+.bg2{color:var(--ion);font-size:16px;text-shadow:0 0 10px var(--ion);}
 .bm{font-family:var(--ui);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ion);margin-left:10px;text-shadow:0 0 8px var(--ion);}
-.nr{display:flex;align-items:center;gap:20px;}
+.nr{display:flex;align-items:center;gap:16px;}
 #clock{font-size:11px;color:var(--mid);font-family:var(--ui);letter-spacing:.04em;}
 .xbtn{background:none;border:1px solid var(--b);border-radius:7px;padding:5px 14px;font-family:var(--ui);font-size:11px;color:var(--mid);cursor:pointer;transition:all .2s;}
 .xbtn:hover{border-color:var(--red);color:var(--red);}
+.nbtn{background:var(--ion-lo);border:1px solid var(--b);border-radius:7px;padding:5px 14px;font-family:var(--ui);font-size:11px;color:var(--ion);cursor:pointer;transition:all .2s;}
+.nbtn:hover{border-color:var(--ion);}
 
-.wrap{max-width:1360px;margin:0 auto;padding:36px 40px;}
+.wrap{max-width:1400px;margin:0 auto;padding:36px 40px;}
 
 /* METRICS */
 .mets{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--b);border:1px solid var(--b);margin-bottom:40px;}
@@ -49,11 +51,29 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
 .mv{font-size:34px;font-weight:700;line-height:1;margin-bottom:4px;letter-spacing:-.04em;}
 .ms{font-family:var(--ui);font-size:10px;color:var(--dim);}
 
-/* SECTION HEADER */
-.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;margin-top:36px;}
-.sh-title{font-size:13px;font-weight:600;color:var(--ion);text-shadow:0 0 8px rgba(79,195,247,0.3);letter-spacing:.01em;}
+/* SECTION */
+.sh{display:flex;align-items:center;gap:12px;margin-bottom:14px;margin-top:36px;}
+.sh-title{font-size:13px;font-weight:600;color:var(--ion);letter-spacing:.01em;}
 .sh-count{font-family:var(--ui);font-size:10px;color:var(--mid);}
 .sh-desc{font-family:var(--ui);font-size:10px;color:var(--dim);margin-left:auto;}
+.sh-btn{background:var(--ion-lo);border:1px solid var(--b);border-radius:6px;padding:4px 12px;font-family:var(--ui);font-size:10px;color:var(--ion);cursor:pointer;margin-left:auto;transition:all .15s;}
+.sh-btn:hover{border-color:var(--ion);}
+
+/* CLIENT CARDS GRID */
+.client-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:4px;}
+.client-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:18px;cursor:pointer;transition:all .2s;position:relative;}
+.client-card:hover{border-color:var(--ion);background:rgba(79,195,247,0.04);}
+.client-card:hover .card-arrow{opacity:1;transform:translateX(0);}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.card-name{font-size:14px;font-weight:600;color:var(--t);margin-bottom:2px;}
+.card-email{font-family:var(--ui);font-size:10px;color:var(--dim);}
+.card-arrow{font-size:14px;color:var(--ion);opacity:0;transform:translateX(-4px);transition:all .15s;}
+.card-plan{display:inline-flex;align-items:center;gap:5px;font-family:var(--ui);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.card-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.card-row{display:flex;align-items:center;justify-content:space-between;font-family:var(--ui);font-size:10px;}
+.card-key{color:var(--dim);}
+.card-val{color:var(--mid);}
+.pip{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:5px;vertical-align:middle;}
 
 /* TABLES */
 .tw{border:1px solid var(--b);overflow:hidden;margin-bottom:4px;}
@@ -61,50 +81,83 @@ table{width:100%;border-collapse:collapse;}
 thead tr{border-bottom:1px solid var(--b);background:var(--bg2);}
 th{padding:9px 14px;text-align:left;font-family:var(--ui);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--mid);}
 th:not(:first-child){text-align:right;}
-tbody tr{border-bottom:1px solid rgba(79,195,247,0.04);}
+tbody tr{border-bottom:1px solid rgba(79,195,247,0.04);cursor:pointer;}
 tbody tr:last-child{border-bottom:none;}
 tbody tr:hover td{background:rgba(79,195,247,0.025);}
 td{padding:11px 14px;vertical-align:middle;background:var(--bg);font-family:var(--ui);font-size:11px;color:var(--mid);}
 td:not(:first-child){text-align:right;}
 .tname{font-size:13px;font-weight:600;color:var(--t);font-family:var(--sans);margin-bottom:1px;}
 .temail{font-size:10px;color:var(--dim);}
-.trole{font-size:10px;color:var(--mid);}
 
-/* STAT CELLS */
-.val-hi{color:var(--t);font-weight:600;}
-.val-green{color:var(--green);}
-.val-amber{color:var(--amber);}
-.val-red{color:var(--red);}
-.val-ion{color:var(--ion);}
-.val-dim{color:var(--dim);}
-
-/* STATUS PIP */
-.pip{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:6px;vertical-align:middle;}
-
-/* ROLE + PLAN SELECTS */
-.rsel{background:var(--bg2);border:1px solid var(--b);border-radius:4px;font-family:var(--ui);font-size:10px;color:var(--t);padding:4px 8px;outline:none;cursor:pointer;transition:border-color .2s;appearance:none;}
+/* SELECTS */
+.rsel{background:var(--bg2);border:1px solid var(--b);border-radius:4px;font-family:var(--ui);font-size:10px;color:var(--t);padding:4px 8px;outline:none;cursor:pointer;appearance:none;}
 .rsel:focus{border-color:var(--ion);}
 .rsel option{background:var(--bg2);}
 
-/* CREDIT BTN */
+/* CREDIT CONTROLS */
 .cw{display:flex;align-items:center;gap:5px;justify-content:flex-end;}
-.cnum{font-size:11px;color:var(--t);min-width:20px;text-align:center;}
-.cbtn{background:var(--bg2);border:1px solid var(--b);width:20px;height:20px;border-radius:3px;font-size:12px;color:var(--mid);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;padding:0;}
+.cnum{font-size:11px;color:var(--t);min-width:24px;text-align:center;font-weight:600;}
+.cbtn{background:var(--bg2);border:1px solid var(--b);width:22px;height:22px;border-radius:3px;font-size:13px;color:var(--mid);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;padding:0;}
 .cbtn:hover{border-color:var(--ion);color:var(--ion);}
 .cbtn.m:hover{border-color:var(--red);color:var(--red);}
-.gobtn{background:none;border:none;font-size:13px;color:var(--ion);cursor:pointer;text-shadow:0 0 6px rgba(79,195,247,0.4);padding:0;transition:opacity .2s;}
-.gobtn:hover{opacity:.6;}
 
-.empty{padding:32px;text-align:center;font-family:var(--ui);font-size:11px;color:var(--dim);background:var(--bg);border:1px solid var(--b);}
+/* ERROR LOG */
+.err-log{background:var(--bg2);border:1px solid rgba(241,113,113,0.2);border-radius:10px;overflow:hidden;}
+.err-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(241,113,113,0.08);font-family:var(--ui);font-size:11px;}
+.err-item:last-child{border-bottom:none;}
+.err-time{color:var(--dim);min-width:80px;flex-shrink:0;font-size:10px;}
+.err-msg{color:var(--red);flex:1;}
+.err-ctx{color:var(--dim);font-size:10px;}
 
+/* CLIENT MODAL */
+.modal-bg{position:fixed;inset:0;z-index:500;background:rgba(3,4,10,0.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal{background:var(--bg2);border:1px solid var(--b);border-radius:14px;width:min(680px,95vw);max-height:90vh;overflow-y:auto;padding:28px;}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;}
+.modal-title{font-size:20px;font-weight:700;color:var(--t);}
+.modal-sub{font-family:var(--ui);font-size:11px;color:var(--dim);margin-top:3px;}
+.modal-close{background:none;border:none;font-size:20px;color:var(--mid);cursor:pointer;padding:0;line-height:1;}
+.modal-close:hover{color:var(--t);}
+.modal-section{margin-bottom:20px;}
+.modal-sec-title{font-family:var(--ui);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--ion);margin-bottom:10px;}
+.modal-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(79,195,247,0.06);}
+.modal-row:last-child{border-bottom:none;}
+.modal-label{font-family:var(--ui);font-size:12px;color:var(--mid);}
+.modal-val{font-family:var(--ui);font-size:12px;color:var(--t);font-weight:500;}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px;}
+.act-btn{padding:10px;border-radius:8px;font-family:var(--ui);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid;}
+.act-btn.primary{background:var(--ion-lo);border-color:var(--ion);color:var(--ion);}
+.act-btn.primary:hover{background:rgba(79,195,247,0.15);}
+.act-btn.success{background:rgba(52,211,153,0.08);border-color:var(--green);color:var(--green);}
+.act-btn.success:hover{background:rgba(52,211,153,0.15);}
+.act-btn.danger{background:rgba(241,113,113,0.08);border-color:var(--red);color:var(--red);}
+.act-btn.danger:hover{background:rgba(241,113,113,0.15);}
+.act-btn.neutral{background:var(--bg3);border-color:var(--b);color:var(--mid);}
+.act-btn.neutral:hover{border-color:var(--bhi);color:var(--t);}
+.credit-input-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
+.credit-input{background:var(--bg3);border:1px solid var(--b);border-radius:6px;padding:7px 12px;font-family:var(--ui);font-size:13px;color:var(--t);outline:none;width:80px;text-align:center;}
+.credit-input:focus{border-color:var(--ion);}
+
+/* SYSTEM HEALTH */
+.health-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.health-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:16px;}
+.health-label{font-family:var(--ui);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--mid);margin-bottom:8px;}
+.health-status{display:flex;align-items:center;gap:8px;font-family:var(--ui);font-size:13px;font-weight:600;}
+.hdot{width:8px;height:8px;border-radius:50%;}
+.hdot.ok{background:var(--green);box-shadow:0 0 8px var(--green);}
+.hdot.warn{background:var(--amber);box-shadow:0 0 8px var(--amber);}
+.hdot.err{background:var(--red);box-shadow:0 0 8px var(--red);}
+
+.empty{padding:32px;text-align:center;font-family:var(--ui);font-size:11px;color:var(--dim);background:var(--bg);border:1px solid var(--b);border-radius:10px;}
 .toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:10px 18px;font-family:var(--ui);font-size:12px;color:var(--ion);opacity:0;transform:translateY(6px);transition:all .3s;pointer-events:none;}
 .toast.show{opacity:1;transform:none;}
+.toast.err{color:var(--red);border-color:rgba(241,113,113,0.3);}
 
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .fi{opacity:0;animation:fu .4s ease forwards;}
-.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}.d5{animation-delay:.25s}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}.d5{animation-delay:.25s}.d6{animation-delay:.3s}
 
-@media(max-width:1100px){.mets{grid-template-columns:1fr 1fr;}.wrap{padding:20px;}.nav{padding:0 20px;}}
+@media(max-width:1100px){.mets{grid-template-columns:1fr 1fr;}.client-grid{grid-template-columns:1fr 1fr;}.health-grid{grid-template-columns:1fr;}}
+@media(max-width:700px){.wrap{padding:20px;}.nav{padding:0 20px;}.client-grid{grid-template-columns:1fr;}.modal-actions{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -122,16 +175,23 @@ td:not(:first-child){text-align:right;}
 <div id="dash">
   <div class="nav">
     <div style="display:flex;align-items:center;">
-      <a href="/" class="brand"><span class="bn">targetdash</span><span class="bg">&gt;</span></a>
+      <a href="/" class="brand"><span class="bn">targetdash</span><span class="bg2">&gt;</span></a>
       <span class="bm">god mode</span>
     </div>
     <div class="nr">
       <span id="clock"></span>
+      <button class="nbtn" onclick="reload()">↻ Refresh</button>
       <button class="xbtn" onclick="so()">Sign out</button>
     </div>
   </div>
   <div class="wrap" id="wrap"></div>
 </div>
+
+<!-- CLIENT MODAL -->
+<div class="modal-bg" id="modal" style="display:none;" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-inner"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -156,245 +216,286 @@ const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6I
 const SUPERS=['niklas.isaksson@targetflow.fi'];
 const {createClient}=supabase;
 const sb=createClient(SU,SK);
-let cl=[],stats={},srch='';
+
+let cl=[],stats={},srch='',errLog=[],activeFilter='all';
 const thisMonth=new Date().toISOString().slice(0,7);
 
+// ── CLOCK ─────────────────────────────────────────────────────────────────
 setInterval(()=>{const e=document.getElementById('clock');if(!e)return;const n=new Date(),p=x=>String(x).padStart(2,'0');e.textContent=`${n.toISOString().split('T')[0]} · ${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;},1000);
 
+// ── INIT ──────────────────────────────────────────────────────────────────
 (async()=>{
   await new Promise(r=>setTimeout(r,1400));
-
-  // Retry session a few times in case cookie hasn't propagated yet
-  let session = null;
+  let session=null;
   for(let i=0;i<5;i++){
     const {data:{session:s}}=await sb.auth.getSession();
     if(s){session=s;break;}
     await new Promise(r=>setTimeout(r,400));
   }
-
   if(!session){window.location.href='/login';return;}
   if(!SUPERS.includes(session.user.email)){window.location.href='/getstarted';return;}
-
-  const [{data:prof},{data:cred}]=await Promise.all([
-    sb.from('user_profiles').select('*').order('created_at',{ascending:false}),
-    sb.from('demo_credits').select('user_id,credits_used'),
-  ]);
-
-  // user_monthly_stats may not exist yet — handle gracefully
-  try {
-    const {data:ums} = await sb.from('user_monthly_stats').select('*').eq('month',thisMonth);
-    (ums||[]).forEach(s=>stats[s.user_id]=s);
-  } catch(e) { /* table not created yet */ }
-
-  const cm={};(cred||[]).forEach(c=>cm[c.user_id]=c.credits_used);
-  cl=(prof||[]).map(p=>({...p,credits_used:cm[p.user_id]||0,stats:stats[p.user_id]||null}));
-
+  await load();
   cancelAnimationFrame(eAnim);
   document.getElementById('entry').style.display='none';
   document.getElementById('dash').style.display='block';
   render();
 })();
 
+async function load(){
+  try{
+    const [{data:prof,error:e1},{data:cred,error:e2}]=await Promise.all([
+      sb.from('user_profiles').select('*').order('created_at',{ascending:false}),
+      sb.from('demo_credits').select('user_id,credits_used'),
+    ]);
+    if(e1) logErr('Loading user_profiles',e1.message);
+    if(e2) logErr('Loading demo_credits',e2.message);
+    const cm={};(cred||[]).forEach(c=>cm[c.user_id]=c.credits_used);
+    cl=(prof||[]).map(p=>({...p,credits_used:cm[p.user_id]||0,stats:stats[p.user_id]||null}));
+  }catch(e){logErr('load()',e.message);}
+  try{
+    const {data:ums}=await sb.from('user_monthly_stats').select('*').eq('month',thisMonth);
+    (ums||[]).forEach(s=>stats[s.user_id]=s);
+  }catch(e){/* table not created yet */}
+}
+
+async function reload(){
+  await load();
+  render();
+  toast('Refreshed');
+}
+
 // ── HELPERS ───────────────────────────────────────────────────────────────
 const fmt=d=>d?new Date(d).toLocaleDateString('fi-FI'):'—';
-const fmtMin=s=>{if(!s)return'—';const m=Math.round(s/60);if(m<60)return m+'min';return Math.floor(m/60)+'h '+(m%60)+'min';};
-const ago=d=>{if(!d)return null;const s=Math.floor((Date.now()-new Date(d))/1000);if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';};
+const ago=d=>{if(!d)return'—';const s=Math.floor((Date.now()-new Date(d))/1000);if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';};
 const daysSince=d=>{if(!d)return 999;return Math.floor((Date.now()-new Date(d))/(1000*60*60*24));};
 const pc=p=>p==='mainuser'?'var(--green)':p==='demo'?'var(--amber)':p==='inactive'?'var(--red)':p==='superuser'?'var(--ion)':'var(--dim)';
-const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);};
+const planLabel=p=>p==='mainuser'?'Active':p==='demo'?'Demo':p==='inactive'?'Inactive':p==='superuser'?'Superuser':'Pending';
+
+function logErr(ctx,msg){
+  errLog.unshift({time:new Date().toLocaleTimeString('fi-FI'),ctx,msg});
+  if(errLog.length>20)errLog.pop();
+}
+
+function toast(m,isErr=false){
+  const t=document.getElementById('toast');
+  t.textContent=m;
+  t.className='toast show'+(isErr?' err':'');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
 
 // ── RENDER ────────────────────────────────────────────────────────────────
 function render(){
-  const now=Date.now();
-  const oneWeek=7*24*60*60*1000;
-
-  // COMPANIES (mainuser plan)
   const companies=cl.filter(c=>c.plan==='mainuser');
-
-  // ACTIVE PAID USERS — paid and opened within 30 days
-  const activePaid=companies.filter(c=>{
-    const lo=c.stats?.last_opened;
-    return !lo || daysSince(lo)<=30;
-  });
-
-  // HOT PROSPECTS — demo, signed up within last 7 days
-  const hotProspects=cl.filter(c=>c.plan==='demo'&&daysSince(c.created_at)<=7);
-
-  // INACTIVE DEMO — demo, signed up more than 7 days ago OR credits exhausted
-  const inactiveDemo=cl.filter(c=>c.plan==='demo'&&(daysSince(c.created_at)>7||(c.credits_used||0)>=5));
-
-  // METRICS
+  const demos=cl.filter(c=>c.plan==='demo');
+  const hotProspects=demos.filter(c=>daysSince(c.created_at)<=7);
+  const inactiveDemo=demos.filter(c=>daysSince(c.created_at)>7||(c.credits_used||0)>=5);
   const mrr=companies.length*80;
-  const conv=hotProspects.length+inactiveDemo.length>0?Math.round(companies.length/(hotProspects.length+inactiveDemo.length)*100):0;
-  const totalAI=Object.values(stats).reduce((s,x)=>s+(x.ai_questions||0),0);
-  const totalTime=Object.values(stats).reduce((s,x)=>s+(x.time_spent_sec||0),0);
+  const conv=demos.length>0?Math.round(companies.length/demos.length*100):0;
+  const pend=cl.filter(c=>!c.plan||c.plan==='subscribe').length;
+
+  // Filter for client list
+  const filters={all:cl,paid:companies,demo:demos,hot:hotProspects,inactive:inactiveDemo};
+  const filtered=(filters[activeFilter]||cl).filter(c=>{
+    if(!srch)return true;
+    const q=srch.toLowerCase();
+    return c.company_name?.toLowerCase().includes(q)||c.email?.toLowerCase().includes(q);
+  });
 
   document.getElementById('wrap').innerHTML=`
 
   <!-- METRICS -->
   <div class="mets fi d1">
-    <div class="met"><div class="mk">MRR</div><div class="mv" style="color:var(--green)">€${mrr.toLocaleString()}</div><div class="ms">${companies.length}×€80 this month</div></div>
-    <div class="met"><div class="mk">Companies</div><div class="mv" style="color:var(--t)">${companies.length}</div><div class="ms">${activePaid.length} active this month</div></div>
+    <div class="met"><div class="mk">MRR</div><div class="mv" style="color:var(--green)">€${mrr.toLocaleString()}</div><div class="ms">${companies.length}×€80/month</div></div>
+    <div class="met"><div class="mk">Paying clients</div><div class="mv" style="color:var(--green)">${companies.length}</div><div class="ms">MainUser plan</div></div>
+    <div class="met"><div class="mk">Demo pipeline</div><div class="mv" style="color:var(--amber)">${demos.length}</div><div class="ms">${hotProspects.length} hot · ${inactiveDemo.length} cold</div></div>
     <div class="met"><div class="mk">Conversion</div><div class="mv" style="color:var(--ion)">${conv}<span style="font-size:18px;color:var(--dim)">%</span></div><div class="ms">demo → paid</div></div>
-    <div class="met"><div class="mk">AI questions</div><div class="mv" style="color:var(--violet)">${totalAI}</div><div class="ms">EBITDA-9000 this month</div></div>
-    <div class="met"><div class="mk">Time on platform</div><div class="mv" style="color:var(--ion)">${fmtMin(totalTime)}</div><div class="ms">all users this month</div></div>
+    <div class="met"><div class="mk">Total users</div><div class="mv" style="color:var(--t)">${cl.length}</div><div class="ms">${pend} pending</div></div>
   </div>
 
-  <!-- COMPANIES -->
+  <!-- SYSTEM HEALTH -->
   <div class="fi d2">
-    <div class="sh">
-      <span class="sh-title">Companies</span>
-      <span class="sh-count">${companies.length} paying clients</span>
-      <span class="sh-desc">€80/mo MainUser plan</span>
+    <div class="sh"><span class="sh-title">System health</span></div>
+    <div class="health-grid">
+      <div class="health-card">
+        <div class="health-label">Supabase auth</div>
+        <div class="health-status"><span class="hdot ok"></span><span style="color:var(--green)">Online</span></div>
+        <div style="font-family:var(--ui);font-size:10px;color:var(--dim);margin-top:6px;">${cl.length} user profiles loaded</div>
+      </div>
+      <div class="health-card">
+        <div class="health-label">Error log</div>
+        <div class="health-status"><span class="hdot ${errLog.length===0?'ok':'err'}"></span><span style="color:${errLog.length===0?'var(--green)':'var(--red)'}">${errLog.length===0?'No errors':errLog.length+' error'+(errLog.length>1?'s':'')}</span></div>
+        <div style="font-family:var(--ui);font-size:10px;color:var(--dim);margin-top:6px;">${errLog.length>0?errLog[0].ctx+': '+errLog[0].msg:'All systems operational'}</div>
+      </div>
+      <div class="health-card">
+        <div class="health-label">Stripe</div>
+        <div class="health-status"><span class="hdot ${companies.length>0?'ok':'warn'}"></span><span style="color:${companies.length>0?'var(--green)':'var(--amber)'}">${companies.length>0?'Active':'No subscribers'}</span></div>
+        <div style="font-family:var(--ui);font-size:10px;color:var(--dim);margin-top:6px;">€${mrr}/month recurring</div>
+      </div>
     </div>
-    ${companies.length===0
-      ?`<div class="empty">No paying companies yet</div>`
-      :`<div class="tw"><table>
-        <thead><tr>
-          <th>Company</th><th>Role</th><th>Plan</th>
-          <th>Views / month</th><th>AI credits used</th><th>Time / month</th>
-          <th>Last opened</th><th>Since</th><th></th>
-        </tr></thead>
-        <tbody>${companies.map(c=>compRow(c)).join('')}</tbody>
-      </table></div>`}
   </div>
 
-  <!-- ACTIVE PAID USERS -->
+  <!-- CLIENT LIST -->
   <div class="fi d3">
     <div class="sh">
-      <span class="sh-title">Active paid users</span>
-      <span class="sh-count">${activePaid.length} users</span>
-      <span class="sh-desc">Opened dashboard within last 30 days</span>
+      <span class="sh-title">All clients</span>
+      <span class="sh-count">${cl.length} users</span>
+      <div style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+        ${['all','paid','demo','hot','inactive'].map(f=>`
+          <button onclick="setFilter('${f}')" style="background:${activeFilter===f?'var(--ion-lo)':'none'};border:1px solid ${activeFilter===f?'var(--ion)':'var(--b)'};border-radius:5px;padding:4px 10px;font-family:var(--ui);font-size:9px;color:${activeFilter===f?'var(--ion)':'var(--mid)'};cursor:pointer;text-transform:uppercase;letter-spacing:.1em;">
+            ${f==='all'?`All (${cl.length})`:f==='paid'?`Paid (${companies.length})`:f==='demo'?`Demo (${demos.length})`:f==='hot'?`Hot (${hotProspects.length})`:`Inactive (${inactiveDemo.length})`}
+          </button>`).join('')}
+        <input value="${srch}" oninput="setSrch(this.value)" placeholder="Search…" autocomplete="off"
+          style="background:var(--bg2);border:1px solid var(--b);border-radius:6px;padding:5px 10px;font-family:var(--ui);font-size:11px;color:var(--t);outline:none;width:160px;"/>
+      </div>
     </div>
-    ${activePaid.length===0
-      ?`<div class="empty">No active users this month</div>`
-      :`<div class="tw"><table>
-        <thead><tr>
-          <th>User</th><th>Primary role</th><th>Plan</th>
-          <th>Views / month</th><th>AI credits used</th><th>Time / month</th>
-          <th>Last opened</th><th>Activated</th><th></th>
-        </tr></thead>
-        <tbody>${activePaid.map(c=>userRow(c)).join('')}</tbody>
-      </table></div>`}
+    ${filtered.length===0
+      ?`<div class="empty">No users match this filter</div>`
+      :`<div class="client-grid">${filtered.map(clientCard).join('')}</div>`}
   </div>
 
-  <!-- HOT PROSPECTS -->
-  <div class="fi d4">
-    <div class="sh">
-      <span class="sh-title" style="color:var(--amber)">Hot prospects</span>
-      <span class="sh-count">${hotProspects.length} users</span>
-      <span class="sh-desc">Demo users who signed up within the last 7 days</span>
+  <!-- ERROR LOG -->
+  ${errLog.length>0?`
+  <div class="fi d5" style="margin-top:36px;">
+    <div class="sh"><span class="sh-title" style="color:var(--red)">Error log</span><span class="sh-count">${errLog.length} recent errors</span><button class="sh-btn" style="color:var(--red);border-color:rgba(241,113,113,0.3);" onclick="clearErrors()">Clear</button></div>
+    <div class="err-log">
+      ${errLog.map(e=>`<div class="err-item"><span class="err-time">${e.time}</span><span class="err-ctx">${e.ctx}</span><span class="err-msg">${e.msg}</span></div>`).join('')}
     </div>
-    ${hotProspects.length===0
-      ?`<div class="empty">No new demo users this week</div>`
-      :`<div class="tw"><table>
-        <thead><tr>
-          <th>User</th><th>Role</th><th>Plan</th>
-          <th>Credits used</th><th>AI questions</th><th>Time spent</th>
-          <th>Signed up</th><th>Last opened</th><th></th>
-        </tr></thead>
-        <tbody>${hotProspects.map(c=>demoRow(c,'amber')).join('')}</tbody>
-      </table></div>`}
-  </div>
+  </div>`:''}`;
+}
 
-  <!-- INACTIVE DEMO -->
-  <div class="fi d5">
-    <div class="sh">
-      <span class="sh-title" style="color:var(--red)">Inactive demo users</span>
-      <span class="sh-count">${inactiveDemo.length} users</span>
-      <span class="sh-desc">Demoed but not converted — over 7 days old</span>
+function clientCard(c){
+  const col=pc(c.plan);
+  const cr=c.credits_used||0;
+  const lo=c.stats?.last_opened;
+  return `<div class="client-card" onclick="openModal('${c.user_id}')">
+    <div class="card-top">
+      <div>
+        <div class="card-name">${c.company_name||'—'}</div>
+        <div class="card-email">${c.email||''}</div>
+      </div>
+      <span class="card-arrow">→</span>
     </div>
-    ${inactiveDemo.length===0
-      ?`<div class="empty">No inactive demo users</div>`
-      :`<div class="tw"><table>
-        <thead><tr>
-          <th>User</th><th>Role</th><th>Plan</th>
-          <th>Credits used</th><th>AI questions</th><th>Time spent</th>
-          <th>Signed up</th><th>Last opened</th><th></th>
-        </tr></thead>
-        <tbody>${inactiveDemo.map(c=>demoRow(c,'red')).join('')}</tbody>
-      </table></div>`}
+    <div class="card-plan">
+      <span class="pip" style="background:${col}"></span>
+      <span style="color:${col}">${planLabel(c.plan)}</span>
+      ${c.plan==='mainuser'?`<span style="color:var(--dim);margin-left:4px;">· €80/mo</span>`:''}
+    </div>
+    <div class="card-meta">
+      <div class="card-row"><span class="card-key">Role</span><span class="card-val">${c.primary_role||'—'}</span></div>
+      <div class="card-row"><span class="card-key">Credits</span><span class="card-val" style="color:${cr>=5?'var(--red)':'var(--mid)'}">${cr}${c.plan==='demo'?'/5':''}</span></div>
+      <div class="card-row"><span class="card-key">Joined</span><span class="card-val">${fmt(c.created_at)}</span></div>
+      <div class="card-row"><span class="card-key">Last seen</span><span class="card-val">${ago(lo)}</span></div>
+    </div>
   </div>`;
 }
 
-function compRow(c){
-  const s=c.stats;
-  const lo=s?.last_opened;
-  const loAgo=lo?ago(lo):'never';
-  const loColor=!lo?'var(--dim)':daysSince(lo)<=7?'var(--green)':daysSince(lo)<=30?'var(--amber)':'var(--red)';
-  const plans=['inactive','demo','mainuser','superuser'];
-  const planOpts=plans.map(p=>`<option value="${p}"${c.plan===p?' selected':''}>${p}</option>`).join('');
-  return `<tr>
-    <td><div class="tname">${c.company_name||'—'}</div><div class="temail">${c.email||''}</div></td>
-    <td><span class="trole">${c.primary_role||'—'}</span></td>
-    <td><select class="rsel" style="color:${pc(c.plan)}" onchange="updatePlan('${c.user_id}',this.value)">${planOpts}</select></td>
-    <td class="val-hi">${s?.opens||'—'}</td>
-    <td><div class="cw"><button class="cbtn m" onclick="adjCredit('${c.user_id}',-1)">−</button><span class="cnum">${c.credits_used||0}</span><button class="cbtn" onclick="adjCredit('${c.user_id}',1)">+</button></div></td>
-    <td class="val-hi">${fmtMin(s?.time_spent_sec)}</td>
-    <td style="color:${loColor}">${loAgo}</td>
-    <td class="val-dim">${fmt(c.plan_activated_at||c.created_at)}</td>
-    <td><button class="gobtn" onclick="go('/dashboard')">→</button></td>
-  </tr>`;
-}
-
-function userRow(c){
-  const s=c.stats;
-  const lo=s?.last_opened;
-  const loAgo=lo?ago(lo):'never';
-  const loColor=!lo?'var(--dim)':daysSince(lo)<=7?'var(--green)':daysSince(lo)<=30?'var(--amber)':'var(--red)';
+// ── CLIENT MODAL ──────────────────────────────────────────────────────────
+function openModal(uid){
+  const c=cl.find(x=>x.user_id===uid);
+  if(!c)return;
+  const col=pc(c.plan);
+  const cr=c.credits_used||0;
+  const plans=['inactive','demo','subscribe','mainuser','superuser'];
   const roles=['CEO','CFO','CMO','CRO','CTO','HR Manager'];
-  const roleOpts=roles.map(r=>`<option value="${r}"${c.primary_role===r?' selected':''}>${r}</option>`).join('');
-  const plans=['inactive','demo','mainuser','superuser'];
-  const planOpts=plans.map(p=>`<option value="${p}"${c.plan===p?' selected':''}>${p}</option>`).join('');
-  return `<tr>
-    <td><div class="tname">${c.company_name||'—'}</div><div class="temail">${c.email||''}</div></td>
-    <td><select class="rsel" onchange="updateRole('${c.user_id}',this.value)">${roleOpts}</select></td>
-    <td><select class="rsel" style="color:${pc(c.plan)}" onchange="updatePlan('${c.user_id}',this.value)">${planOpts}</select></td>
-    <td class="val-hi">${s?.opens||'—'}</td>
-    <td><div class="cw"><button class="cbtn m" onclick="adjCredit('${c.user_id}',-1)">−</button><span class="cnum">${c.credits_used||0}</span><button class="cbtn" onclick="adjCredit('${c.user_id}',1)">+</button></div></td>
-    <td class="val-hi">${fmtMin(s?.time_spent_sec)}</td>
-    <td style="color:${loColor}">${loAgo}</td>
-    <td class="val-dim">${fmt(c.plan_activated_at||c.agreed_at)}</td>
-    <td><button class="gobtn" onclick="go('/dashboard')">→</button></td>
-  </tr>`;
+  document.getElementById('modal-inner').innerHTML=`
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">${c.company_name||'Unnamed'}</div>
+        <div class="modal-sub">${c.email||''} · ${c.user_id?.slice(0,8)}…</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-sec-title">Account details</div>
+      <div class="modal-row"><span class="modal-label">Plan</span>
+        <select class="rsel" style="color:${col}" onchange="updatePlan('${uid}',this.value)">
+          ${plans.map(p=>`<option value="${p}"${c.plan===p?' selected':''}>${p}</option>`).join('')}
+        </select>
+      </div>
+      <div class="modal-row"><span class="modal-label">Primary role</span>
+        <select class="rsel" onchange="updateRole('${uid}',this.value)">
+          ${roles.map(r=>`<option value="${r}"${c.primary_role===r?' selected':''}>${r}</option>`).join('')}
+        </select>
+      </div>
+      <div class="modal-row"><span class="modal-label">Country</span><span class="modal-val">${c.country||'—'}</span></div>
+      <div class="modal-row"><span class="modal-label">Business ID</span><span class="modal-val">${c.business_id||'—'}</span></div>
+      <div class="modal-row"><span class="modal-label">Joined</span><span class="modal-val">${fmt(c.created_at)}</span></div>
+      <div class="modal-row"><span class="modal-label">Activated</span><span class="modal-val">${fmt(c.plan_activated_at||c.agreed_at)}</span></div>
+      <div class="modal-row"><span class="modal-label">Onboarded</span><span class="modal-val" style="color:${c.onboarded?'var(--green)':'var(--red)'}">${c.onboarded?'Yes':'No'}</span></div>
+      <div class="modal-row"><span class="modal-label">Stripe customer</span><span class="modal-val" style="font-size:10px;">${c.stripe_customer_id||'—'}</span></div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-sec-title">AI credits — current: <span style="color:${cr>=5?'var(--red)':'var(--ion)'}">${cr}${c.plan==='demo'?' / 5':''}</span></div>
+      <div class="credit-input-row">
+        <button class="cbtn m" onclick="adjCredit('${uid}',-5)" title="-5">−5</button>
+        <button class="cbtn m" onclick="adjCredit('${uid}',-1)" title="-1">−</button>
+        <span class="cnum" style="font-size:16px;min-width:36px;">${cr}</span>
+        <button class="cbtn" onclick="adjCredit('${uid}',1)" title="+1">+</button>
+        <button class="cbtn" onclick="adjCredit('${uid}',5)" title="+5">+5</button>
+        <input id="custom-credits" type="number" class="credit-input" placeholder="0" min="0" max="999"/>
+        <button class="act-btn primary" style="padding:6px 12px;font-size:11px;" onclick="setCredits('${uid}')">Set</button>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="act-btn success" onclick="quickAction('${uid}','upgrade')">⬆ Upgrade to MainUser</button>
+      <button class="act-btn primary" onclick="quickAction('${uid}','resetdemo')">↺ Reset demo credits</button>
+      <button class="act-btn neutral" onclick="openDash('${c.plan}')">→ Open their dashboard</button>
+      <button class="act-btn danger" onclick="quickAction('${uid}','deactivate')">⊘ Deactivate account</button>
+    </div>`;
+  document.getElementById('modal').style.display='flex';
 }
 
-function demoRow(c,accent){
-  const s=c.stats;
-  const lo=s?.last_opened;
-  const loAgo=lo?ago(lo):'never';
-  const daysOld=daysSince(c.created_at);
-  const plans=['inactive','demo','mainuser'];
-  const planOpts=plans.map(p=>`<option value="${p}"${c.plan===p?' selected':''}>${p}</option>`).join('');
-  const credBar=`<div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-    <div style="width:36px;height:2px;background:var(--dim);border-radius:1px;overflow:hidden;">
-      <div style="width:${Math.min(100,(c.credits_used||0)/5*100)}%;height:100%;background:var(--${accent});"></div>
-    </div>
-    <span style="color:var(--t);font-size:11px;">${c.credits_used||0}/5</span>
-  </div>`;
-  return `<tr>
-    <td><div class="tname">${c.company_name||'—'}</div><div class="temail">${c.email||''}</div></td>
-    <td class="val-dim">${c.primary_role||'—'}</td>
-    <td><select class="rsel" style="color:${pc(c.plan)}" onchange="updatePlan('${c.user_id}',this.value)">${planOpts}</select></td>
-    <td>${credBar}</td>
-    <td class="val-hi">${s?.ai_questions||'—'}</td>
-    <td class="val-hi">${fmtMin(s?.time_spent_sec)}</td>
-    <td class="val-dim">${fmt(c.created_at)} <span style="color:var(--${accent});font-size:9px;">(${daysOld}d ago)</span></td>
-    <td style="color:${lo?'var(--mid)':'var(--dim)'}">${loAgo}</td>
-    <td><button class="gobtn" onclick="go('/demo')">→</button></td>
-  </tr>`;
+function closeModal(){document.getElementById('modal').style.display='none';}
+
+function openDash(plan){
+  closeModal();
+  window.open(plan==='demo'?'https://demo.targetdash.ai':'https://app.targetdash.ai','_blank');
+}
+
+async function quickAction(uid,action){
+  const c=cl.find(x=>x.user_id===uid);
+  if(!c)return;
+  if(action==='upgrade'){
+    await updatePlan(uid,'mainuser');
+  } else if(action==='resetdemo'){
+    const {error}=await sb.from('demo_credits').upsert({user_id:uid,user_email:c.email,credits_used:0},{onConflict:'user_id'});
+    if(error){toast('Error: '+error.message,true);return;}
+    const i=cl.findIndex(x=>x.user_id===uid);if(i>-1)cl[i].credits_used=0;
+    toast('Demo credits reset to 0');
+    openModal(uid);render();
+  } else if(action==='deactivate'){
+    if(!confirm(`Deactivate ${c.company_name||c.email}?`))return;
+    await updatePlan(uid,'inactive');
+    closeModal();
+  }
+}
+
+async function setCredits(uid){
+  const val=parseInt(document.getElementById('custom-credits').value);
+  if(isNaN(val)||val<0)return;
+  const c=cl.find(x=>x.user_id===uid);
+  if(!c)return;
+  const {error}=await sb.from('demo_credits').upsert({user_id:uid,user_email:c.email,credits_used:val},{onConflict:'user_id'});
+  if(error){toast('Error: '+error.message,true);return;}
+  const i=cl.findIndex(x=>x.user_id===uid);if(i>-1)cl[i].credits_used=val;
+  toast('Credits set to '+val);
+  openModal(uid);render();
 }
 
 // ── ACTIONS ───────────────────────────────────────────────────────────────
 async function updatePlan(uid,plan){
   const {error}=await sb.from('user_profiles').update({plan,updated_at:new Date().toISOString()}).eq('user_id',uid);
-  if(error){toast('Error: '+error.message);return;}
+  if(error){logErr('updatePlan',error.message);toast('Error: '+error.message,true);return;}
   const i=cl.findIndex(c=>c.user_id===uid);if(i>-1)cl[i].plan=plan;
-  toast('Plan updated → '+plan);render();
+  toast('Plan → '+plan);
+  openModal(uid);render();
 }
 async function updateRole(uid,role){
   const {error}=await sb.from('user_profiles').update({primary_role:role,updated_at:new Date().toISOString()}).eq('user_id',uid);
-  if(error){toast('Error: '+error.message);return;}
+  if(error){logErr('updateRole',error.message);toast('Error: '+error.message,true);return;}
   const i=cl.findIndex(c=>c.user_id===uid);if(i>-1)cl[i].primary_role=role;
   toast('Role → '+role);
 }
@@ -402,12 +503,22 @@ async function adjCredit(uid,delta){
   const i=cl.findIndex(c=>c.user_id===uid);if(i<0)return;
   const next=Math.max(0,(cl[i].credits_used||0)+delta);
   const {error}=await sb.from('demo_credits').upsert({user_id:uid,user_email:cl[i].email,credits_used:next},{onConflict:'user_id'});
-  if(error){toast('Error: '+error.message);return;}
-  cl[i].credits_used=next;toast(delta>0?'+1 credit':'−1 credit');render();
+  if(error){logErr('adjCredit',error.message);toast('Error: '+error.message,true);return;}
+  cl[i].credits_used=next;
+  toast((delta>0?'+':'')+delta+' credit'+(Math.abs(delta)>1?'s':''));
+  openModal(uid);render();
 }
+
+function setFilter(f){activeFilter=f;render();}
+function setSrch(s){srch=s;render();}
+function clearErrors(){errLog=[];render();}
 function go(u){window.location.href=u;}
 async function so(){await sb.auth.signOut();window.location.href='/login';}
-window.updatePlan=updatePlan;window.updateRole=updateRole;window.adjCredit=adjCredit;window.go=go;window.so=so;
+
+window.setFilter=setFilter;window.setSrch=setSrch;window.openModal=openModal;window.closeModal=closeModal;
+window.openDash=openDash;window.quickAction=quickAction;window.setCredits=setCredits;
+window.updatePlan=updatePlan;window.updateRole=updateRole;window.adjCredit=adjCredit;
+window.clearErrors=clearErrors;window.go=go;window.so=so;window.reload=reload;
 </script>
 </body>
 </html>
