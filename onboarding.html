@@ -499,13 +499,28 @@ let userId = '';
     // Check if already onboarded → skip to dashboard
     try {
       const { data: profile } = await sb.from('user_profiles')
-        .select('onboarded, plan').eq('user_id', userId).maybeSingle();
+        .select('onboarded, plan, company_name, primary_role').eq('user_id', userId).maybeSingle();
 
       if(profile?.onboarded) {
-        // Route by plan
         if(profile?.plan === 'demo') window.location.href = DEMO_URL;
         else window.location.href = DASHBOARD_URL;
         return;
+      }
+
+      // Invited user — pre-fill from their profile and show invite banner
+      if(mode === 'invite' && profile) {
+        if(profile.company_name) document.getElementById('companyName').value = profile.company_name;
+        if(profile.primary_role) {
+          selectedRole = profile.primary_role;
+          document.querySelectorAll('.role-card').forEach(c => {
+            c.classList.toggle('selected', c.dataset.role === profile.primary_role);
+          });
+        }
+        // Show invite welcome banner in step 1
+        const banner = document.createElement('div');
+        banner.style.cssText = 'background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
+        banner.innerHTML = `<strong style="color:#fff;">You've been invited to targetdash</strong><br/>Your account has been set up. Please confirm your details and agree to our terms to activate your dashboard.`;
+        document.querySelector('#step1 .step-body').prepend(banner);
       }
     } catch(e) {}
 
@@ -515,7 +530,6 @@ let userId = '';
         const { data: cr } = await sb.from('demo_credits')
           .select('credits_used').eq('user_id', userId).maybeSingle();
         if(cr && cr.credits_used >= 5) {
-          // Already used demo — show upgrade message instead
           document.getElementById('mainCard').innerHTML = `
             <div style="text-align:center;padding:52px 40px;">
               <div style="font-size:40px;margin-bottom:16px;">🎯</div>
@@ -614,6 +628,15 @@ document.getElementById('btn3').addEventListener('click', async () => {
 
   const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
 
+  // For invite mode, fetch existing plan from profile
+  let existingPlan = mode;
+  if(mode === 'invite') {
+    try {
+      const { data: p } = await sb.from('user_profiles').select('plan').eq('user_id', userId).maybeSingle();
+      existingPlan = p?.plan || 'mainuser';
+    } catch(e) { existingPlan = 'mainuser'; }
+  }
+
   const payload = {
     user_id:      userId,
     email:        userEmail,
@@ -624,7 +647,7 @@ document.getElementById('btn3').addEventListener('click', async () => {
     country:      document.getElementById('country').value,
     currency:     document.getElementById('currency').value,
     primary_role: selectedRole,
-    plan:         mode,
+    plan:         mode === 'invite' ? existingPlan : mode,
     agreed_terms: true,
     agreed_dpa:   true,
     agreed_at:    new Date().toISOString(),
@@ -635,11 +658,10 @@ document.getElementById('btn3').addEventListener('click', async () => {
     const { error } = await sb.from('user_profiles').upsert(payload, { onConflict: 'user_id' });
     if(error) throw error;
 
-    // Success!
     const redirectTo = mode === 'demo' ? DEMO_URL : DASHBOARD_URL;
 
+    // Subscribe mode → Stripe checkout
     if(mode === 'subscribe') {
-      // Launch Stripe checkout
       btn.innerHTML = '<span class="spinner"></span>Redirecting to payment…';
       try {
         const res = await fetch('/api/create-checkout', {
@@ -662,14 +684,19 @@ document.getElementById('btn3').addEventListener('click', async () => {
         return;
       }
     }
+
+    // Demo or invite mode → show success and launch
     currentStep = 'x';
     document.getElementById('step3').classList.remove('active');
     document.getElementById('stepDone').classList.add('active');
     document.getElementById('progressFill').style.width = '100%';
     document.getElementById('stepLabel').textContent = 'Complete';
     [1,2,3].forEach(i => document.getElementById('dot'+i).className='nav-step-dot done');
-    document.getElementById('successMsg').textContent =
-      `Welcome, ${payload.full_name.split(' ')[0]}! Your dashboard is ready. Time to be a financial hero.`;
+
+    const firstName = payload.full_name.split(' ')[0];
+    document.getElementById('successMsg').textContent = mode === 'invite'
+      ? `Welcome, ${firstName}! Your dashboard is ready. All agreements are on file.`
+      : `Welcome, ${firstName}! Your dashboard is ready. Time to be a financial hero.`;
 
     document.getElementById('btnLaunch').addEventListener('click', () => {
       window.location.href = redirectTo;
