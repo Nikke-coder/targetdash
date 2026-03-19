@@ -184,8 +184,8 @@ td{padding:10px 14px;vertical-align:middle;background:var(--bg);font-family:var(
     </div>
     <div class="nr">
       <span id="clock"></span>
-      <button class="nbtn" onclick="window.open('https://app.targetdash.ai','_blank')">⚡ Production</button>
-      <button class="abtn" onclick="window.open('https://demo.targetdash.ai','_blank')">◆ Demo</button>
+      <button class="nbtn" onclick="openApp('https://app.targetdash.ai')">⚡ Production</button>
+      <button class="abtn" onclick="openApp('https://demo.targetdash.ai')">◆ Demo</button>
       <button class="nbtn" onclick="reload()">↻ Refresh</button>
       <button class="xbtn" onclick="so()">Sign out</button>
     </div>
@@ -547,8 +547,8 @@ function openModal(uid){
     <div class="modal-actions">
       <button class="act-btn success" onclick="quickAction('${uid}','upgrade')">⬆ Upgrade to MainUser</button>
       <button class="act-btn amber" onclick="quickAction('${uid}','resetdemo')">↺ Reset demo credits</button>
-      <button class="act-btn primary" onclick="window.open('https://app.targetdash.ai','_blank')">⚡ Open production</button>
-      <button class="act-btn neutral" onclick="window.open('https://demo.targetdash.ai','_blank')">◆ Open demo</button>
+      <button class="act-btn primary" onclick="openApp('https://app.targetdash.ai')">⚡ Open production</button>
+      <button class="act-btn neutral" onclick="openApp('https://demo.targetdash.ai')">◆ Open demo</button>
       <button class="act-btn danger" onclick="quickAction('${uid}','deactivate')" style="grid-column:1/-1;">⊘ Deactivate account</button>
     </div>`;
   document.getElementById('modal').style.display='flex';
@@ -612,7 +612,19 @@ async function adjCredit(uid,delta){
   openModal(uid);render();
 }
 
-function setFilter(f){activeFilter=f;render();}
+// ── OPEN APP WITH SESSION ─────────────────────────────────────────────────
+async function openApp(baseUrl){
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){toast('No session found',true);return;}
+    // Pass tokens in URL hash — Supabase picks these up automatically
+    const url=`${baseUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token}&type=recovery`;
+    window.open(url,'_blank');
+  }catch(e){
+    toast('Error: '+e.message,true);
+  }
+}
+window.openApp=openApp;
 function setSrch(s){srch=s;render();}
 function clearErrors(){errLog=[];render();}
 async function so(){await sb.auth.signOut();window.location.href='/login';}
