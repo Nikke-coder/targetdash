@@ -266,18 +266,18 @@ const thisMonth=new Date().toISOString().slice(0,7);
 setInterval(()=>{const e=document.getElementById('clock');if(!e)return;const n=new Date(),p=x=>String(x).padStart(2,'0');e.textContent=`${n.toISOString().split('T')[0]} · ${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;},1000);
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-(async()=>{
-  await new Promise(r=>setTimeout(r,1400));
-  let session=null;
-  for(let i=0;i<5;i++){const {data:{session:s}}=await sb.auth.getSession();if(s){session=s;break;}await new Promise(r=>setTimeout(r,400));}
-  if(!session){window.location.href='/login';return;}
-  if(!SUPERS.includes(session.user.email)){window.location.href='/getstarted';return;}
+sb.auth.onAuthStateChange(async (event, session) => {
+  if(event !== 'INITIAL_SESSION' && event !== 'SIGNED_IN') return;
+  if(!session) { window.location.href='/login'; return; }
+  if(!SUPERS.includes(session.user.email)) { window.location.href='/getstarted'; return; }
   await load();
+  // Wait for animation (min 1400ms) before showing dash
+  await new Promise(r=>setTimeout(r,1400));
   cancelAnimationFrame(eAnim);
   document.getElementById('entry').style.display='none';
   document.getElementById('dash').style.display='block';
   render();
-})();
+});
 
 async function load(){
   try{
