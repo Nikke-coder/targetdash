@@ -267,9 +267,11 @@ setInterval(()=>{const e=document.getElementById('clock');if(!e)return;const n=n
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 sb.auth.onAuthStateChange(async (event, session) => {
+  console.log('[ADMIN] event:', event, 'email:', session?.user?.email);
   if(event !== 'INITIAL_SESSION' && event !== 'SIGNED_IN') return;
-  if(!session) { window.location.href='/login'; return; }
-  if(!SUPERS.includes(session.user.email)) { window.location.href='/getstarted'; return; }
+  if(!session) { console.log('[ADMIN] no session → /login'); window.location.href='/login'; return; }
+  if(!SUPERS.includes(session.user.email)) { console.log('[ADMIN] not superuser → /getstarted'); window.location.href='/getstarted'; return; }
+  console.log('[ADMIN] superuser confirmed, loading...');
   await load();
   // Wait for animation (min 1400ms) before showing dash
   await new Promise(r=>setTimeout(r,1400));
@@ -662,7 +664,7 @@ async function adjCredit(uid,delta){
 
 // ── OPEN APP ──────────────────────────────────────────────────────────────
 function openApp(url){ window.open(url,'_blank'); }
-window.openApp=openApp;
+function setFilter(f){activeFilter=f;render();}
 function setSrch(s){srch=s;render();}
 function clearErrors(){errLog=[];render();}
 async function so(){await sb.auth.signOut();window.location.href='/login';}
@@ -720,7 +722,7 @@ function showInvStatus(msg,type){
 window.setFilter=setFilter;window.setSrch=setSrch;window.openModal=openModal;window.closeModal=closeModal;
 window.quickAction=quickAction;window.setCredits=setCredits;window.saveNote=saveNote;
 window.updatePlan=updatePlan;window.updateRole=updateRole;window.adjCredit=adjCredit;
-window.clearErrors=clearErrors;window.so=so;window.reload=reload;
+window.clearErrors=clearErrors;window.so=so;window.reload=reload;window.openApp=openApp;
 window.openInvite=openInvite;window.closeInvite=closeInvite;window.sendInvite=sendInvite;
 </script>
 </body>
