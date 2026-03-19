@@ -445,28 +445,48 @@ async function redirectAfterLogin(session) {
   try {
     const SUPERUSERS = ['niklas.isaksson@targetflow.fi'];
     const params = new URLSearchParams(window.location.search);
-    const mode     = params.get('mode') || '';
-    const redirect = params.get('redirect') || '';
+    const mode   = params.get('mode') || '';
 
-    // Superuser → always go to admin
+    // Superuser → god mode admin
     if(SUPERUSERS.includes(session.user.email)) {
       window.location.href = '/admin'; return;
     }
 
-    if(!mode) { window.location.href = DASHBOARD_URL; return; }
+    // Load profile to check onboarding status and plan
+    const { data: profile } = await sb.from('user_profiles')
+      .select('onboarded, plan')
+      .eq('user_id', session.user.id)
+      .maybeSingle();
 
-    const { data: profile } = await sb.from('user_profiles').select('onboarded').eq('user_id', session.user.id).maybeSingle();
-
-    if(profile?.onboarded) {
-      // Already onboarded — send to demo or dashboard
-      window.location.href = mode === 'demo' ? 'https://demo.targetdash.ai' : 'https://app.targetdash.ai';
-      return;
+    // Demo flow
+    if(mode === 'demo') {
+      if(profile?.onboarded) {
+        window.location.href = 'https://demo.targetdash.ai'; return;
+      }
+      window.location.href = ONBOARDING_URL + '?mode=demo'; return;
     }
 
-    // Not yet onboarded — go through onboarding
-    window.location.href = ONBOARDING_URL + '?mode=' + mode;
+    // Subscribe flow
+    if(mode === 'subscribe') {
+      if(profile?.onboarded && (profile?.plan === 'mainuser' || profile?.plan === 'superuser')) {
+        window.location.href = 'https://app.targetdash.ai'; return;
+      }
+      window.location.href = ONBOARDING_URL + '?mode=subscribe'; return;
+    }
+
+    // Direct sign-in (no mode) — route by plan
+    if(profile?.plan === 'mainuser' || profile?.plan === 'superuser') {
+      window.location.href = 'https://app.targetdash.ai'; return;
+    }
+    if(profile?.plan === 'demo' && profile?.onboarded) {
+      window.location.href = 'https://demo.targetdash.ai'; return;
+    }
+
+    // Not onboarded at all → getstarted
+    window.location.href = '/getstarted';
+
   } catch(e) {
-    window.location.href = DASHBOARD_URL;
+    window.location.href = '/getstarted';
   }
 }
 
