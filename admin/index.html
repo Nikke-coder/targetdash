@@ -664,9 +664,9 @@ async function adjCredit(uid,delta){
 async function openApp(baseUrl){
   try{
     const {data:{session}}=await sb.auth.getSession();
-    if(!session){toast('No session found',true);return;}
-    // Pass tokens in URL hash — Supabase picks these up automatically
-    const url=`${baseUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token}&type=recovery`;
+    if(!session){toast('No session — please refresh',true);return;}
+    // Pass tokens in URL hash — Supabase's onAuthStateChange picks these up
+    const url=`${baseUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token}&type=magiclink`;
     window.open(url,'_blank');
   }catch(e){
     toast('Error: '+e.message,true);
