@@ -283,32 +283,35 @@ const SUPERUSERS     = ['niklas.isaksson@targetflow.fi'];
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ── REDIRECT AFTER LOGIN ──────────────────────────────────────────────────
-async function redirectAfterLogin(session) {
-  if(!session) return;
-  try {
-    const mode = new URLSearchParams(window.location.search).get('mode') || '';
+// Guard — only redirect once, no matter how many events fire
+let redirecting = false;
 
-    // Superuser → god mode, always, no checks
+async function redirectAfterLogin(session) {
+  if(!session || redirecting) return;
+  redirecting = true;
+
+  try {
+    // Superuser → god mode, always, instantly
     if(SUPERUSERS.includes(session.user.email)) {
       window.location.href = '/admin'; return;
     }
+
+    const mode = new URLSearchParams(window.location.search).get('mode') || '';
 
     const { data: profile } = await sb.from('user_profiles')
       .select('onboarded, plan')
       .eq('user_id', session.user.id)
       .maybeSingle();
 
-    // ── DEMO FLOW ──
+    // DEMO FLOW
     if(mode === 'demo') {
       if(profile?.onboarded && profile?.plan === 'demo') {
-        // Already used demo — back to getstarted
         window.location.href = '/getstarted'; return;
       }
       window.location.href = ONBOARDING_URL + '?mode=demo'; return;
     }
 
-    // ── SUBSCRIBE FLOW ──
+    // SUBSCRIBE FLOW
     if(mode === 'subscribe') {
       if(profile?.onboarded && profile?.plan === 'mainuser') {
         window.location.href = 'https://app.targetdash.ai'; return;
@@ -316,42 +319,38 @@ async function redirectAfterLogin(session) {
       window.location.href = ONBOARDING_URL + '?mode=subscribe'; return;
     }
 
-    // ── DIRECT LOGIN (no mode) — route by plan ──
+    // DIRECT LOGIN — route by plan
     if(profile?.plan === 'mainuser' || profile?.plan === 'superuser') {
       window.location.href = 'https://app.targetdash.ai'; return;
     }
     if(profile?.plan === 'demo' && profile?.onboarded) {
-      // Demo already used — send to getstarted to upgrade
       window.location.href = '/getstarted'; return;
     }
 
-    // Unknown state → getstarted
     window.location.href = '/getstarted';
 
   } catch(e) {
+    redirecting = false; // allow retry on error
     window.location.href = '/getstarted';
   }
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────
-(async () => {
-  // Wait for OAuth callback to settle
-  if(window.location.hash.includes('access_token')) return;
-  const { data: { session } } = await sb.auth.getSession();
-  if(session) await redirectAfterLogin(session);
-})();
-
+// Only use onAuthStateChange as the single trigger — handles both
+// existing session on page load (INITIAL_SESSION) and OAuth return (SIGNED_IN)
 sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'SIGNED_IN' && session) redirectAfterLogin(session);
+  if(event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
+    redirectAfterLogin(session);
+  }
 });
 
-// ── GOOGLE SIGN IN ────────────────────────────────────────────────────────
+// GOOGLE SIGN IN — hardcode domain to avoid www vs non-www mismatch
 async function signInWithGoogle() {
   const mode = new URLSearchParams(window.location.search).get('mode');
+  const base = 'https://www.targetdash.ai/login';
   await sb.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: window.location.origin + '/login' + (mode ? '?mode=' + mode : '')
+      redirectTo: base + (mode ? '?mode=' + mode : '')
     }
   });
 }
