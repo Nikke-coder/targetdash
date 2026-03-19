@@ -270,44 +270,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
         </div>
       </div>
 
-      <!-- VIEW: MFA ENROLL (first time) -->
-      <div id="viewEnroll" style="display:none">
-        <div style="text-align:center;margin-bottom:24px;">
-          <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--violet-lo),var(--violet-hi));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;">🔐</div>
-          <div class="form-title">Set up two-factor auth</div>
-          <div class="form-sub">Scan this QR code with Google Authenticator to secure your account.</div>
-        </div>
-        <div id="qrWrap" style="display:flex;justify-content:center;margin-bottom:16px;">
-          <div style="width:160px;height:160px;background:var(--panel);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--ui);font-size:11px;color:var(--dim);">Loading QR…</div>
-        </div>
-        <div id="secretWrap" style="display:none;margin-bottom:16px;">
-          <div style="font-family:var(--ui);font-size:11px;color:var(--mid);text-align:center;margin-bottom:6px;">Or enter manually:</div>
-          <div id="secretCode" style="font-family:var(--ui);font-size:12px;color:var(--lilac);letter-spacing:2px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px;word-break:break-all;"></div>
-        </div>
-        <div style="font-family:var(--ui);font-size:12px;color:var(--mid);text-align:center;margin-bottom:12px;">Enter the 6-digit code to confirm setup</div>
-        <input id="enrollCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000"
-          style="width:100%;text-align:center;font-family:var(--ui);font-size:24px;letter-spacing:8px;padding:14px;background:var(--panel);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none;margin-bottom:8px;"
-          oninput="this.value=this.value.replace(/\D/g,'').slice(0,6);checkEnrollBtn()"
-          onkeydown="if(event.key==='Enter')enrollMfa()"/>
-        <div id="enrollErr" style="display:none;color:var(--red);font-family:var(--ui);font-size:12px;text-align:center;margin-bottom:8px;">Invalid code — try again</div>
-        <button class="btn-submit" id="enrollBtn" onclick="enrollMfa()" disabled>Activate &amp; continue →</button>
-      </div>
-
-      <!-- VIEW: MFA VERIFY (returning users) -->
-      <div id="viewVerify" style="display:none">
-        <div style="text-align:center;margin-bottom:24px;">
-          <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--violet-lo),var(--violet-hi));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;">🔐</div>
-          <div class="form-title">Two-factor auth</div>
-          <div class="form-sub">Enter the 6-digit code from Google Authenticator.</div>
-        </div>
-        <input id="verifyCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000"
-          style="width:100%;text-align:center;font-family:var(--ui);font-size:24px;letter-spacing:8px;padding:14px;background:var(--panel);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none;margin-bottom:8px;"
-          oninput="this.value=this.value.replace(/\D/g,'').slice(0,6);checkVerifyBtn()"
-          onkeydown="if(event.key==='Enter')verifyMfa()"/>
-        <div id="verifyErr" style="display:none;color:var(--red);font-family:var(--ui);font-size:12px;text-align:center;margin-bottom:8px;">Invalid code — try again</div>
-        <button class="btn-submit" id="verifyBtn" onclick="verifyMfa()" disabled>Verify →</button>
-      </div>
-
     </div>
   </div>
 </div>
@@ -315,174 +277,55 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 <script>
 const SUPABASE_URL   = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-const DASHBOARD_URL  = '/dashboard';
 const ONBOARDING_URL = '/onboarding';
+const SUPERUSERS     = ['niklas.isaksson@targetflow.fi'];
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let mfaFactorId = null;
-
-// ── VIEWS ────────────────────────────────────────────────────────────────
-function showView(id) {
-  ['viewSignin','viewEnroll','viewVerify'].forEach(v => {
-    document.getElementById(v).style.display = v === id ? '' : 'none';
-  });
-}
-
-// ── AFTER GOOGLE LOGIN — CHECK MFA STATUS ────────────────────────────────
-async function afterGoogleLogin(session) {
-  try {
-    // Check MFA assurance level
-    const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-    const { data: factors } = await sb.auth.mfa.listFactors();
-    const hasTotp = factors?.totp?.length > 0;
-
-    if(!hasTotp) {
-      // No MFA set up yet — enroll them
-      await startEnroll();
-      return;
-    }
-
-    if(aal?.nextLevel === 'aal2' && aal?.currentLevel !== 'aal2') {
-      // Has MFA but not verified yet — show verify screen
-      showView('viewVerify');
-      document.getElementById('verifyCode').focus();
-      return;
-    }
-
-    // MFA already satisfied — proceed
-    await redirectAfterLogin(session);
-
-  } catch(e) {
-    await redirectAfterLogin(session);
-  }
-}
-
-// ── ENROLL ───────────────────────────────────────────────────────────────
-async function startEnroll() {
-  showView('viewEnroll');
-  const { data, error } = await sb.auth.mfa.enroll({
-    factorType: 'totp',
-    friendlyName: 'Google Authenticator'
-  });
-  if(error || !data) { console.error(error); return; }
-  mfaFactorId = data.id;
-
-  // Show QR code
-  document.getElementById('qrWrap').innerHTML =
-    `<img src="${data.totp.qr_code}" style="width:160px;height:160px;border-radius:12px;border:1px solid var(--border);" alt="QR Code"/>`;
-
-  // Show manual secret
-  document.getElementById('secretCode').textContent = data.totp.secret;
-  document.getElementById('secretWrap').style.display = '';
-}
-
-async function enrollMfa() {
-  const code = document.getElementById('enrollCode').value.trim();
-  if(code.length < 6) return;
-  const btn = document.getElementById('enrollBtn');
-  btn.disabled = true; btn.textContent = 'Verifying…';
-  document.getElementById('enrollErr').style.display = 'none';
-
-  try {
-    const { data: challenge } = await sb.auth.mfa.challenge({ factorId: mfaFactorId });
-    const { error } = await sb.auth.mfa.verify({
-      factorId: mfaFactorId, challengeId: challenge.id, code
-    });
-    if(error) throw error;
-
-    // Enrolled and verified — proceed
-    const { data: { session } } = await sb.auth.getSession();
-    await redirectAfterLogin(session);
-  } catch(e) {
-    document.getElementById('enrollErr').style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Activate & continue →';
-    document.getElementById('enrollCode').value = '';
-  }
-}
-
-function checkEnrollBtn() {
-  document.getElementById('enrollBtn').disabled =
-    document.getElementById('enrollCode').value.length < 6;
-}
-
-// ── VERIFY ───────────────────────────────────────────────────────────────
-async function verifyMfa() {
-  const code = document.getElementById('verifyCode').value.trim();
-  if(code.length < 6) return;
-  const btn = document.getElementById('verifyBtn');
-  btn.disabled = true; btn.textContent = 'Verifying…';
-  document.getElementById('verifyErr').style.display = 'none';
-
-  try {
-    const { data: factors } = await sb.auth.mfa.listFactors();
-    const factor = factors?.totp?.[0];
-    if(!factor) throw new Error('No factor found');
-
-    const { data: challenge } = await sb.auth.mfa.challenge({ factorId: factor.id });
-    const { error } = await sb.auth.mfa.verify({
-      factorId: factor.id, challengeId: challenge.id, code
-    });
-    if(error) throw error;
-
-    const { data: { session } } = await sb.auth.getSession();
-    await redirectAfterLogin(session);
-  } catch(e) {
-    document.getElementById('verifyErr').style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Verify →';
-    document.getElementById('verifyCode').value = '';
-  }
-}
-
-function checkVerifyBtn() {
-  document.getElementById('verifyBtn').disabled =
-    document.getElementById('verifyCode').value.length < 6;
-}
-
-// ── REDIRECT ─────────────────────────────────────────────────────────────
+// ── REDIRECT AFTER LOGIN ──────────────────────────────────────────────────
 async function redirectAfterLogin(session) {
+  if(!session) return;
   try {
-    const SUPERUSERS = ['niklas.isaksson@targetflow.fi'];
-    const params = new URLSearchParams(window.location.search);
-    const mode   = params.get('mode') || '';
+    const mode = new URLSearchParams(window.location.search).get('mode') || '';
 
-    // Superuser → god mode admin
+    // Superuser → god mode, always, no checks
     if(SUPERUSERS.includes(session.user.email)) {
       window.location.href = '/admin'; return;
     }
 
-    // Load profile to check onboarding status and plan
     const { data: profile } = await sb.from('user_profiles')
       .select('onboarded, plan')
       .eq('user_id', session.user.id)
       .maybeSingle();
 
-    // Demo flow
+    // ── DEMO FLOW ──
     if(mode === 'demo') {
-      if(profile?.onboarded) {
-        window.location.href = 'https://demo.targetdash.ai'; return;
+      if(profile?.onboarded && profile?.plan === 'demo') {
+        // Already used demo — back to getstarted
+        window.location.href = '/getstarted'; return;
       }
       window.location.href = ONBOARDING_URL + '?mode=demo'; return;
     }
 
-    // Subscribe flow
+    // ── SUBSCRIBE FLOW ──
     if(mode === 'subscribe') {
-      if(profile?.onboarded && (profile?.plan === 'mainuser' || profile?.plan === 'superuser')) {
+      if(profile?.onboarded && profile?.plan === 'mainuser') {
         window.location.href = 'https://app.targetdash.ai'; return;
       }
       window.location.href = ONBOARDING_URL + '?mode=subscribe'; return;
     }
 
-    // Direct sign-in (no mode) — route by plan
+    // ── DIRECT LOGIN (no mode) — route by plan ──
     if(profile?.plan === 'mainuser' || profile?.plan === 'superuser') {
       window.location.href = 'https://app.targetdash.ai'; return;
     }
     if(profile?.plan === 'demo' && profile?.onboarded) {
-      window.location.href = 'https://demo.targetdash.ai'; return;
+      // Demo already used — send to getstarted to upgrade
+      window.location.href = '/getstarted'; return;
     }
 
-    // Not onboarded at all → getstarted
+    // Unknown state → getstarted
     window.location.href = '/getstarted';
 
   } catch(e) {
@@ -490,33 +333,29 @@ async function redirectAfterLogin(session) {
   }
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────────────────
 (async () => {
-  if(window.location.hash.includes('access_token')) return; // OAuth callback — wait for onAuthStateChange
+  // Wait for OAuth callback to settle
+  if(window.location.hash.includes('access_token')) return;
   const { data: { session } } = await sb.auth.getSession();
-  if(session) await afterGoogleLogin(session); // Already logged in — check MFA
-  // No session — just show the sign in button, do nothing
+  if(session) await redirectAfterLogin(session);
 })();
 
 sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'SIGNED_IN' && session) afterGoogleLogin(session);
+  if(event === 'SIGNED_IN' && session) redirectAfterLogin(session);
 });
 
-// ── GOOGLE SSO ────────────────────────────────────────────────────────────
+// ── GOOGLE SIGN IN ────────────────────────────────────────────────────────
 async function signInWithGoogle() {
   const mode = new URLSearchParams(window.location.search).get('mode');
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + '/login' + (mode ? '?mode=' + mode : '') }
+    options: {
+      redirectTo: window.location.origin + '/login' + (mode ? '?mode=' + mode : '')
+    }
   });
 }
 document.getElementById('googleBtn').onclick = signInWithGoogle;
-
-// Expose for inline handlers
-window.enrollMfa   = enrollMfa;
-window.verifyMfa   = verifyMfa;
-window.checkEnrollBtn = checkEnrollBtn;
-window.checkVerifyBtn = checkVerifyBtn;
 </script>
 </body>
 </html>
