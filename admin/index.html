@@ -162,21 +162,31 @@ const thisMonth=new Date().toISOString().slice(0,7);
 setInterval(()=>{const e=document.getElementById('clock');if(!e)return;const n=new Date(),p=x=>String(x).padStart(2,'0');e.textContent=`${n.toISOString().split('T')[0]} · ${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;},1000);
 
 (async()=>{
-  await new Promise(r=>setTimeout(r,2400));
-  const {data:{session}}=await sb.auth.getSession();
-  if(!session){window.location.href='/login';return;}
-  if(!SUPERS.includes(session.user.email)){window.location.href='/dashboard';return;}
+  await new Promise(r=>setTimeout(r,1400));
 
-  const [{data:prof},{data:cred},{data:ums}]=await Promise.all([
+  // Retry session a few times in case cookie hasn't propagated yet
+  let session = null;
+  for(let i=0;i<5;i++){
+    const {data:{session:s}}=await sb.auth.getSession();
+    if(s){session=s;break;}
+    await new Promise(r=>setTimeout(r,400));
+  }
+
+  if(!session){window.location.href='/login';return;}
+  if(!SUPERS.includes(session.user.email)){window.location.href='/getstarted';return;}
+
+  const [{data:prof},{data:cred}]=await Promise.all([
     sb.from('user_profiles').select('*').order('created_at',{ascending:false}),
     sb.from('demo_credits').select('user_id,credits_used'),
-    sb.from('user_monthly_stats').select('*').eq('month',thisMonth).catch(()=>({data:[]})),
   ]);
 
-  const cm={};(cred||[]).forEach(c=>cm[c.user_id]=c.credits_used);
-  // Build stats map by user_id
-  (ums||[]).forEach(s=>stats[s.user_id]=s);
+  // user_monthly_stats may not exist yet — handle gracefully
+  try {
+    const {data:ums} = await sb.from('user_monthly_stats').select('*').eq('month',thisMonth);
+    (ums||[]).forEach(s=>stats[s.user_id]=s);
+  } catch(e) { /* table not created yet */ }
 
+  const cm={};(cred||[]).forEach(c=>cm[c.user_id]=c.credits_used);
   cl=(prof||[]).map(p=>({...p,credits_used:cm[p.user_id]||0,stats:stats[p.user_id]||null}));
 
   cancelAnimationFrame(eAnim);
