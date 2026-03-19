@@ -473,7 +473,7 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
 <script>
 const SUPABASE_URL  = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-const DASHBOARD_URL = '/dashboard';
+const DASHBOARD_URL = 'https://app.targetdash.ai';
 const DEMO_URL      = 'https://demo.targetdash.ai';
 
 const { createClient } = supabase;
@@ -502,7 +502,9 @@ let userId = '';
         .select('onboarded, plan').eq('user_id', userId).maybeSingle();
 
       if(profile?.onboarded) {
-        window.location.href = DASHBOARD_URL;
+        // Route by plan
+        if(profile?.plan === 'demo') window.location.href = DEMO_URL;
+        else window.location.href = DASHBOARD_URL;
         return;
       }
     } catch(e) {}
@@ -525,8 +527,8 @@ let userId = '';
               <a href="/getstarted" style="display:inline-block;background:#7c3aed;color:#fff;padding:13px 28px;border-radius:10px;font-family:var(--ui);font-size:14px;font-weight:600;text-decoration:none;margin-bottom:12px;">
                 Subscribe now →
               </a><br/>
-              <a href="/dashboard" style="font-family:var(--ui);font-size:12px;color:var(--mid);text-decoration:none;">
-                Go to dashboard
+              <a href="https://app.targetdash.ai" style="font-family:var(--ui);font-size:12px;color:var(--mid);text-decoration:none;">
+                Already subscribed? Go to dashboard
               </a>
             </div>`;
           return;
