@@ -186,6 +186,7 @@ td{padding:10px 14px;vertical-align:middle;background:var(--bg);font-family:var(
       <span id="clock"></span>
       <button class="nbtn" onclick="openApp('https://app.targetdash.ai')">⚡ Production</button>
       <button class="abtn" onclick="openApp('https://demo.targetdash.ai')">◆ Demo</button>
+      <button class="nbtn" style="color:var(--green);border-color:rgba(52,211,153,0.3);background:rgba(52,211,153,0.06);" onclick="openInvite()">+ New client</button>
       <button class="nbtn" onclick="reload()">↻ Refresh</button>
       <button class="xbtn" onclick="so()">Sign out</button>
     </div>
@@ -194,6 +195,53 @@ td{padding:10px 14px;vertical-align:middle;background:var(--bg);font-family:var(
 </div>
 <div class="modal-bg" id="modal" style="display:none;" onclick="if(event.target===this)closeModal()">
   <div class="modal" id="modal-inner"></div>
+</div>
+
+<!-- INVITE MODAL -->
+<div class="modal-bg" id="invite-modal" style="display:none;" onclick="if(event.target===this)closeInvite()">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">New client</div>
+        <div class="modal-sub">Invite a company to targetdash. They'll receive an email with a magic link to activate their account.</div>
+      </div>
+      <button class="modal-close" onclick="closeInvite()">✕</button>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-sec-title">Company details</div>
+      <div class="modal-row">
+        <span class="modal-label">Company name</span>
+        <input id="inv-company" type="text" placeholder="Acme Oy" class="credit-input" style="width:200px;text-align:left;padding:6px 10px;"/>
+      </div>
+      <div class="modal-row">
+        <span class="modal-label">Contact email</span>
+        <input id="inv-email" type="email" placeholder="ceo@acme.fi" class="credit-input" style="width:200px;text-align:left;padding:6px 10px;"/>
+      </div>
+      <div class="modal-row">
+        <span class="modal-label">Contact role</span>
+        <select id="inv-role" class="rsel">
+          <option>CEO</option><option>CFO</option><option>CMO</option>
+          <option>CRO</option><option>CTO</option><option>HR Manager</option>
+        </select>
+      </div>
+      <div class="modal-row">
+        <span class="modal-label">Plan</span>
+        <select id="inv-plan" class="rsel">
+          <option value="mainuser">MainUser — €80/mo</option>
+          <option value="demo">Demo — free</option>
+          <option value="inactive">Inactive — no access</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="inv-status" style="display:none;padding:10px 12px;border-radius:8px;font-family:var(--ui);font-size:12px;margin-bottom:12px;"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button class="act-btn neutral" onclick="closeInvite()">Cancel</button>
+      <button class="act-btn success" id="inv-btn" onclick="sendInvite()">Send invite →</button>
+    </div>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -629,10 +677,61 @@ function setSrch(s){srch=s;render();}
 function clearErrors(){errLog=[];render();}
 async function so(){await sb.auth.signOut();window.location.href='/login';}
 
+// ── INVITE ────────────────────────────────────────────────────────────────
+function openInvite(){
+  document.getElementById('inv-company').value='';
+  document.getElementById('inv-email').value='';
+  document.getElementById('inv-role').value='CEO';
+  document.getElementById('inv-plan').value='mainuser';
+  document.getElementById('inv-status').style.display='none';
+  document.getElementById('inv-btn').disabled=false;
+  document.getElementById('inv-btn').textContent='Send invite →';
+  document.getElementById('invite-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('inv-company').focus(),100);
+}
+function closeInvite(){document.getElementById('invite-modal').style.display='none';}
+
+async function sendInvite(){
+  const company=document.getElementById('inv-company').value.trim();
+  const email=document.getElementById('inv-email').value.trim();
+  const role=document.getElementById('inv-role').value;
+  const plan=document.getElementById('inv-plan').value;
+  const btn=document.getElementById('inv-btn');
+  if(!company){showInvStatus('Enter a company name','err');return;}
+  if(!email||!email.includes('@')){showInvStatus('Enter a valid email','err');return;}
+  btn.disabled=true;btn.textContent='Sending…';
+  try{
+    const res=await fetch('https://app.targetdash.ai/api/invite-member',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,company_name:company,role,plan,invited_by:'niklas.isaksson@targetflow.fi'})
+    });
+    const data=await res.json();
+    if(!res.ok||data.error){showInvStatus('Error: '+data.error,'err');btn.disabled=false;btn.textContent='Send invite →';return;}
+    showInvStatus(`✓ Invite sent to ${email}. They'll get a magic link to activate.`+(data.note?' ('+data.note+')':''),'ok');
+    btn.textContent='Sent ✓';
+    await reload();
+    setTimeout(closeInvite,3000);
+  }catch(e){
+    showInvStatus('Network error: '+e.message,'err');
+    btn.disabled=false;btn.textContent='Send invite →';
+  }
+}
+
+function showInvStatus(msg,type){
+  const el=document.getElementById('inv-status');
+  el.style.display='block';
+  el.style.background=type==='ok'?'rgba(52,211,153,0.08)':'rgba(241,113,113,0.08)';
+  el.style.border='1px solid '+(type==='ok'?'rgba(52,211,153,0.3)':'rgba(241,113,113,0.3)');
+  el.style.color=type==='ok'?'var(--green)':'var(--red)';
+  el.textContent=msg;
+}
+
 window.setFilter=setFilter;window.setSrch=setSrch;window.openModal=openModal;window.closeModal=closeModal;
 window.quickAction=quickAction;window.setCredits=setCredits;window.saveNote=saveNote;
 window.updatePlan=updatePlan;window.updateRole=updateRole;window.adjCredit=adjCredit;
 window.clearErrors=clearErrors;window.so=so;window.reload=reload;
+window.openInvite=openInvite;window.closeInvite=closeInvite;window.sendInvite=sendInvite;
 </script>
 </body>
 </html>
