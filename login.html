@@ -313,6 +313,9 @@ async function redirectAfterLogin(session) {
     }
 
     // DIRECT LOGIN — route by plan
+    if(profile?.plan === 'superuser') {
+      window.location.href = 'https://admin.targetdash.ai'; return;
+    }
     if(profile?.plan === 'mainuser') {
       window.location.href = 'https://app.targetdash.ai'; return;
     }
