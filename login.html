@@ -346,7 +346,7 @@ async function redirectAfterLogin(session) {
 }
 
 sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
+  if(event === 'SIGNED_IN') {
     redirectAfterLogin(session);
   }
 });
