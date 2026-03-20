@@ -237,10 +237,9 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
     const { data: profile } = await sb.from('user_profiles').select('onboarded,plan').eq('user_id',session.user.id).maybeSingle();
     if(profile?.onboarded) {
       const plan = profile?.plan;
-      if(plan === 'superuser') window.location.href = 'https://admin.targetdash.ai';
-      else if(plan === 'mainuser') window.location.href = 'https://app.targetdash.ai';
-      else if(plan === 'demo') window.location.href = 'https://demo.targetdash.ai';
-      else window.location.href = '/onboarding?mode=subscribe';
+      // Paid users go straight to their dashboard
+      if(plan === 'superuser' || plan === 'mainuser') window.location.href = 'https://app.targetdash.ai';
+      // Demo users stay on getstarted so they can choose demo or subscribe
     }
   }
 })();
