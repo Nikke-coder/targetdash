@@ -256,7 +256,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
   <div class="right">
     <div class="form-box">
 
-      <!-- VIEW: SIGN IN -->
       <div id="viewSignin">
         <div class="form-title" id="loginTitle">Welcome back</div>
         <div class="form-sub" id="loginSub">Sign in to your dashboard</div>
@@ -273,21 +272,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
     </div>
   </div>
 </div>
-<script>
-// Adapt messaging to mode
-(()=>{
-  const mode = new URLSearchParams(window.location.search).get('mode');
-  if(mode === 'demo') {
-    document.getElementById('loginTitle').textContent = 'Start your free demo';
-    document.getElementById('loginSub').textContent = '5 AI credits included · No credit card needed';
-    document.getElementById('loginFooter').innerHTML = 'Already have an account? <a href="/login" style="color:var(--lilac);text-decoration:none;">Sign in →</a>';
-  } else if(mode === 'subscribe') {
-    document.getElementById('loginTitle').textContent = 'Create your account';
-    document.getElementById('loginSub').textContent = 'Set up your targetdash dashboard';
-    document.getElementById('loginFooter').innerHTML = 'Already have an account? <a href="/login" style="color:var(--lilac);text-decoration:none;">Sign in →</a>';
-  }
-})();
-</script>
 
 <script>
 const SUPABASE_URL   = 'https://nghlvfngpfrhhigkoeem.supabase.co';
@@ -297,62 +281,75 @@ const ONBOARDING_URL = '/onboarding';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let redirecting = false;
+const mode = new URLSearchParams(window.location.search).get('mode') || '';
 
-async function redirectAfterLogin(session) {
-  if(!session || redirecting) return;
-  redirecting = true;
-
-  try {
-    const mode = new URLSearchParams(window.location.search).get('mode') || '';
-
-    const { data: profile } = await sb.from('user_profiles')
-      .select('onboarded, plan')
-      .eq('user_id', session.user.id)
-      .maybeSingle();
-
-    const plan = profile?.plan;
-
-    // DEMO FLOW
-    if(mode === 'demo') {
-      window.location.href = ONBOARDING_URL + '?mode=demo'; return;
-    }
-
-    // SUBSCRIBE FLOW
-    if(mode === 'subscribe') {
-      if(profile?.onboarded && (plan === 'mainuser' || plan === 'superuser')) {
-        window.location.href = 'https://app.targetdash.ai'; return;
-      }
-      window.location.href = ONBOARDING_URL + '?mode=subscribe'; return;
-    }
-
-    // DIRECT LOGIN — paid users and superuser go to production dashboard
-    if((plan === 'mainuser' || plan === 'superuser') && profile?.onboarded) {
-      window.location.href = 'https://app.targetdash.ai'; return;
-    }
-
-    // Not yet onboarded → onboarding
-    if(plan === 'mainuser') {
-      window.location.href = ONBOARDING_URL + '?mode=invite'; return;
-    }
-
-    // Everything else → getstarted
-    window.location.href = '/getstarted';
-
-  } catch(e) {
-    redirecting = false;
-    window.location.href = '/getstarted';
-  }
+// Update copy based on mode
+if(mode === 'demo') {
+  document.getElementById('loginTitle').textContent = 'Start your free demo';
+  document.getElementById('loginSub').textContent = '5 AI credits included · No credit card needed';
+  document.getElementById('loginFooter').innerHTML = 'Already have an account? <a href="/login" style="color:var(--lilac);text-decoration:none;">Sign in →</a>';
+} else if(mode === 'subscribe') {
+  document.getElementById('loginTitle').textContent = 'Create your account';
+  document.getElementById('loginSub').textContent = 'Set up your targetdash dashboard';
+  document.getElementById('loginFooter').innerHTML = 'Already have an account? <a href="/login" style="color:var(--lilac);text-decoration:none;">Sign in →</a>';
 }
 
-sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'SIGNED_IN') {
-    redirectAfterLogin(session);
+let done = false;
+
+async function route(session) {
+  if(done || !session) return;
+  done = true;
+
+  const { data: profile } = await sb.from('user_profiles')
+    .select('onboarded, plan')
+    .eq('user_id', session.user.id)
+    .maybeSingle();
+
+  const plan = profile?.plan;
+  const onboarded = profile?.onboarded;
+
+  if(mode === 'demo') {
+    // Always go through onboarding for demo - it handles already-used check
+    window.location.href = ONBOARDING_URL + '?mode=demo'; return;
   }
+
+  if(mode === 'subscribe') {
+    if(onboarded && (plan === 'mainuser' || plan === 'superuser')) {
+      window.location.href = 'https://app.targetdash.ai'; return;
+    }
+    window.location.href = ONBOARDING_URL + '?mode=subscribe'; return;
+  }
+
+  // Direct login - no mode
+  if(plan === 'mainuser' || plan === 'superuser') {
+    if(onboarded) { window.location.href = 'https://app.targetdash.ai'; return; }
+    window.location.href = ONBOARDING_URL + '?mode=invite'; return;
+  }
+
+  window.location.href = '/getstarted';
+}
+
+// Check existing session on load — BUT only auto-route if not on demo/subscribe mode
+// (user should see the page first before being auto-routed on those flows)
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if(session && !mode) {
+    // Direct login with existing session → route immediately
+    await route(session);
+  }
+  // For mode=demo or mode=subscribe: just show the form, don't auto-route
+  // They'll click Google → SIGNED_IN fires → route()
+})();
+
+// After Google OAuth
+sb.auth.onAuthStateChange((event, session) => {
+  if(event === 'SIGNED_IN') route(session);
 });
 
 async function signInWithGoogle() {
-  const mode = new URLSearchParams(window.location.search).get('mode');
+  const btn = document.getElementById('googleBtn');
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
   await sb.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: 'https://www.targetdash.ai/login' + (mode ? '?mode=' + mode : '') }
