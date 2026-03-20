@@ -298,9 +298,6 @@ async function redirectAfterLogin(session) {
 
     // DEMO FLOW
     if(mode === 'demo') {
-      if(profile?.onboarded && profile?.plan === 'demo') {
-        window.location.href = '/getstarted'; return;
-      }
       window.location.href = ONBOARDING_URL + '?mode=demo'; return;
     }
 
@@ -312,17 +309,12 @@ async function redirectAfterLogin(session) {
       window.location.href = ONBOARDING_URL + '?mode=subscribe'; return;
     }
 
-    // DIRECT LOGIN — route by plan
-    if(profile?.plan === 'superuser') {
-      window.location.href = 'https://admin.targetdash.ai'; return;
-    }
-    if(profile?.plan === 'mainuser') {
+    // DIRECT LOGIN — only route paid users automatically
+    if(profile?.plan === 'mainuser' && profile?.onboarded) {
       window.location.href = 'https://app.targetdash.ai'; return;
     }
-    if(profile?.plan === 'demo' && profile?.onboarded) {
-      window.location.href = '/getstarted'; return;
-    }
 
+    // Everyone else → getstarted to choose their path
     window.location.href = '/getstarted';
 
   } catch(e) {
