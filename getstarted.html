@@ -220,11 +220,11 @@ h1 span{color:var(--violet-hi);}
   </div>
 
   <p class="note">
-    Questions? <a href="mailto:niklas@targetdash.ai">niklas@targetdash.ai</a> · No setup fees · Cancel anytime
+    Questions? <a href="/cdn-cgi/l/email-protection#d1bfb8babdb0a291a5b0a3b6b4a5b5b0a2b9ffb0b8"><span class="__cf_email__" data-cfemail="ed838486818c9ead998c9f8a8899898c9e85c38c84">[email&#160;protected]</span></a> · No setup fees · Cancel anytime
   </p>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // If already logged in, redirect based on account status
 const SUPABASE_URL = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
@@ -237,12 +237,4 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
     const { data: profile } = await sb.from('user_profiles').select('onboarded,plan').eq('user_id',session.user.id).maybeSingle();
     if(profile?.onboarded) {
       const plan = profile?.plan;
-      // Paid users go straight to their dashboard
-      if(plan === 'superuser' || plan === 'mainuser') window.location.href = 'https://app.targetdash.ai';
-      // Demo users stay on getstarted so they can choose demo or subscribe
-    }
-  }
-})();
-</script>
-</body>
-</html>
+      // Paid users go straigh
