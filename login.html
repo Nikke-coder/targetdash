@@ -296,6 +296,8 @@ async function redirectAfterLogin(session) {
       .eq('user_id', session.user.id)
       .maybeSingle();
 
+    const plan = profile?.plan;
+
     // DEMO FLOW
     if(mode === 'demo') {
       window.location.href = ONBOARDING_URL + '?mode=demo'; return;
@@ -303,18 +305,23 @@ async function redirectAfterLogin(session) {
 
     // SUBSCRIBE FLOW
     if(mode === 'subscribe') {
-      if(profile?.onboarded && profile?.plan === 'mainuser') {
+      if(profile?.onboarded && (plan === 'mainuser' || plan === 'superuser')) {
         window.location.href = 'https://app.targetdash.ai'; return;
       }
       window.location.href = ONBOARDING_URL + '?mode=subscribe'; return;
     }
 
-    // DIRECT LOGIN — only route paid users automatically
-    if(profile?.plan === 'mainuser' && profile?.onboarded) {
+    // DIRECT LOGIN — paid users and superuser go to production dashboard
+    if((plan === 'mainuser' || plan === 'superuser') && profile?.onboarded) {
       window.location.href = 'https://app.targetdash.ai'; return;
     }
 
-    // Everyone else → getstarted to choose their path
+    // Not yet onboarded → onboarding
+    if(plan === 'mainuser') {
+      window.location.href = ONBOARDING_URL + '?mode=invite'; return;
+    }
+
+    // Everything else → getstarted
     window.location.href = '/getstarted';
 
   } catch(e) {
