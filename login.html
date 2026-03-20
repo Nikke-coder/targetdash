@@ -278,12 +278,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 const SUPABASE_URL   = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 const ONBOARDING_URL = '/onboarding';
-const SUPERUSERS     = ['niklas.isaksson@targetflow.fi'];
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Guard — only redirect once, no matter how many events fire
 let redirecting = false;
 
 async function redirectAfterLogin(session) {
@@ -291,11 +289,6 @@ async function redirectAfterLogin(session) {
   redirecting = true;
 
   try {
-    // Superuser → god mode, always, instantly
-    if(SUPERUSERS.includes(session.user.email)) {
-      window.location.href = '/admin'; return;
-    }
-
     const mode = new URLSearchParams(window.location.search).get('mode') || '';
 
     const { data: profile } = await sb.from('user_profiles')
@@ -320,7 +313,7 @@ async function redirectAfterLogin(session) {
     }
 
     // DIRECT LOGIN — route by plan
-    if(profile?.plan === 'mainuser' || profile?.plan === 'superuser') {
+    if(profile?.plan === 'mainuser') {
       window.location.href = 'https://app.targetdash.ai'; return;
     }
     if(profile?.plan === 'demo' && profile?.onboarded) {
@@ -330,28 +323,22 @@ async function redirectAfterLogin(session) {
     window.location.href = '/getstarted';
 
   } catch(e) {
-    redirecting = false; // allow retry on error
+    redirecting = false;
     window.location.href = '/getstarted';
   }
 }
 
-// Only use onAuthStateChange as the single trigger — handles both
-// existing session on page load (INITIAL_SESSION) and OAuth return (SIGNED_IN)
 sb.auth.onAuthStateChange((event, session) => {
   if(event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
     redirectAfterLogin(session);
   }
 });
 
-// GOOGLE SIGN IN — hardcode domain to avoid www vs non-www mismatch
 async function signInWithGoogle() {
   const mode = new URLSearchParams(window.location.search).get('mode');
-  const base = 'https://www.targetdash.ai/login';
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: {
-      redirectTo: base + (mode ? '?mode=' + mode : '')
-    }
+    options: { redirectTo: 'https://www.targetdash.ai/login' + (mode ? '?mode=' + mode : '') }
   });
 }
 document.getElementById('googleBtn').onclick = signInWithGoogle;
