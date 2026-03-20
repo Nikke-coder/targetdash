@@ -3,760 +3,246 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>targetdash › Welcome</title>
+<title>targetdash › Get started</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:       #0a0a0f;
-  --bg2:      #0e0e16;
-  --bg3:      #12121c;
-  --panel:    rgba(255,255,255,0.04);
-  --panel-hi: rgba(255,255,255,0.07);
-  --border:   rgba(255,255,255,0.08);
-  --border-hi:rgba(255,255,255,0.14);
-  --violet:   #7c3aed;
-  --violet-hi:#9d5ffc;
-  --violet-lo:#5b21b6;
-  --vglow:    rgba(124,58,237,0.3);
-  --lilac:    #c4b5fd;
-  --white:    #fff;
-  --text:     #f1f0f5;
-  --mid:      #8b8a9a;
-  --dim:      #3d3c52;
-  --green:    #34d399;
-  --red:      #f87171;
-  --amber:    #fbbf24;
-  --sans:     'Outfit', sans-serif;
-  --ui:       'Instrument Sans', sans-serif;
+  --bg:#0a0a0f; --bg2:#0e0e16; --bg3:#12121c;
+  --panel:rgba(255,255,255,0.04); --panel-hi:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08); --border-hi:rgba(255,255,255,0.14);
+  --violet:#7c3aed; --violet-hi:#9d5ffc; --violet-lo:#5b21b6;
+  --vglow:rgba(124,58,237,0.3); --lilac:#c4b5fd;
+  --white:#fff; --text:#f1f0f5; --mid:#8b8a9a; --dim:#3d3c52;
+  --green:#34d399; --amber:#fbbf24; --red:#f87171;
+  --sans:'Outfit',sans-serif; --ui:'Instrument Sans',sans-serif;
+}
+html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--sans);}
+
+/* bg orb */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 40%,rgba(124,58,237,0.08) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 70%,rgba(91,33,182,0.05) 0%,transparent 55%);
 }
 
-html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100%; }
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:64px;border-bottom:1px solid var(--border);
+  background:rgba(10,10,15,0.8);backdrop-filter:blur(20px);
+  position:fixed;top:0;left:0;right:0;z-index:10;
+}
+.logo{display:flex;align-items:center;text-decoration:none;}
+.logo-name{font-family:var(--ui);font-size:16px;font-weight:600;color:var(--white);}
+.logo-gt{font-size:18px;color:var(--violet-hi);text-shadow:0 0 16px var(--violet);}
+.nav-signin{font-family:var(--ui);font-size:13px;color:var(--mid);text-decoration:none;transition:color .2s;}
+.nav-signin:hover{color:var(--text);}
 
-/* ── PROGRESS BAR ── */
-.progress-bar {
-  position:fixed; top:0; left:0; right:0; height:3px;
-  background:var(--bg3); z-index:100;
-}
-.progress-fill {
-  height:100%; background:linear-gradient(90deg, var(--violet-lo), var(--violet-hi));
-  box-shadow:0 0 8px var(--violet);
-  transition:width .5s cubic-bezier(.16,1,.3,1);
-}
-
-/* ── NAV ── */
-.top-nav {
-  position:fixed; top:3px; left:0; right:0; z-index:99;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 40px; height:60px;
-  background:rgba(10,10,15,0.85); backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-}
-.nav-logo { display:flex; align-items:center; text-decoration:none; }
-.nav-logo-name { font-family:var(--ui); font-size:15px; font-weight:600; color:var(--white); }
-.nav-logo-gt { font-size:17px; color:var(--violet-hi); text-shadow:0 0 12px var(--violet); }
-.nav-step {
-  font-family:var(--ui); font-size:12px; color:var(--dim);
-  display:flex; align-items:center; gap:8px;
-}
-.nav-step-dot {
-  width:7px; height:7px; border-radius:50%;
-  background:var(--dim); transition:all .3s;
-}
-.nav-step-dot.done { background:var(--green); box-shadow:0 0 6px var(--green); }
-.nav-step-dot.active { background:var(--violet-hi); box-shadow:0 0 8px var(--violet); }
-
-/* ── MAIN ── */
-.main {
-  min-height:100vh; display:flex; align-items:center; justify-content:center;
-  padding:100px 24px 60px;
+.main{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:100px 24px 60px;position:relative;
 }
 
-/* ── CARD ── */
-.card {
-  width:100%; max-width:540px;
-  background:var(--bg2); border:1px solid var(--border);
-  border-radius:20px; overflow:hidden;
-  box-shadow:0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  position:relative;
+.eyebrow{
+  font-family:var(--ui);font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--violet-hi);
+  display:flex;align-items:center;gap:8px;margin-bottom:16px;
+  opacity:0;animation:fadeUp .6s ease forwards .1s;
 }
-.card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, transparent, var(--violet), transparent);
+.eyebrow::before{content:'';width:16px;height:1px;background:var(--violet-hi);}
+
+h1{
+  font-family:var(--sans);font-size:clamp(36px,5vw,56px);
+  font-weight:700;letter-spacing:-.04em;color:var(--white);
+  text-align:center;line-height:1.05;margin-bottom:12px;
+  opacity:0;animation:fadeUp .7s ease forwards .2s;
+}
+h1 span{color:var(--violet-hi);}
+
+.sub{
+  font-family:var(--ui);font-size:16px;color:var(--mid);
+  text-align:center;max-width:440px;line-height:1.7;margin-bottom:56px;
+  opacity:0;animation:fadeUp .7s ease forwards .3s;
 }
 
-/* STEP PANELS */
-.step { display:none; }
-.step.active { display:block; }
-
-/* ── STEP HEADER ── */
-.step-header {
-  padding:36px 40px 28px;
-  border-bottom:1px solid var(--border);
-}
-.step-eyebrow {
-  font-family:var(--ui); font-size:11px; font-weight:600;
-  letter-spacing:0.1em; text-transform:uppercase; color:var(--violet-hi);
-  display:flex; align-items:center; gap:8px; margin-bottom:12px;
-}
-.step-eyebrow::before { content:''; width:16px; height:1px; background:var(--violet-hi); box-shadow:0 0 6px var(--violet); }
-.step-title { font-family:var(--sans); font-size:26px; font-weight:700; color:var(--white); letter-spacing:-0.03em; margin-bottom:6px; }
-.step-sub { font-family:var(--ui); font-size:14px; color:var(--mid); line-height:1.6; }
-
-/* ── FORM BODY ── */
-.step-body { padding:32px 40px; }
-
-.field { margin-bottom:18px; }
-.field label {
-  display:block; font-family:var(--ui); font-size:12px; font-weight:600;
-  color:var(--mid); margin-bottom:7px; letter-spacing:0.02em;
-}
-.field label .req { color:var(--violet-hi); margin-left:3px; }
-.field input, .field select {
-  width:100%; padding:11px 14px;
-  background:var(--panel); border:1px solid var(--border);
-  border-radius:9px; outline:none;
-  font-family:var(--ui); font-size:14px; color:var(--text);
-  transition:border-color .2s, background .2s;
-  appearance:none; -webkit-appearance:none;
-}
-.field input:focus, .field select:focus {
-  border-color:rgba(124,58,237,0.5);
-  background:rgba(124,58,237,0.04);
-}
-.field input::placeholder { color:var(--dim); }
-.field select option { background:var(--bg3); }
-
-/* select arrow */
-.select-wrap { position:relative; }
-.select-wrap::after {
-  content:'▾'; position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  color:var(--dim); font-size:12px; pointer-events:none;
+/* CARDS */
+.cards{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;
+  width:100%;max-width:760px;
+  opacity:0;animation:fadeUp .8s ease forwards .4s;
 }
 
-/* field row */
-.field-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.choice-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:20px;padding:36px;position:relative;overflow:hidden;
+  cursor:pointer;transition:all .25s;text-decoration:none;display:block;
+}
+.choice-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--violet),transparent);
+  opacity:0;transition:opacity .25s;
+}
+.choice-card:hover{border-color:rgba(124,58,237,0.4);transform:translateY(-3px);}
+.choice-card:hover::before{opacity:.6;}
 
-/* role cards */
-.role-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:4px; }
-.role-card {
-  border:1px solid var(--border); border-radius:10px; padding:12px 10px;
-  text-align:center; cursor:pointer; transition:all .2s;
-  background:var(--panel);
+.choice-card.featured{
+  border-color:rgba(124,58,237,0.35);
+  background:linear-gradient(135deg,var(--bg2),rgba(124,58,237,0.06));
 }
-.role-card:hover { border-color:rgba(124,58,237,0.35); background:rgba(124,58,237,0.06); }
-.role-card.selected { border-color:var(--violet-hi); background:rgba(124,58,237,0.12); }
-.role-card-icon { font-size:20px; margin-bottom:6px; }
-.role-card-label { font-family:var(--ui); font-size:11px; font-weight:600; color:var(--mid); }
-.role-card.selected .role-card-label { color:var(--lilac); }
+.choice-card.featured::before{opacity:.4;}
 
-/* ── TERMS ── */
-.terms-scroll {
-  background:var(--bg3); border:1px solid var(--border);
-  border-radius:10px; padding:20px; height:220px; overflow-y:auto;
-  font-family:var(--ui); font-size:12px; color:var(--mid); line-height:1.7;
-  margin-bottom:20px;
+.card-badge{
+  display:inline-block;font-family:var(--ui);font-size:9px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;margin-bottom:20px;
 }
-.terms-scroll::-webkit-scrollbar { width:4px; }
-.terms-scroll::-webkit-scrollbar-thumb { background:var(--dim); border-radius:2px; }
-.terms-scroll h4 { font-family:var(--sans); font-size:13px; font-weight:600; color:var(--text); margin:14px 0 6px; }
-.terms-scroll h4:first-child { margin-top:0; }
-.terms-scroll p { margin-bottom:8px; }
-.terms-scroll a { color:var(--lilac); }
+.badge-demo{background:rgba(251,191,36,.1);color:var(--amber);border:1px solid rgba(251,191,36,.25);}
+.badge-full{background:rgba(124,58,237,.12);color:var(--lilac);border:1px solid rgba(124,58,237,.3);}
 
-/* checkbox */
-.check-row {
-  display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; cursor:pointer;
+.card-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;margin-bottom:20px;
 }
-.check-box {
-  width:18px; height:18px; border-radius:5px; flex-shrink:0; margin-top:1px;
-  border:1.5px solid var(--border); background:var(--panel);
-  display:flex; align-items:center; justify-content:center;
-  transition:all .2s; cursor:pointer;
-}
-.check-box.checked { background:var(--violet); border-color:var(--violet); }
-.check-box.checked::after { content:'✓'; font-size:11px; color:#fff; font-weight:700; }
-.check-label { font-family:var(--ui); font-size:13px; color:var(--mid); line-height:1.5; }
-.check-label a { color:var(--lilac); text-decoration:none; }
-.check-label a:hover { color:var(--violet-hi); }
+.icon-demo{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);}
+.icon-full{background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2);}
 
-/* ── BUTTONS ── */
-.btn-row { display:flex; gap:10px; margin-top:24px; }
-.btn-back {
-  font-family:var(--ui); font-size:14px; font-weight:500;
-  color:var(--mid); background:transparent;
-  border:1px solid var(--border); border-radius:10px;
-  padding:12px 22px; cursor:pointer; transition:all .2s;
-}
-.btn-back:hover { color:var(--text); border-color:var(--border-hi); }
-.btn-next {
-  flex:1; font-family:var(--ui); font-size:14px; font-weight:600;
-  color:#fff; background:var(--violet); border:none; border-radius:10px;
-  padding:13px; cursor:pointer; transition:all .25s;
-  box-shadow:0 4px 24px rgba(124,58,237,0.35);
-}
-.btn-next:hover { background:var(--violet-hi); box-shadow:0 4px 36px rgba(124,58,237,0.5); }
-.btn-next:disabled { opacity:0.5; cursor:not-allowed; }
+.card-title{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--white);letter-spacing:-.03em;margin-bottom:8px;}
+.card-desc{font-family:var(--ui);font-size:14px;color:var(--mid);line-height:1.65;margin-bottom:24px;}
 
-/* spinner */
-.spinner {
-  display:inline-block; width:14px; height:14px;
-  border:2px solid rgba(255,255,255,0.3); border-top-color:#fff;
-  border-radius:50%; animation:spin .7s linear infinite; margin-right:8px; vertical-align:middle;
+.card-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px;}
+.card-features li{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--ui);font-size:13px;color:var(--mid);
 }
-@keyframes spin { to{ transform:rotate(360deg) } }
+.card-features li::before{content:'✓';font-weight:700;font-size:12px;flex-shrink:0;}
+.badge-demo~ul li::before,.badge-demo~.card-features li::before{color:var(--amber);}
+.badge-full~.card-features li::before,.featured .card-features li::before{color:var(--violet-hi);}
 
-/* msg */
-.msg-box {
-  display:none; padding:11px 14px; border-radius:9px;
-  font-family:var(--ui); font-size:13px; line-height:1.5; margin-bottom:16px;
+.card-cta{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:20px;border-top:1px solid var(--border);
 }
-.msg-box.error { background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.25); color:var(--red); display:block; }
+.cta-label{font-family:var(--ui);font-size:13px;font-weight:600;}
+.cta-price{font-family:var(--ui);font-size:13px;color:var(--dim);}
+.cta-arrow{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.arrow-demo{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);}
+.arrow-demo svg{color:var(--amber);}
+.arrow-full{background:var(--violet);border:none;}
+.arrow-full svg{color:#fff;}
+.choice-card:hover .cta-arrow{transform:translateX(3px);}
 
-/* ── SUCCESS ── */
-.success-wrap {
-  text-align:center; padding:52px 40px;
+.note{
+  font-family:var(--ui);font-size:12px;color:var(--dim);
+  text-align:center;margin-top:28px;
+  opacity:0;animation:fadeUp .7s ease forwards .6s;
 }
-.success-icon {
-  width:64px; height:64px; border-radius:16px; margin:0 auto 24px;
-  background:linear-gradient(135deg, var(--violet-lo), var(--violet-hi));
-  display:flex; align-items:center; justify-content:center; font-size:28px;
-}
-.success-title { font-family:var(--sans); font-size:26px; font-weight:700; color:var(--white); letter-spacing:-0.03em; margin-bottom:8px; }
-.success-sub { font-family:var(--ui); font-size:15px; color:var(--mid); line-height:1.7; margin-bottom:32px; }
+.note a{color:var(--mid);transition:color .2s;}
+.note a:hover{color:var(--text);}
 
-@media(max-width:600px){
-  .step-header, .step-body { padding:24px; }
-  .field-row { grid-template-columns:1fr; }
-  .role-grid { grid-template-columns:repeat(2,1fr); }
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+@media(max-width:680px){
+  .cards{grid-template-columns:1fr;}
+  nav{padding:0 24px;}
 }
 </style>
 </head>
 <body>
 
-<!-- PROGRESS BAR -->
-<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:33%"></div></div>
-
-<!-- NAV -->
-<div class="top-nav">
-  <a href="/" class="nav-logo">
-    <span class="nav-logo-name">targetdash</span><span class="nav-logo-gt">&gt;</span>
+<nav>
+  <a href="/" class="logo">
+    <span class="logo-name">targetdash</span><span class="logo-gt">&gt;</span>
   </a>
-  <div class="nav-step">
-    <div class="nav-step-dot active" id="dot1"></div>
-    <div class="nav-step-dot" id="dot2"></div>
-    <div class="nav-step-dot" id="dot3"></div>
-    <span id="stepLabel" style="margin-left:4px;">Step 1 of 3</span>
-  </div>
-</div>
+  <a href="/login" class="nav-signin">Already have an account? Sign in →</a>
+</nav>
 
 <div class="main">
-<div class="card" id="mainCard">
+  <div class="eyebrow">Choose your path</div>
+  <h1>Start your engine.<br/><span>Unlock the potential.</span></h1>
+  <p class="sub">Try the demo with sample data, or subscribe and connect your own financials right away.</p>
 
-  <!-- ══ STEP 1 — COMPANY DETAILS ══ -->
-  <div class="step active" id="step1">
-    <div class="step-header">
-      <div class="step-eyebrow">Welcome aboard</div>
-      <div class="step-title">Tell us about your company</div>
-      <div class="step-sub">This sets up your dashboard. You can change these details later in settings.</div>
-    </div>
-    <div class="step-body">
-      <div id="step1Msg"></div>
-      <div class="field">
-        <label>Company name <span class="req">*</span></label>
-        <input type="text" id="companyName" placeholder="Acme Oy"/>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Business ID</label>
-          <input type="text" id="businessId" placeholder="1234567-8"/>
+  <div class="cards">
+
+    <!-- DEMO -->
+    <a href="/login?mode=demo" class="choice-card" id="demoCard">
+      <div class="card-badge badge-demo">Free demo</div>
+      <div class="card-icon icon-demo">⚡</div>
+      <div class="card-title">Try the demo</div>
+      <p class="card-desc">Explore the full dashboard with sample financial data. No credit card needed.</p>
+      <ul class="card-features">
+        <li>Full dashboard — KPIs, P&L, Balance Sheet, Cash Flow</li>
+        <li>5 AI questions with EBITDA-9000</li>
+        <li>All 6 advisor roles (CEO, CFO, CMO…)</li>
+        <li>Personalised with your company name</li>
+      </ul>
+      <div class="card-cta">
+        <div>
+          <div class="cta-label" style="color:var(--amber)">Start demo</div>
+          <div class="cta-price">Free · one-time</div>
         </div>
-        <div class="field">
-          <label>Fiscal year <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select id="fiscalYear">
-              <option value="2025">2025</option>
-              <option value="2026" selected>2026</option>
-              <option value="2027">2027</option>
-            </select>
-          </div>
+        <div class="cta-arrow arrow-demo">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Country <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select id="country">
-              <option value="FI" selected>Finland</option>
-              <option value="SE">Sweden</option>
-              <option value="NO">Norway</option>
-              <option value="DK">Denmark</option>
-              <option value="DE">Germany</option>
-              <option value="GB">United Kingdom</option>
-              <option value="OTHER">Other</option>
-            </select>
-          </div>
+    </a>
+
+    <!-- SUBSCRIBE -->
+    <a href="/login?mode=subscribe" class="choice-card featured" id="subCard">
+      <div class="card-badge badge-full">Full access</div>
+      <div class="card-icon icon-full">🚀</div>
+      <div class="card-title">Subscribe now</div>
+      <p class="card-desc">Connect your own financial data and get the full power of targetdash from day one.</p>
+      <ul class="card-features">
+        <li>Your own financial data — CSV, Netvisor, Procountor</li>
+        <li>100 AI credits / month included</li>
+        <li>2 configurable cost centre dashboards</li>
+        <li>Team member access (€50/mo each)</li>
+        <li>FX conversion · snapshot history · 24/7 monitoring</li>
+      </ul>
+      <div class="card-cta">
+        <div>
+          <div class="cta-label" style="color:var(--lilac)">Get started</div>
+          <div class="cta-price">€80/mo · VAT 0%</div>
         </div>
-        <div class="field">
-          <label>Currency <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select id="currency">
-              <option value="EUR" selected>EUR — Euro</option>
-              <option value="SEK">SEK — Swedish Krona</option>
-              <option value="NOK">NOK — Norwegian Krone</option>
-              <option value="DKK">DKK — Danish Krone</option>
-              <option value="GBP">GBP — British Pound</option>
-              <option value="USD">USD — US Dollar</option>
-            </select>
-          </div>
+        <div class="cta-arrow arrow-full">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
-      <div class="btn-row">
-        <button class="btn-next" id="btn1">Continue →</button>
-      </div>
-    </div>
+    </a>
+
   </div>
 
-  <!-- ══ STEP 2 — YOUR ROLE ══ -->
-  <div class="step" id="step2">
-    <div class="step-header">
-      <div class="step-eyebrow">Your profile</div>
-      <div class="step-title">What's your primary role?</div>
-      <div class="step-sub">EBITDA-9000 will tailor its insights to match how you think about your business.</div>
-    </div>
-    <div class="step-body">
-      <div class="field">
-        <label>Your name <span class="req">*</span></label>
-        <input type="text" id="fullName" placeholder="Niklas Isaksson"/>
-      </div>
-      <div class="field">
-        <label>Primary role <span class="req">*</span></label>
-        <div class="role-grid" id="roleGrid">
-          <div class="role-card" data-role="CEO">
-            <div class="role-card-icon">👑</div>
-            <div class="role-card-label">CEO</div>
-          </div>
-          <div class="role-card selected" data-role="CFO">
-            <div class="role-card-icon">📊</div>
-            <div class="role-card-label">CFO</div>
-          </div>
-          <div class="role-card" data-role="CMO">
-            <div class="role-card-icon">📣</div>
-            <div class="role-card-label">CMO</div>
-          </div>
-          <div class="role-card" data-role="CRO">
-            <div class="role-card-icon">🎯</div>
-            <div class="role-card-label">CRO</div>
-          </div>
-          <div class="role-card" data-role="CTO">
-            <div class="role-card-icon">⚙️</div>
-            <div class="role-card-label">CTO</div>
-          </div>
-          <div class="role-card" data-role="HR Manager">
-            <div class="role-card-icon">👥</div>
-            <div class="role-card-label">HR</div>
-          </div>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn-back" onclick="goStep(1)">← Back</button>
-        <button class="btn-next" id="btn2">Continue →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ STEP 3 — TERMS ══ -->
-  <div class="step" id="step3">
-    <div class="step-header">
-      <div class="step-eyebrow">Almost there</div>
-      <div class="step-title">Review & agree</div>
-      <div class="step-sub">Please read and accept the agreements before accessing your dashboard.</div>
-    </div>
-    <div class="step-body">
-      <div id="step3Msg"></div>
-      <div class="terms-scroll" id="termsScroll">
-        <h4>Terms of Service</h4>
-        <p>These Terms of Service ("Terms") govern your access to and use of targetdash (the "Service"), operated by Targetflow Oy, a Finnish limited company (business ID 3382818-7), registered in Helsinki, Finland.</p>
-        <p>By accessing the Service, you agree to be bound by these Terms. If you do not agree, do not use the Service.</p>
-
-        <h4>1. The Service</h4>
-        <p>targetdash provides a financial intelligence dashboard platform that allows businesses to visualise, analyse and receive AI-assisted insights on their financial data. The Service is provided on a subscription basis.</p>
-
-        <h4>2. Account & Access</h4>
-        <p>You are responsible for maintaining the confidentiality of your login credentials. Each account is for a single organisation. You must not share access with users outside your organisation without purchasing additional user licences.</p>
-
-        <h4>3. Subscription & Payment</h4>
-        <p>Subscriptions are billed monthly. The MainUser plan is €80/month (VAT 0%). Additional users are €50/month each. AI credits (1 credit = 1 AI response) are included in your plan and may be topped up. All prices are exclusive of applicable taxes unless stated otherwise. Payments are processed securely via Stripe.</p>
-
-        <h4>4. Data & Privacy</h4>
-        <p>You retain full ownership of all financial data you upload or connect to the Service. We process your data solely to provide the Service. We do not sell, share or use your data for any other purpose. Full details are set out in our Privacy Policy and Data Processing Agreement below.</p>
-
-        <h4>5. AI Services</h4>
-        <p>The AI assistant (EBITDA-9000) uses your financial data to generate insights. AI responses are for informational purposes only and do not constitute financial, legal or investment advice. You remain responsible for all business decisions made based on AI output.</p>
-
-        <h4>6. Intellectual Property</h4>
-        <p>The Service, including all software, design and content, is owned by Targetflow Oy. You may not copy, reproduce or distribute any part of the Service without written permission.</p>
-
-        <h4>7. Limitation of Liability</h4>
-        <p>To the maximum extent permitted by Finnish law, Targetflow Oy shall not be liable for any indirect, incidental or consequential damages arising from your use of the Service. Our total liability to you shall not exceed the amounts paid by you in the three months preceding the claim.</p>
-
-        <h4>8. Termination</h4>
-        <p>You may cancel your subscription at any time from your account settings. We may suspend or terminate your access if you breach these Terms. Upon termination, your data will be retained for 30 days and then permanently deleted.</p>
-
-        <h4>9. Governing Law</h4>
-        <p>These Terms are governed by Finnish law. Any disputes shall be resolved in the District Court of Helsinki (Helsingin käräjäoikeus).</p>
-
-        <h4>Privacy Policy</h4>
-        <p>Targetflow Oy ("we", "us") is the data controller for personal data processed through targetdash. This policy explains what data we collect and how we use it, in accordance with EU GDPR and Finnish data protection law.</p>
-
-        <h4>Data We Collect</h4>
-        <p>Account data: name, email address, company name, business ID, country and role. Usage data: login timestamps, feature usage, AI credit consumption. Financial data: figures you upload or connect via API integrations (Netvisor, Procountor). We do not collect payment card details — these are handled by Stripe.</p>
-
-        <h4>How We Use Your Data</h4>
-        <p>To provide and improve the Service; to authenticate you and maintain your session; to power AI-generated insights based on your financial data; to send transactional emails (login, billing, alerts); to comply with legal obligations.</p>
-
-        <h4>Data Storage & Security</h4>
-        <p>All data is stored in the European Union via Supabase (PostgreSQL). Data is encrypted at rest and in transit. We implement row-level security to ensure users can only access their own data. We conduct regular security reviews.</p>
-
-        <h4>Data Retention</h4>
-        <p>Your data is retained for as long as your account is active. Upon account deletion, data is permanently purged within 30 days. You may request export of your data at any time by contacting niklas@targetdash.ai.</p>
-
-        <h4>Your Rights (GDPR)</h4>
-        <p>You have the right to access, correct, export or delete your personal data. You may withdraw consent at any time. To exercise these rights, contact niklas@targetdash.ai. You also have the right to lodge a complaint with the Finnish Data Protection Ombudsman (tietosuojavaltuutettu.fi).</p>
-
-        <h4>Data Processing Agreement</h4>
-        <p>When you use targetdash to process financial data relating to individuals (e.g. payroll data), Targetflow Oy acts as a data processor on your behalf. You, as the business, are the data controller. By accepting these terms you enter into a Data Processing Agreement with Targetflow Oy under Article 28 GDPR.</p>
-        <p>We will: process personal data only on your documented instructions; ensure persons authorised to process the data are bound by confidentiality; implement appropriate technical and organisational security measures; not engage sub-processors without your authorisation; assist you in responding to data subject rights requests; delete or return all personal data upon termination of the service.</p>
-        <p>Our current sub-processors include: Supabase Inc. (database infrastructure, EU region); Anthropic PBC (AI processing — prompts contain only anonymised financial figures, not personal data); Stripe Inc. (payment processing).</p>
-
-        <h4>Contact</h4>
-        <p>Data controller: Targetflow Oy · niklas@targetdash.ai · Helsinki, Finland</p>
-        <p>Last updated: March 2026</p>
-      </div>
-
-      <div class="check-row" id="checkTerms" onclick="toggleCheck('terms')">
-        <div class="check-box" id="checkTermsBox"></div>
-        <div class="check-label">I have read and agree to the <a href="#" onclick="return false">Terms of Service</a> and <a href="#" onclick="return false">Privacy Policy</a></div>
-      </div>
-      <div class="check-row" id="checkDpa" onclick="toggleCheck('dpa')">
-        <div class="check-box" id="checkDpaBox"></div>
-        <div class="check-label">I accept the <a href="#" onclick="return false">Data Processing Agreement</a> on behalf of my organisation (Article 28 GDPR)</div>
-      </div>
-      <div class="check-row" id="checkAge" onclick="toggleCheck('age')">
-        <div class="check-box" id="checkAgeBox"></div>
-        <div class="check-label">I confirm I am 18 years or older and authorised to enter into these agreements on behalf of my company</div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-back" onclick="goStep(2)">← Back</button>
-        <button class="btn-next" id="btn3" disabled>Activate my dashboard →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SUCCESS ══ -->
-  <div class="step" id="stepDone">
-    <div class="success-wrap">
-      <div class="success-icon">🚀</div>
-      <div class="success-title">You're all set!</div>
-      <div class="success-sub" id="successMsg">Your dashboard is ready. Time to be a financial hero.</div>
-      <button class="btn-next" id="btnLaunch" style="width:100%;max-width:320px;">
-        Open my dashboard →
-      </button>
-    </div>
-  </div>
-
-</div>
+  <p class="note">
+    Questions? <a href="mailto:niklas@targetdash.ai">niklas@targetdash.ai</a> · No setup fees · Cancel anytime
+  </p>
 </div>
 
 <script>
-const SUPABASE_URL  = 'https://nghlvfngpfrhhigkoeem.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-const DASHBOARD_URL = 'https://app.targetdash.ai';
-const DEMO_URL      = 'https://demo.targetdash.ai';
-
+// If already logged in, redirect based on account status
+const SUPABASE_URL = 'https://nghlvfngpfrhhigkoeem.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ── STATE ────────────────────────────────────────────────────────────────
-let currentStep = 1;
-let selectedRole = 'CFO';
-let checks = { terms: false, dpa: false, age: false };
-let userEmail = '';
-let userId = '';
-
-// ── INIT — check session ─────────────────────────────────────────────────
 (async () => {
-  // Handle OAuth callback
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if(event === 'SIGNED_IN' && session && !userId) {
-      userId    = session.user.id;
-      userEmail = session.user.email;
-      await initOnboarding(session);
+  const { data: { session } } = await sb.auth.getSession();
+  if(session) {
+    const { data: profile } = await sb.from('user_profiles').select('onboarded,plan').eq('user_id',session.user.id).maybeSingle();
+    if(profile?.onboarded) {
+      const plan = profile?.plan;
+      // Paid users go straight to their dashboard
+      if(plan === 'superuser' || plan === 'mainuser') window.location.href = 'https://app.targetdash.ai';
+      // Demo users stay on getstarted so they can choose demo or subscribe
     }
-  });
-
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if(!session) {
-      // No session — show inline sign-in instead of redirecting
-      const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
-      const isDemo = mode === 'demo';
-      document.getElementById('mainCard').innerHTML = `
-        <div style="text-align:center;padding:52px 40px;">
-          <div style="font-size:40px;margin-bottom:16px;">${isDemo ? '🧪' : '🚀'}</div>
-          <div style="font-family:var(--sans);font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;">
-            ${isDemo ? 'Start your free demo' : 'Set up your dashboard'}
-          </div>
-          <div style="font-family:var(--ui);font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:32px;">
-            ${isDemo ? '5 free AI credits · No credit card needed · Takes 1 minute' : 'Connect your financial data and go live in minutes'}
-          </div>
-          <button id="googleSignInBtn" style="display:inline-flex;align-items:center;gap:10px;padding:13px 28px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);border-radius:10px;cursor:pointer;font-family:var(--ui);font-size:14px;font-weight:500;color:#f1f0f5;margin-bottom:16px;">
-            <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Continue with Google
-          </button>
-          <div style="font-family:var(--ui);font-size:11px;color:var(--dim);">Already have an account? <a href="/login" style="color:var(--lilac);text-decoration:none;">Sign in →</a></div>
-        </div>`;
-      document.getElementById('googleSignInBtn').onclick = async () => {
-        document.getElementById('googleSignInBtn').textContent = 'Signing in…';
-        document.getElementById('googleSignInBtn').disabled = true;
-        await sb.auth.signInWithOAuth({
-          provider: 'google',
-          options: { redirectTo: 'https://www.targetdash.ai/onboarding?mode=' + mode }
-        });
-      };
-      return;
-    }
-
-    userId    = session.user.id;
-    userEmail = session.user.email;
-    await initOnboarding(session);
-
-  } catch(e) {
-    window.location.href = '/login';
   }
 })();
-
-async function initOnboarding(session) {
-  try {
-    const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
-      const { data: profile } = await sb.from('user_profiles')
-        .select('onboarded, plan, company_name, primary_role').eq('user_id', userId).maybeSingle();
-
-      if(profile?.onboarded) {
-        if(profile?.plan === 'demo') window.location.href = DEMO_URL;
-        else window.location.href = DASHBOARD_URL;
-        return;
-      }
-
-      // Invited user — pre-fill from their profile and show invite banner
-      if(mode === 'invite' && profile) {
-        if(profile.company_name) document.getElementById('companyName').value = profile.company_name;
-        if(profile.primary_role) {
-          selectedRole = profile.primary_role;
-          document.querySelectorAll('.role-card').forEach(c => {
-            c.classList.toggle('selected', c.dataset.role === profile.primary_role);
-          });
-        }
-        // Show invite welcome banner in step 1
-        const banner = document.createElement('div');
-        banner.style.cssText = 'background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
-        banner.innerHTML = `<strong style="color:#fff;">You've been invited to targetdash</strong><br/>Your account has been set up. Please confirm your details and agree to our terms to activate your dashboard.`;
-        document.querySelector('#step1 .step-body').prepend(banner);
-      }
-    } catch(e) {}
-
-    // If demo mode — check if this email has already used demo
-    if(mode === 'demo') {
-      try {
-        const { data: cr } = await sb.from('demo_credits')
-          .select('credits_used').eq('user_id', userId).maybeSingle();
-        if(cr && cr.credits_used >= 5) {
-          document.getElementById('mainCard').innerHTML = `
-            <div style="text-align:center;padding:52px 40px;">
-              <div style="font-size:40px;margin-bottom:16px;">🎯</div>
-              <div style="font-family:var(--sans);font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;">Demo already used</div>
-              <div style="font-family:var(--ui);font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:28px;">
-                You've already explored the targetdash demo.<br/>
-                Ready to connect your own financial data?
-              </div>
-              <a href="/getstarted" style="display:inline-block;background:#7c3aed;color:#fff;padding:13px 28px;border-radius:10px;font-family:var(--ui);font-size:14px;font-weight:600;text-decoration:none;margin-bottom:12px;">
-                Subscribe now →
-              </a><br/>
-              <a href="https://app.targetdash.ai" style="font-family:var(--ui);font-size:12px;color:var(--mid);text-decoration:none;">
-                Already subscribed? Go to dashboard
-              </a>
-            </div>`;
-          return;
-        }
-      } catch(e) {}
-    }
-
-    // Pre-fill name from Google if available
-    const meta = session.user.user_metadata;
-    if(meta?.full_name) document.getElementById('fullName').value = meta.full_name;
-    else if(meta?.name) document.getElementById('fullName').value = meta.name;
-
-  } catch(e) {
-    window.location.href = '/login';
-  }
-}
-
-// ── STEP NAVIGATION ──────────────────────────────────────────────────────
-function goStep(n) {
-  document.getElementById('step' + currentStep).classList.remove('active');
-  currentStep = n;
-
-  const el = document.getElementById(n === 'Done' ? 'stepDone' : 'step' + n);
-  el.classList.add('active');
-
-  // Progress
-  const pct = n === 'Done' ? 100 : (n / 3) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-
-  // Step dots
-  [1,2,3].forEach(i => {
-    const dot = document.getElementById('dot' + i);
-    dot.className = 'nav-step-dot';
-    if(i < n)  dot.classList.add('done');
-    if(i === n) dot.classList.add('active');
-  });
-
-  const labels = { 1:'Step 1 of 3', 2:'Step 2 of 3', 3:'Step 3 of 3', Done:'Complete' };
-  document.getElementById('stepLabel').textContent = labels[n] || '';
-}
-
-// ── ROLE SELECTION ───────────────────────────────────────────────────────
-document.getElementById('roleGrid').addEventListener('click', e => {
-  const card = e.target.closest('.role-card');
-  if(!card) return;
-  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
-  card.classList.add('selected');
-  selectedRole = card.dataset.role;
-});
-
-// ── CHECKBOX ─────────────────────────────────────────────────────────────
-function toggleCheck(key) {
-  checks[key] = !checks[key];
-  const box = document.getElementById('check' + key.charAt(0).toUpperCase() + key.slice(1) + 'Box');
-  box.className = 'check-box' + (checks[key] ? ' checked' : '');
-  // Enable btn3 only if all checked
-  document.getElementById('btn3').disabled = !(checks.terms && checks.dpa && checks.age);
-}
-
-// ── STEP 1 → 2 ───────────────────────────────────────────────────────────
-document.getElementById('btn1').addEventListener('click', () => {
-  const name = document.getElementById('companyName').value.trim();
-  if(!name) {
-    showMsg('step1Msg', 'Please enter your company name.'); return;
-  }
-  goStep(2);
-});
-
-// ── STEP 2 → 3 ───────────────────────────────────────────────────────────
-document.getElementById('btn2').addEventListener('click', () => {
-  const name = document.getElementById('fullName').value.trim();
-  if(!name) {
-    alert('Please enter your name.'); return;
-  }
-  goStep(3);
-});
-
-// ── STEP 3 → SAVE ────────────────────────────────────────────────────────
-document.getElementById('btn3').addEventListener('click', async () => {
-  const btn = document.getElementById('btn3');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Setting up your dashboard…';
-
-  const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
-
-  // For invite mode, fetch existing plan from profile
-  let existingPlan = mode;
-  if(mode === 'invite') {
-    try {
-      const { data: p } = await sb.from('user_profiles').select('plan').eq('user_id', userId).maybeSingle();
-      existingPlan = p?.plan || 'mainuser';
-    } catch(e) { existingPlan = 'mainuser'; }
-  }
-
-  const payload = {
-    user_id:      userId,
-    email:        userEmail,
-    full_name:    document.getElementById('fullName').value.trim(),
-    company_name: document.getElementById('companyName').value.trim(),
-    business_id:  document.getElementById('businessId').value.trim() || null,
-    fiscal_year:  parseInt(document.getElementById('fiscalYear').value),
-    country:      document.getElementById('country').value,
-    currency:     document.getElementById('currency').value,
-    primary_role: selectedRole,
-    plan:         mode === 'invite' ? existingPlan : mode,
-    agreed_terms: true,
-    agreed_dpa:   true,
-    agreed_at:    new Date().toISOString(),
-    onboarded:    true,
-  };
-
-  try {
-    const { error } = await sb.from('user_profiles').upsert(payload, { onConflict: 'user_id' });
-    if(error) throw error;
-
-    const redirectTo = mode === 'demo' ? DEMO_URL : DASHBOARD_URL;
-
-    // Subscribe mode → Stripe checkout
-    if(mode === 'subscribe') {
-      btn.innerHTML = '<span class="spinner"></span>Redirecting to payment…';
-      try {
-        const res = await fetch('/api/create-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_id:      userId,
-            user_email:   userEmail,
-            company_name: payload.company_name,
-          }),
-        });
-        const { url, error } = await res.json();
-        if(error) throw new Error(error);
-        window.location.href = url;
-        return;
-      } catch(e) {
-        showMsg('step3Msg', 'Payment error: ' + e.message);
-        btn.disabled = false;
-        btn.textContent = 'Activate my dashboard →';
-        return;
-      }
-    }
-
-    // Demo or invite mode → show success and launch
-    currentStep = 'x';
-    document.getElementById('step3').classList.remove('active');
-    document.getElementById('stepDone').classList.add('active');
-    document.getElementById('progressFill').style.width = '100%';
-    document.getElementById('stepLabel').textContent = 'Complete';
-    [1,2,3].forEach(i => document.getElementById('dot'+i).className='nav-step-dot done');
-
-    const firstName = payload.full_name.split(' ')[0];
-    document.getElementById('successMsg').textContent = mode === 'invite'
-      ? `Welcome, ${firstName}! Your dashboard is ready. All agreements are on file.`
-      : `Welcome, ${firstName}! Your dashboard is ready. Time to be a financial hero.`;
-
-    document.getElementById('btnLaunch').addEventListener('click', () => {
-      window.location.href = redirectTo;
-    });
-
-  } catch(e) {
-    showMsg('step3Msg', 'Something went wrong: ' + e.message);
-    btn.disabled = false;
-    btn.textContent = 'Activate my dashboard →';
-  }
-});
-
-function showMsg(id, text) {
-  const el = document.getElementById(id);
-  el.className = 'msg-box error';
-  el.textContent = text;
-}
 </script>
 </body>
 </html>
