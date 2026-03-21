@@ -3,238 +3,73 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>targetdash › Get started</title>
+<title>targetdash › Invite only</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0a0f; --bg2:#0e0e16; --bg3:#12121c;
-  --panel:rgba(255,255,255,0.04); --panel-hi:rgba(255,255,255,0.07);
-  --border:rgba(255,255,255,0.08); --border-hi:rgba(255,255,255,0.14);
-  --violet:#7c3aed; --violet-hi:#9d5ffc; --violet-lo:#5b21b6;
-  --vglow:rgba(124,58,237,0.3); --lilac:#c4b5fd;
-  --white:#fff; --text:#f1f0f5; --mid:#8b8a9a; --dim:#3d3c52;
-  --green:#34d399; --amber:#fbbf24; --red:#f87171;
-  --sans:'Outfit',sans-serif; --ui:'Instrument Sans',sans-serif;
+  --bg:#0a0a0f;--bg2:#0e0e16;--border:rgba(255,255,255,0.08);
+  --violet:#7c3aed;--violet-hi:#9d5ffc;--vglow:rgba(124,58,237,0.3);
+  --lilac:#c4b5fd;--white:#fff;--text:#f1f0f5;--mid:#8b8a9a;--dim:#3d3c52;
+  --sans:'Outfit',sans-serif;--ui:'Instrument Sans',sans-serif;
 }
-html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--sans);}
-
-/* bg orb */
-body::before{
-  content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;
-  background:radial-gradient(ellipse at 30% 40%,rgba(124,58,237,0.08) 0%,transparent 60%),
-             radial-gradient(ellipse at 80% 70%,rgba(91,33,182,0.05) 0%,transparent 55%);
-}
-
-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 48px;height:64px;border-bottom:1px solid var(--border);
-  background:rgba(10,10,15,0.8);backdrop-filter:blur(20px);
-  position:fixed;top:0;left:0;right:0;z-index:10;
-}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .logo{display:flex;align-items:center;text-decoration:none;}
 .logo-name{font-family:var(--ui);font-size:16px;font-weight:600;color:var(--white);}
-.logo-gt{font-size:18px;color:var(--violet-hi);text-shadow:0 0 16px var(--violet);}
-.nav-signin{font-family:var(--ui);font-size:13px;color:var(--mid);text-decoration:none;transition:color .2s;}
-.nav-signin:hover{color:var(--text);}
-
-.main{
-  min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:100px 24px 60px;position:relative;
-}
-
-.eyebrow{
-  font-family:var(--ui);font-size:11px;font-weight:600;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--violet-hi);
-  display:flex;align-items:center;gap:8px;margin-bottom:16px;
-  opacity:0;animation:fadeUp .6s ease forwards .1s;
-}
-.eyebrow::before{content:'';width:16px;height:1px;background:var(--violet-hi);}
-
-h1{
-  font-family:var(--sans);font-size:clamp(36px,5vw,56px);
-  font-weight:700;letter-spacing:-.04em;color:var(--white);
-  text-align:center;line-height:1.05;margin-bottom:12px;
-  opacity:0;animation:fadeUp .7s ease forwards .2s;
-}
-h1 span{color:var(--violet-hi);}
-
-.sub{
-  font-family:var(--ui);font-size:16px;color:var(--mid);
-  text-align:center;max-width:440px;line-height:1.7;margin-bottom:56px;
-  opacity:0;animation:fadeUp .7s ease forwards .3s;
-}
-
-/* CARDS */
-.cards{
-  display:grid;grid-template-columns:1fr 1fr;gap:20px;
-  width:100%;max-width:760px;
-  opacity:0;animation:fadeUp .8s ease forwards .4s;
-}
-
-.choice-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:20px;padding:36px;position:relative;overflow:hidden;
-  cursor:pointer;transition:all .25s;text-decoration:none;display:block;
-}
-.choice-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--violet),transparent);
-  opacity:0;transition:opacity .25s;
-}
-.choice-card:hover{border-color:rgba(124,58,237,0.4);transform:translateY(-3px);}
-.choice-card:hover::before{opacity:.6;}
-
-.choice-card.featured{
-  border-color:rgba(124,58,237,0.35);
-  background:linear-gradient(135deg,var(--bg2),rgba(124,58,237,0.06));
-}
-.choice-card.featured::before{opacity:.4;}
-
-.card-badge{
-  display:inline-block;font-family:var(--ui);font-size:9px;font-weight:700;
-  letter-spacing:.15em;text-transform:uppercase;
-  padding:3px 10px;border-radius:100px;margin-bottom:20px;
-}
-.badge-demo{background:rgba(251,191,36,.1);color:var(--amber);border:1px solid rgba(251,191,36,.25);}
-.badge-full{background:rgba(124,58,237,.12);color:var(--lilac);border:1px solid rgba(124,58,237,.3);}
-
-.card-icon{
-  width:52px;height:52px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;margin-bottom:20px;
-}
-.icon-demo{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);}
-.icon-full{background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2);}
-
-.card-title{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--white);letter-spacing:-.03em;margin-bottom:8px;}
-.card-desc{font-family:var(--ui);font-size:14px;color:var(--mid);line-height:1.65;margin-bottom:24px;}
-
-.card-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px;}
-.card-features li{
-  display:flex;align-items:center;gap:8px;
-  font-family:var(--ui);font-size:13px;color:var(--mid);
-}
-.card-features li::before{content:'✓';font-weight:700;font-size:12px;flex-shrink:0;}
-.badge-demo~ul li::before,.badge-demo~.card-features li::before{color:var(--amber);}
-.badge-full~.card-features li::before,.featured .card-features li::before{color:var(--violet-hi);}
-
-.card-cta{
-  display:flex;align-items:center;justify-content:space-between;
-  padding-top:20px;border-top:1px solid var(--border);
-}
-.cta-label{font-family:var(--ui);font-size:13px;font-weight:600;}
-.cta-price{font-family:var(--ui);font-size:13px;color:var(--dim);}
-.cta-arrow{
-  width:34px;height:34px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;
-}
-.arrow-demo{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);}
-.arrow-demo svg{color:var(--amber);}
-.arrow-full{background:var(--violet);border:none;}
-.arrow-full svg{color:#fff;}
-.choice-card:hover .cta-arrow{transform:translateX(3px);}
-
-.note{
-  font-family:var(--ui);font-size:12px;color:var(--dim);
-  text-align:center;margin-top:28px;
-  opacity:0;animation:fadeUp .7s ease forwards .6s;
-}
-.note a{color:var(--mid);transition:color .2s;}
-.note a:hover{color:var(--text);}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
-@media(max-width:680px){
-  .cards{grid-template-columns:1fr;}
-  nav{padding:0 24px;}
-}
+.logo-gt{font-size:18px;color:var(--violet-hi);text-shadow:0 0 12px var(--violet);}
+a.sign-in{font-family:var(--ui);font-size:13px;color:var(--mid);text-decoration:none;padding:8px 18px;border:1px solid var(--border);border-radius:8px;transition:all .2s;}
+a.sign-in:hover{color:var(--text);border-color:rgba(124,58,237,0.4);}
+.main{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;}
+.card{width:100%;max-width:480px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:52px 44px;text-align:center;}
+.icon{font-size:48px;margin-bottom:24px;}
+h1{font-size:30px;font-weight:700;letter-spacing:-.03em;color:var(--white);margin-bottom:12px;}
+.sub{font-family:var(--ui);font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:36px;}
+.contact-btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:var(--violet);color:#fff;font-family:var(--ui);font-size:14px;font-weight:600;text-decoration:none;border-radius:10px;transition:all .25s;box-shadow:0 4px 24px rgba(124,58,237,0.35);}
+.contact-btn:hover{background:var(--violet-hi);transform:translateY(-1px);box-shadow:0 4px 36px rgba(124,58,237,0.5);}
+.divider{display:flex;align-items:center;gap:12px;margin:28px 0;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-text{font-family:var(--ui);font-size:11px;color:var(--dim);}
+.sign-in-row{font-family:var(--ui);font-size:13px;color:var(--dim);}
+.sign-in-row a{color:var(--lilac);text-decoration:none;}
 </style>
 </head>
 <body>
-
 <nav>
-  <a href="/" class="logo">
-    <span class="logo-name">targetdash</span><span class="logo-gt">&gt;</span>
-  </a>
-  <a href="/login" class="nav-signin">Already have an account? Sign in →</a>
+  <a href="/" class="logo"><span class="logo-name">targetdash</span><span class="logo-gt">&gt;</span></a>
+  <a href="/login" class="sign-in">Sign in →</a>
 </nav>
-
 <div class="main">
-  <div class="eyebrow">Choose your path</div>
-  <h1>Start your engine.<br/><span>Unlock the potential.</span></h1>
-  <p class="sub">Try the demo with sample data, or subscribe and connect your own financials right away.</p>
-
-  <div class="cards">
-
-    <!-- DEMO -->
-    <a href="/login?mode=demo" class="choice-card" id="demoCard">
-      <div class="card-badge badge-demo">Free demo</div>
-      <div class="card-icon icon-demo">⚡</div>
-      <div class="card-title">Try the demo</div>
-      <p class="card-desc">Explore the full dashboard with sample financial data. No credit card needed.</p>
-      <ul class="card-features">
-        <li>Full dashboard — KPIs, P&L, Balance Sheet, Cash Flow</li>
-        <li>5 AI questions with EBITDA-9000</li>
-        <li>All 6 advisor roles (CEO, CFO, CMO…)</li>
-        <li>Personalised with your company name</li>
-      </ul>
-      <div class="card-cta">
-        <div>
-          <div class="cta-label" style="color:var(--amber)">Start demo</div>
-          <div class="cta-price">Free · one-time</div>
-        </div>
-        <div class="cta-arrow arrow-demo">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
+  <div class="card">
+    <div class="icon">🔒</div>
+    <h1>Invite only</h1>
+    <p class="sub">targetdash is currently available by invitation only. Get in touch and we'll set up your account personally.</p>
+    <a href="mailto:niklas@targetdash.ai" class="contact-btn">
+      Contact us →
     </a>
-
-    <!-- SUBSCRIBE -->
-    <a href="/login?mode=subscribe" class="choice-card featured" id="subCard">
-      <div class="card-badge badge-full">Full access</div>
-      <div class="card-icon icon-full">🚀</div>
-      <div class="card-title">Subscribe now</div>
-      <p class="card-desc">Connect your own financial data and get the full power of targetdash from day one.</p>
-      <ul class="card-features">
-        <li>Your own financial data — CSV, Netvisor, Procountor</li>
-        <li>100 AI credits / month included</li>
-        <li>2 configurable cost centre dashboards</li>
-        <li>Team member access (€50/mo each)</li>
-        <li>FX conversion · snapshot history · 24/7 monitoring</li>
-      </ul>
-      <div class="card-cta">
-        <div>
-          <div class="cta-label" style="color:var(--lilac)">Get started</div>
-          <div class="cta-price">€80/mo · VAT 0%</div>
-        </div>
-        <div class="cta-arrow arrow-full">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </a>
-
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-text">already invited?</div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="sign-in-row">Check your email for the invite link, or <a href="/login">sign in →</a></div>
   </div>
-
-  <p class="note">
-    Questions? <a href="/cdn-cgi/l/email-protection#d1bfb8babdb0a291a5b0a3b6b4a5b5b0a2b9ffb0b8"><span class="__cf_email__" data-cfemail="ed838486818c9ead998c9f8a8899898c9e85c38c84">[email&#160;protected]</span></a> · No setup fees · Cancel anytime
-  </p>
 </div>
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// If already logged in, redirect based on account status
+<script>
 const SUPABASE_URL = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-
+// If already logged in and onboarded, go to dashboard
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if(session) {
-    const { data: profile } = await sb.from('user_profiles').select('onboarded,plan').eq('user_id',session.user.id).maybeSingle();
-    if(profile?.onboarded) {
-      const plan = profile?.plan;
-      // Paid users go straigh
+    const { data: p } = await sb.from('user_profiles').select('onboarded,plan').eq('user_id',session.user.id).maybeSingle();
+    if(p?.onboarded && (p.plan === 'mainuser' || p.plan === 'superuser')) {
+      window.location.href = 'https://app.targetdash.ai';
+    }
+  }
+})();
+</script>
+</body>
+</html>
