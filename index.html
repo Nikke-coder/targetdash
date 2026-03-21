@@ -541,6 +541,61 @@ section { padding: 120px 52px; }
 .bar.hi { background: linear-gradient(to top, var(--bg2), rgba(124,58,237,0.2)); }
 
 /* ══════════════════════════════════
+   PRICING
+══════════════════════════════════ */
+.pricing-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pricing-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px; margin-top: 56px; max-width: 860px;
+}
+.price-card {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 16px; padding: 36px; position: relative; overflow: hidden;
+  transition: border-color .3s;
+}
+.price-card:hover { border-color: rgba(124,58,237,0.35); }
+.price-card.featured {
+  border-color: rgba(124,58,237,0.4);
+  background: linear-gradient(135deg, var(--bg3), rgba(124,58,237,0.05));
+}
+.price-card.featured::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--violet), transparent);
+}
+.price-badge {
+  display: inline-block; font-family: var(--ui); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--lilac);
+  background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 100px; padding: 3px 10px; margin-bottom: 20px;
+}
+.price-tier { font-family: var(--ui); font-size: 13px; font-weight: 600; color: var(--mid); margin-bottom: 8px; }
+.price-amount {
+  font-family: var(--sans); font-size: 48px; font-weight: 700;
+  color: var(--white); letter-spacing: -0.04em; line-height: 1; margin-bottom: 4px;
+}
+.price-amount .curr { font-size: 24px; color: var(--violet-hi); vertical-align: top; margin-top: 8px; display: inline-block; }
+.price-amount .period { font-size: 16px; color: var(--mid); font-weight: 400; }
+.price-sub { font-family: var(--ui); font-size: 12px; color: var(--dim); margin-bottom: 28px; margin-top: 6px; }
+.price-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.price-features li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-family: var(--ui); font-size: 13px; color: var(--mid); line-height: 1.4;
+}
+.price-features li::before {
+  content: '✓'; color: var(--violet-hi); font-weight: 700; font-size: 12px; flex-shrink: 0; margin-top: 1px;
+}
+.price-features li b { color: var(--text); font-weight: 600; }
+
+.price-credit-box {
+  background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2);
+  border-radius: 10px; padding: 14px 16px; margin-top: 20px;
+}
+.credit-label { font-family: var(--ui); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--violet-hi); margin-bottom: 4px; }
+.credit-desc { font-family: var(--ui); font-size: 12px; color: var(--mid); line-height: 1.5; }
+.credit-desc b { color: var(--text); }
+
+/* ══════════════════════════════════
    STATS
 ══════════════════════════════════ */
 .stats-grid {
@@ -1087,11 +1142,12 @@ footer {
     <a href="#features">Features</a>
     <a href="#ai">AI advisor</a>
     <a href="#security">Security</a>
+    <a href="#pricing">Pricing</a>
   </div>
   <div class="nav-right">
     <button class="btn-ghost" onclick="document.getElementById('contactModal').classList.add('open')" style="border:none;cursor:pointer;background:transparent;">Contact</button>
     <a href="/login" class="btn-ghost">Sign in</a>
-    <a href="/login" class="btn-primary">Sign in →</a>
+    <a href="/getstarted" class="btn-primary">Get started</a>
   </div>
 </nav>
 
@@ -1114,8 +1170,8 @@ footer {
       Unlock <b>superpowers</b> for your business finances — live KPIs, AI-driven insights and cost centre intelligence, all talking back in the language of your role.
     </p>
     <div class="hero-actions">
-      <a href="/login" class="hero-btn-main">
-        Sign in
+      <a href="/getstarted" class="hero-btn-main">
+        Get started
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
       <a href="#ai" class="hero-btn-sec">See AI in action</a>
@@ -1767,6 +1823,55 @@ footer {
   </div>
 </section>
 
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="label rv">Pricing</div>
+  <h2 class="section-title rv">Simple, transparent pricing.</h2>
+  <div class="pricing-grid">
+
+    <div class="price-card featured rv">
+      <div class="price-badge">Main User</div>
+      <div class="price-tier">Primary account holder</div>
+      <div class="price-amount"><span class="curr">€</span>80<span class="period">/mo</span></div>
+      <div class="price-sub">VAT 0% · Includes 100 AI credits per month</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Full dashboard access for your business</li>
+        <li><b>2 configurable dashboards</b> — by cost centre, country, city, channel</li>
+        <li>AI advisor in <b>6 roles</b> (CEO, CFO, CMO, CRO, CTO, HR)</li>
+        <li><b>100 credits/month</b> included</li>
+        <li>Netvisor & Procountor sync</li>
+        <li>FX conversion & snapshot history</li>
+        <li>Manage team members & shared views</li>
+      </ul>
+      <div class="price-credit-box">
+        <div class="credit-label">AI Credits</div>
+        <div class="credit-desc"><b>1 credit = 1 AI response.</b> Buy top-up packs anytime. Credits never expire within the billing period.</div>
+      </div>
+    </div>
+
+    <div class="price-card rv d1">
+      <div class="price-badge">Additional User</div>
+      <div class="price-tier">Team member / board access</div>
+      <div class="price-amount"><span class="curr">€</span>50<span class="period">/mo</span></div>
+      <div class="price-sub">VAT 0% · Per additional user added by MainUser</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Access to <b>shared dashboards</b></li>
+        <li><b>2 configurable dashboards</b> — cost centre, country, channel</li>
+        <li>AI advisor with <b>own credit balance</b></li>
+        <li>All 6 AI advisor roles available</li>
+        <li>Read-only or editable — MainUser decides</li>
+        <li>Google SSO login</li>
+      </ul>
+      <div class="price-credit-box">
+        <div class="credit-label">Credit top-ups</div>
+        <div class="credit-desc">Additional credits available for purchase. MainUser can also <b>share credits</b> with team members.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 <!-- STATS -->
 <section>
@@ -1783,12 +1888,12 @@ footer {
 <!-- CTA -->
 <section class="cta-section">
   <div class="cta-orb"></div>
-  <div class="label rv">Get in touch</div>
+  <div class="label rv">Get started</div>
   <h2 class="cta-h rv">Ready to understand your business<br/><span class="accent">like never before?</span></h2>
-  <p class="cta-sub rv">Invite-only access. No setup fees. Cancel anytime.</p>
+  <p class="cta-sub rv">Start at €80/mo. No setup fees. Cancel anytime.</p>
   <div class="cta-btns rv">
-    <a href="/login" class="hero-btn-main">
-      Sign in
+    <a href="/getstarted" class="hero-btn-main">
+      Get started
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
     <a href="mailto:niklas@targetdash.ai" class="hero-btn-sec">Contact us</a>
@@ -2447,7 +2552,7 @@ function openPopup() {
   if(!popupGreeted) {
     popupGreeted = true;
     setTimeout(() => {
-      addPopupMsg('ai', 'Hi 👋 I\'m <strong>EBITDA-9000</strong> — ask me about targetdash features or capabilities. Or just watch — I\'ll keep the facts coming.');
+      addPopupMsg('ai', 'Hi 👋 I\'m <strong>EBITDA-9000</strong> — ask me about targetdash features, pricing or capabilities. Or just watch — I\'ll keep the facts coming.');
     }, 400);
     setTimeout(() => startFactStream(), 2000);
   }
@@ -2529,4 +2634,16 @@ function sendPopupMsg(text) {
     else if(q.includes('contact') || q.includes('niklas') || q.includes('email'))
       reply = FACTS[14];
     else
-      reply = FACTS[Math.fl
+      reply = FACTS[Math.floor(Math.random() * FACTS.length)];
+    addPopupMsg('ai', reply);
+    setTimeout(() => { factTimer = setInterval(deliverFact, 7000); }, 3000);
+  }, 1200);
+}
+
+window.openPopup    = openPopup;
+window.closePopup   = closePopup;
+window.sendPopupMsg = sendPopupMsg;
+</script>
+
+</body>
+</html>
