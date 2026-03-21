@@ -265,7 +265,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
           Continue with Google
         </button>
         <div style="text-align:center;margin-top:24px;font-family:var(--ui);font-size:12px;color:var(--dim);">
-          Access is by invitation only. <a href="mailto:niklas@targetdash.ai" style="color:var(--lilac);text-decoration:none;">Contact us →</a>
+          Access is by invitation only. <a href="/cdn-cgi/l/email-protection#dab4b3b1b6bba99aaebba8bdbfaebebba9b2f4bbb3" style="color:var(--lilac);text-decoration:none;">Contact us →</a>
         </div>
       </div>
 
@@ -273,7 +273,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL   = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 const { createClient } = supabase;
@@ -303,14 +303,8 @@ async function route(session) {
     window.location.href = '/onboarding'; return;
   }
 
-  // No profile / unknown → show invite-only message and sign out
-  await sb.auth.signOut();
-  done = false;
-  const msgBox = document.getElementById('signinMsg');
-  if(msgBox) {
-    msgBox.className = 'msg-box error show';
-    msgBox.innerHTML = 'Access is by invitation only. Please contact <a href="mailto:niklas@targetdash.ai" style="color:#c4b5fd">niklas@targetdash.ai</a> for an invite.';
-  }
+  // No profile / unknown → invite-only page
+  window.location.href = '/getstarted';
 }
 
 // Auto-route if already signed in
@@ -329,4 +323,10 @@ async function signInWithGoogle() {
   btn.disabled = true; btn.style.opacity = '0.6';
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options
+    options: { redirectTo: 'https://www.targetdash.ai/login' }
+  });
+}
+document.getElementById('googleBtn').onclick = signInWithGoogle;
+</script>
+</body>
+</html>
