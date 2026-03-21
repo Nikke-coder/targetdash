@@ -303,8 +303,14 @@ async function route(session) {
     window.location.href = '/onboarding'; return;
   }
 
-  // No profile / unknown → invite-only page
-  window.location.href = '/getstarted';
+  // No profile / unknown → show invite-only message and sign out
+  await sb.auth.signOut();
+  done = false;
+  const msgBox = document.getElementById('signinMsg');
+  if(msgBox) {
+    msgBox.className = 'msg-box error show';
+    msgBox.innerHTML = 'Access is by invitation only. Please contact <a href="mailto:niklas@targetdash.ai" style="color:#c4b5fd">niklas@targetdash.ai</a> for an invite.';
+  }
 }
 
 // Auto-route if already signed in
@@ -323,10 +329,4 @@ async function signInWithGoogle() {
   btn.disabled = true; btn.style.opacity = '0.6';
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://www.targetdash.ai/login' }
-  });
-}
-document.getElementById('googleBtn').onclick = signInWithGoogle;
-</script>
-</body>
-</html>
+    options
