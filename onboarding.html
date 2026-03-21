@@ -376,6 +376,9 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
     <div class="step-body">
       <div id="step3Msg"></div>
       <div class="terms-scroll" id="termsScroll">
+        <div id="scrollHint" style="position:sticky;top:0;z-index:10;background:rgba(14,14,22,0.95);border-bottom:1px solid rgba(124,58,237,0.2);padding:8px 16px;font-family:var(--ui);font-size:11px;color:#9d5ffc;text-align:center;backdrop-filter:blur(8px);">
+          ↓ Scroll to read the full agreement before accepting
+        </div>
         <h4>Terms of Service</h4>
         <p>These Terms of Service ("Terms") govern your access to and use of targetdash (the "Service"), operated by Targetflow Oy, a Finnish limited company (business ID 3382818-7), registered in Helsinki, Finland.</p>
         <p>By accessing the Service, you agree to be bound by these Terms. If you do not agree, do not use the Service.</p>
@@ -420,18 +423,18 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
         <p>All data is stored in the European Union via Supabase (PostgreSQL). Data is encrypted at rest and in transit. We implement row-level security to ensure users can only access their own data. We conduct regular security reviews.</p>
 
         <h4>Data Retention</h4>
-        <p>Your data is retained for as long as your account is active. Upon account deletion, data is permanently purged within 30 days. You may request export of your data at any time by contacting <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d0beb9bbbcb1a390a4b1a2b7b5a4b4b1a3b8feb1b9">[email&#160;protected]</a>.</p>
+        <p>Your data is retained for as long as your account is active. Upon account deletion, data is permanently purged within 30 days. You may request export of your data at any time by contacting niklas@targetdash.ai.</p>
 
         <h4>Your Rights (GDPR)</h4>
-        <p>You have the right to access, correct, export or delete your personal data. You may withdraw consent at any time. To exercise these rights, contact <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aac4c3c1c6cbd9eadecbd8cdcfdececbd9c284cbc3">[email&#160;protected]</a>. You also have the right to lodge a complaint with the Finnish Data Protection Ombudsman (tietosuojavaltuutettu.fi).</p>
+        <p>You have the right to access, correct, export or delete your personal data. You may withdraw consent at any time. To exercise these rights, contact niklas@targetdash.ai. You also have the right to lodge a complaint with the Finnish Data Protection Ombudsman (tietosuojavaltuutettu.fi).</p>
 
         <h4>Data Processing Agreement</h4>
         <p>When you use targetdash to process financial data relating to individuals (e.g. payroll data), Targetflow Oy acts as a data processor on your behalf. You, as the business, are the data controller. By accepting these terms you enter into a Data Processing Agreement with Targetflow Oy under Article 28 GDPR.</p>
         <p>We will: process personal data only on your documented instructions; ensure persons authorised to process the data are bound by confidentiality; implement appropriate technical and organisational security measures; not engage sub-processors without your authorisation; assist you in responding to data subject rights requests; delete or return all personal data upon termination of the service.</p>
-        <p>Our current sub-processors include: Supabase Inc. (database infrastructure, EU region); Anthropic PBC (AI processing — prompts contain only anonymised financial figures, not personal data); Stripe Inc. (payment processing).</p>
+        <p>Our current sub-processors include: Supabase Inc. (database infrastructure, EU region); Mistral AI SAS (AI processing — EU-based, prompts contain only anonymised financial figures, not personal data); Stripe Inc. (payment processing).</p>
 
         <h4>Contact</h4>
-        <p>Data controller: Targetflow Oy · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8c6c1c3c4c9dbe8dcc9dacfcddcccc9dbc086c9c1">[email&#160;protected]</a> · Helsinki, Finland</p>
+        <p>Data controller: Targetflow Oy · niklas@targetdash.ai · Helsinki, Finland</p>
         <p>Last updated: March 2026</p>
       </div>
 
@@ -470,11 +473,10 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
 </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const SUPABASE_URL  = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 const DASHBOARD_URL = 'https://app.targetdash.ai';
-const DEMO_URL      = 'https://demo.targetdash.ai';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -490,78 +492,38 @@ let userId = '';
 (async () => {
   try {
     const { data: { session } } = await sb.auth.getSession();
-    if(!session) {
-      // No session — send to login with the correct mode preserved
-      const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
-      window.location.href = '/login?mode=' + mode;
-      return;
-    }
+    if(!session) { window.location.href = '/login'; return; }
 
     userId    = session.user.id;
     userEmail = session.user.email;
-    await initOnboarding(session);
 
-  } catch(e) {
-    window.location.href = '/login';
-  }
-})();
+    const { data: profile } = await sb.from('user_profiles')
+      .select('onboarded, plan, company_name, primary_role').eq('user_id', userId).maybeSingle();
 
-async function initOnboarding(session) {
-  try {
-    const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
-      const { data: profile } = await sb.from('user_profiles')
-        .select('onboarded, plan, company_name, primary_role').eq('user_id', userId).maybeSingle();
+    // Already onboarded → go to dashboard
+    if(profile?.onboarded) { window.location.href = DASHBOARD_URL; return; }
 
-      if(profile?.onboarded) {
-        if(profile?.plan === 'demo') window.location.href = DEMO_URL;
-        else window.location.href = DASHBOARD_URL;
-        return;
-      }
-
-      // Invited user — pre-fill from their profile and show invite banner
-      if(mode === 'invite' && profile) {
-        if(profile.company_name) document.getElementById('companyName').value = profile.company_name;
-        if(profile.primary_role) {
-          selectedRole = profile.primary_role;
-          document.querySelectorAll('.role-card').forEach(c => {
-            c.classList.toggle('selected', c.dataset.role === profile.primary_role);
-          });
-        }
-        // Show invite welcome banner in step 1
-        const banner = document.createElement('div');
-        banner.style.cssText = 'background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
-        banner.innerHTML = `<strong style="color:#fff;">You've been invited to targetdash</strong><br/>Your account has been set up. Please confirm your details and agree to our terms to activate your dashboard.`;
-        document.querySelector('#step1 .step-body').prepend(banner);
-      }
-    } catch(e) {}
-
-    // If demo mode — check if this email has already used demo
-    if(mode === 'demo') {
-      try {
-        const { data: cr } = await sb.from('demo_credits')
-          .select('credits_used').eq('user_id', userId).maybeSingle();
-        if(cr && cr.credits_used >= 5) {
-          document.getElementById('mainCard').innerHTML = `
-            <div style="text-align:center;padding:52px 40px;">
-              <div style="font-size:40px;margin-bottom:16px;">🎯</div>
-              <div style="font-family:var(--sans);font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;">Demo already used</div>
-              <div style="font-family:var(--ui);font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:28px;">
-                You've already explored the targetdash demo.<br/>
-                Ready to connect your own financial data?
-              </div>
-              <a href="/getstarted" style="display:inline-block;background:#7c3aed;color:#fff;padding:13px 28px;border-radius:10px;font-family:var(--ui);font-size:14px;font-weight:600;text-decoration:none;margin-bottom:12px;">
-                Subscribe now →
-              </a><br/>
-              <a href="https://app.targetdash.ai" style="font-family:var(--ui);font-size:12px;color:var(--mid);text-decoration:none;">
-                Already subscribed? Go to dashboard
-              </a>
-            </div>`;
-          return;
-        }
-      } catch(e) {}
+    // Not invited at all → invite-only page
+    if(!profile || (profile.plan !== 'mainuser' && profile.plan !== 'superuser')) {
+      window.location.href = '/getstarted'; return;
     }
 
-    // Pre-fill name from Google if available
+    // Pre-fill from profile if set
+    if(profile.company_name) document.getElementById('companyName').value = profile.company_name;
+    if(profile.primary_role) {
+      selectedRole = profile.primary_role;
+      document.querySelectorAll('.role-card').forEach(c => {
+        c.classList.toggle('selected', c.dataset.role === profile.primary_role);
+      });
+    }
+
+    // Show welcome banner
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
+    banner.innerHTML = `<strong style="color:#fff;">Welcome to targetdash</strong><br/>Please confirm your details and accept the legal agreements to activate your dashboard.`;
+    document.querySelector('#step1 .step-body').prepend(banner);
+
+    // Pre-fill name from Google
     const meta = session.user.user_metadata;
     if(meta?.full_name) document.getElementById('fullName').value = meta.full_name;
     else if(meta?.name) document.getElementById('fullName').value = meta.name;
@@ -569,7 +531,7 @@ async function initOnboarding(session) {
   } catch(e) {
     window.location.href = '/login';
   }
-}
+})();
 
 // ── STEP NAVIGATION ──────────────────────────────────────────────────────
 function goStep(n) {
@@ -604,6 +566,59 @@ document.getElementById('roleGrid').addEventListener('click', e => {
   selectedRole = card.dataset.role;
 });
 
+// ── LEGAL SCROLL ENFORCEMENT ──────────────────────────────────────────────
+// Checkboxes are locked until user scrolls to the bottom of the terms
+let termsScrolled = false;
+
+function lockChecks() {
+  ['checkTerms','checkDpa','checkAge'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.opacity = '0.4';
+    el.style.pointerEvents = 'none';
+    el.style.cursor = 'not-allowed';
+  });
+}
+
+function unlockChecks() {
+  if(termsScrolled) return;
+  termsScrolled = true;
+  ['checkTerms','checkDpa','checkAge'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.opacity = '';
+    el.style.pointerEvents = '';
+    el.style.cursor = '';
+  });
+  const hint = document.getElementById('scrollHint');
+  if(hint) { hint.textContent = '✓ You\'ve read the full agreement — please accept below'; hint.style.color = 'var(--green)'; }
+}
+
+// Called when step 3 becomes active
+const origGoStep = goStep;
+function goStep(n) {
+  origGoStep(n);
+  if(n === 3) {
+    termsScrolled = false;
+    lockChecks();
+    // Reset checkboxes
+    checks = { terms: false, dpa: false, age: false };
+    ['Terms','Dpa','Age'].forEach(k => {
+      const box = document.getElementById('check' + k + 'Box');
+      if(box) box.className = 'check-box';
+    });
+    document.getElementById('btn3').disabled = true;
+
+    setTimeout(() => {
+      const scroll = document.getElementById('termsScroll');
+      if(scroll) {
+        scroll.addEventListener('scroll', () => {
+          const nearBottom = scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 40;
+          if(nearBottom) unlockChecks();
+        });
+      }
+    }, 100);
+  }
+}
+
 // ── CHECKBOX ─────────────────────────────────────────────────────────────
 function toggleCheck(key) {
   checks[key] = !checks[key];
@@ -637,16 +652,12 @@ document.getElementById('btn3').addEventListener('click', async () => {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Setting up your dashboard…';
 
-  const mode = new URLSearchParams(window.location.search).get('mode') || 'subscribe';
-
-  // For invite mode, fetch existing plan from profile
-  let existingPlan = mode;
-  if(mode === 'invite') {
-    try {
-      const { data: p } = await sb.from('user_profiles').select('plan').eq('user_id', userId).maybeSingle();
-      existingPlan = p?.plan || 'mainuser';
-    } catch(e) { existingPlan = 'mainuser'; }
-  }
+  // Fetch existing plan from profile (preserve what admin set)
+  let existingPlan = 'mainuser';
+  try {
+    const { data: p } = await sb.from('user_profiles').select('plan').eq('user_id', userId).maybeSingle();
+    existingPlan = p?.plan || 'mainuser';
+  } catch(e) {}
 
   const payload = {
     user_id:      userId,
@@ -658,7 +669,7 @@ document.getElementById('btn3').addEventListener('click', async () => {
     country:      document.getElementById('country').value,
     currency:     document.getElementById('currency').value,
     primary_role: selectedRole,
-    plan:         mode === 'invite' ? existingPlan : mode,
+    plan:         existingPlan,
     agreed_terms: true,
     agreed_dpa:   true,
     agreed_at:    new Date().toISOString(),
@@ -669,34 +680,9 @@ document.getElementById('btn3').addEventListener('click', async () => {
     const { error } = await sb.from('user_profiles').upsert(payload, { onConflict: 'user_id' });
     if(error) throw error;
 
-    const redirectTo = mode === 'demo' ? DEMO_URL : DASHBOARD_URL;
+    const redirectTo = DASHBOARD_URL;
 
-    // Subscribe mode → Stripe checkout
-    if(mode === 'subscribe') {
-      btn.innerHTML = '<span class="spinner"></span>Redirecting to payment…';
-      try {
-        const res = await fetch('/api/create-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_id:      userId,
-            user_email:   userEmail,
-            company_name: payload.company_name,
-          }),
-        });
-        const { url, error } = await res.json();
-        if(error) throw new Error(error);
-        window.location.href = url;
-        return;
-      } catch(e) {
-        showMsg('step3Msg', 'Payment error: ' + e.message);
-        btn.disabled = false;
-        btn.textContent = 'Activate my dashboard →';
-        return;
-      }
-    }
-
-    // Demo or invite mode → show success and launch
+    // Show success and launch
     currentStep = 'x';
     document.getElementById('step3').classList.remove('active');
     document.getElementById('stepDone').classList.add('active');
@@ -705,6 +691,24 @@ document.getElementById('btn3').addEventListener('click', async () => {
     [1,2,3].forEach(i => document.getElementById('dot'+i).className='nav-step-dot done');
 
     const firstName = payload.full_name.split(' ')[0];
-    document.getElementById('successMsg').textContent = mode === 'invite'
-      ? `Welcome, ${firstName}! Your dashboard is ready. All agreements are on file.`
-      : `Welcome, ${firstName}! Your dashboard is ready. Ti
+    document.getElementById('successMsg').textContent = `Welcome, ${firstName}! Your dashboard is ready. All agreements are on file.`;
+
+    document.getElementById('btnLaunch').addEventListener('click', () => {
+      window.location.href = redirectTo;
+    });
+
+  } catch(e) {
+    showMsg('step3Msg', 'Something went wrong: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Activate my dashboard →';
+  }
+});
+
+function showMsg(id, text) {
+  const el = document.getElementById(id);
+  el.className = 'msg-box error';
+  el.textContent = text;
+}
+</script>
+</body>
+</html>
