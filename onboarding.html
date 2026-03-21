@@ -473,7 +473,7 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
 </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const SUPABASE_URL  = 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 const DASHBOARD_URL = 'https://app.targetdash.ai';
@@ -690,11 +690,8 @@ document.getElementById('btn3').addEventListener('click', async () => {
     document.getElementById('stepLabel').textContent = 'Complete';
     [1,2,3].forEach(i => document.getElementById('dot'+i).className='nav-step-dot done');
 
-    const firstName = payload.full_name.split(' ')[0];
-    const firstName = payload.full_name.split(' ')[0];
-    document.getElementById('successMsg').textContent = `Welcome, ${firstName}! Your dashboard is ready. Time to be a financial hero.`;
 
-    const redirectTo = DASHBOARD_URL;
+    document.getElementById('successMsg').textContent = `Welcome, ${firstName}! Your dashboard is ready. Time to be a financial hero.`;
 
     // Auto-redirect after 3 seconds
     setTimeout(() => {
