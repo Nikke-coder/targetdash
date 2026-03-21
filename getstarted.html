@@ -1,75 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>targetdash › Invite only</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0a0a0f;--bg2:#0e0e16;--border:rgba(255,255,255,0.08);
-  --violet:#7c3aed;--violet-hi:#9d5ffc;--vglow:rgba(124,58,237,0.3);
-  --lilac:#c4b5fd;--white:#fff;--text:#f1f0f5;--mid:#8b8a9a;--dim:#3d3c52;
-  --sans:'Outfit',sans-serif;--ui:'Instrument Sans',sans-serif;
-}
-html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.logo{display:flex;align-items:center;text-decoration:none;}
-.logo-name{font-family:var(--ui);font-size:16px;font-weight:600;color:var(--white);}
-.logo-gt{font-size:18px;color:var(--violet-hi);text-shadow:0 0 12px var(--violet);}
-a.sign-in{font-family:var(--ui);font-size:13px;color:var(--mid);text-decoration:none;padding:8px 18px;border:1px solid var(--border);border-radius:8px;transition:all .2s;}
-a.sign-in:hover{color:var(--text);border-color:rgba(124,58,237,0.4);}
-.main{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;}
-.card{width:100%;max-width:480px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:52px 44px;text-align:center;}
-.icon{font-size:48px;margin-bottom:24px;}
-h1{font-size:30px;font-weight:700;letter-spacing:-.03em;color:var(--white);margin-bottom:12px;}
-.sub{font-family:var(--ui);font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:36px;}
-.contact-btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:var(--violet);color:#fff;font-family:var(--ui);font-size:14px;font-weight:600;text-decoration:none;border-radius:10px;transition:all .25s;box-shadow:0 4px 24px rgba(124,58,237,0.35);}
-.contact-btn:hover{background:var(--violet-hi);transform:translateY(-1px);box-shadow:0 4px 36px rgba(124,58,237,0.5);}
-.divider{display:flex;align-items:center;gap:12px;margin:28px 0;}
-.divider-line{flex:1;height:1px;background:var(--border);}
-.divider-text{font-family:var(--ui);font-size:11px;color:var(--dim);}
-.sign-in-row{font-family:var(--ui);font-size:13px;color:var(--dim);}
-.sign-in-row a{color:var(--lilac);text-decoration:none;}
-</style>
-</head>
-<body>
-<nav>
-  <a href="/" class="logo"><span class="logo-name">targetdash</span><span class="logo-gt">&gt;</span></a>
-  <a href="/login" class="sign-in">Sign in →</a>
-</nav>
-<div class="main">
-  <div class="card">
-    <div class="icon">🔒</div>
-    <h1>Invite only</h1>
-    <p class="sub">targetdash is currently available by invitation only. Get in touch and we'll set up your account personally.</p>
-    <a href="mailto:niklas@targetdash.ai" class="contact-btn">
-      Contact us →
-    </a>
-    <div class="divider">
-      <div class="divider-line"></div>
-      <div class="divider-text">already invited?</div>
-      <div class="divider-line"></div>
-    </div>
-    <div class="sign-in-row">Check your email for the invite link, or <a href="/login">sign in →</a></div>
-  </div>
-</div>
-<script>
-const SUPABASE_URL = 'https://nghlvfngpfrhhigkoeem.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-// If already logged in and onboarded, go to dashboard
-(async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if(session) {
-    const { data: p } = await sb.from('user_profiles').select('onboarded,plan').eq('user_id',session.user.id).maybeSingle();
-    if(p?.onboarded && (p.plan === 'mainuser' || p.plan === 'superuser')) {
-      window.location.href = 'https://app.targetdash.ai';
-    }
-  }
-})();
-</script>
-</body>
-</html>
+<html><head><meta charset="UTF-8"/>
+<meta http-equiv="refresh" content="0;url=/login"/>
+<title>targetdash › Redirecting…</title>
+<style>body{background:#0a0a0f;color:#4a6278;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-size:12px;}</style>
+</head><body>
+Redirecting to login…
+<script>window.location.href='/login';</script>
+</body></html>
