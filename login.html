@@ -323,7 +323,7 @@ async function signInWithGoogle() {
   btn.disabled = true; btn.style.opacity = '0.6';
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://www.targetdash.ai/login' }
+   options: { redirectTo: 'https://app.targetdash.ai' }
   });
 }
 document.getElementById('googleBtn').onclick = signInWithGoogle;
