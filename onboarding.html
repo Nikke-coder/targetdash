@@ -423,10 +423,10 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
         <p>All data is stored in the European Union via Supabase (PostgreSQL). Data is encrypted at rest and in transit. We implement row-level security to ensure users can only access their own data. We conduct regular security reviews.</p>
 
         <h4>Data Retention</h4>
-        <p>Your data is retained for as long as your account is active. Upon account deletion, data is permanently purged within 30 days. You may request export of your data at any time by contacting <a href="mailto:niklas@targetdash.ai">niklas@targetdash.ai</a>.</p>
+        <p>Your data is retained for as long as your account is active. Upon account deletion, data is permanently purged within 30 days. You may request export of your data at any time by contacting niklas@targetdash.ai.</p>
 
         <h4>Your Rights (GDPR)</h4>
-        <p>You have the right to access, correct, export or delete your personal data. You may withdraw consent at any time. To exercise these rights, contact <a href="mailto:niklas@targetdash.ai">niklas@targetdash.ai</a>. You also have the right to lodge a complaint with the Finnish Data Protection Ombudsman (tietosuojavaltuutettu.fi).</p>
+        <p>You have the right to access, correct, export or delete your personal data. You may withdraw consent at any time. To exercise these rights, contact niklas@targetdash.ai. You also have the right to lodge a complaint with the Finnish Data Protection Ombudsman (tietosuojavaltuutettu.fi).</p>
 
         <h4>Data Processing Agreement</h4>
         <p>When you use targetdash to process financial data relating to individuals (e.g. payroll data), Targetflow Oy acts as a data processor on your behalf. You, as the business, are the data controller. By accepting these terms you enter into a Data Processing Agreement with Targetflow Oy under Article 28 GDPR.</p>
@@ -434,7 +434,7 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
         <p>Our current sub-processors include: Supabase Inc. (database infrastructure, EU region); Mistral AI SAS (AI processing — EU-based, prompts contain only anonymised financial figures, not personal data); Stripe Inc. (payment processing).</p>
 
         <h4>Contact</h4>
-        <p>Data controller: Targetflow Oy · <a href="mailto:niklas@targetdash.ai">niklas@targetdash.ai</a> · Helsinki, Finland</p>
+        <p>Data controller: Targetflow Oy · niklas@targetdash.ai · Helsinki, Finland</p>
         <p>Last updated: March 2026</p>
       </div>
 
@@ -691,30 +691,23 @@ document.getElementById('btn3').addEventListener('click', async () => {
     [1,2,3].forEach(i => document.getElementById('dot'+i).className='nav-step-dot done');
 
     const firstName = payload.full_name.split(' ')[0];
-    document.getElementById('successMsg').textContent = `Welcome, ${firstName}! Your dashboard is ready. Time to be a financial hero.`;
+    document.getElementById('successMsg').textContent = `Welcome, ${firstName}! Your dashboard is ready. All agreements are on file.`;
 
-    setTimeout(() => {
+    document.getElementById('btnLaunch').addEventListener('click', () => {
       window.location.href = redirectTo;
-    }, 3000);
+    });
 
   } catch(e) {
-    console.error('Onboarding error:', e);
+    showMsg('step3Msg', 'Something went wrong: ' + e.message);
     btn.disabled = false;
     btn.textContent = 'Activate my dashboard →';
-    showMsg('step3Msg', 'Something went wrong. Please try again.');
   }
-});
-
-document.getElementById('btnLaunch').addEventListener('click', () => {
-  window.location.href = DASHBOARD_URL;
 });
 
 function showMsg(id, text) {
   const el = document.getElementById(id);
-  if(!el) return;
   el.className = 'msg-box error';
   el.textContent = text;
-  setTimeout(() => { el.className = 'msg-box'; }, 4000);
 }
 </script>
 </body>
