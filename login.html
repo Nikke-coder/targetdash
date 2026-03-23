@@ -350,7 +350,7 @@ async function sendMagicLink() {
   const { error } = await sb.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: 'https://app.targetdash.ai',
+      emailRedirectTo: 'https://www.targetdash.ai/login',
     },
   });
 
