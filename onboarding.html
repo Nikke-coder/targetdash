@@ -414,7 +414,7 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
         <p>Targetflow Oy ("we", "us") is the data controller for personal data processed through targetdash. This policy explains what data we collect and how we use it, in accordance with EU GDPR and Finnish data protection law.</p>
 
         <h4>Data We Collect</h4>
-        <p>Account data: name, email address, company name, business ID, country and role. Usage data: login timestamps, feature usage, AI credit consumption. Financial data: figures you upload or connect via API integrations (Netvisor, Procountor). We do not collect payment card details — these are handled by Stripe.</p>
+        <p>Account data: name, email address, company name, business ID, country and role. Usage data: login timestamps, feature usage, AI credit consumption. Financial data: aggregated figures you upload via CSV or Excel. We do not collect payment card details — these are handled by Stripe.</p>
 
         <h4>How We Use Your Data</h4>
         <p>To provide and improve the Service; to authenticate you and maintain your session; to power AI-generated insights based on your financial data; to send transactional emails (login, billing, alerts); to comply with legal obligations.</p>
@@ -473,253 +473,216 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
 </div>
 </div>
 
+
 <script>
-const SUPABASE_URL  = 'https://nghlvfngpfrhhigkoeem.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-const DASHBOARD_URL = 'https://app.targetdash.ai';
+var SUPABASE_URL='https://nghlvfngpfrhhigkoeem.supabase.co';
+var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
+var DASHBOARD_URL='https://app.targetdash.ai';
+var sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+var currentStep=1;
+var selectedRole='CFO';
+var checks={terms:false,dpa:false,age:false};
+var userEmail='';
+var userId='';
+var termsScrolled=false;
 
-// ── STATE ────────────────────────────────────────────────────────────────
-let currentStep = 1;
-let selectedRole = 'CFO';
-let checks = { terms: false, dpa: false, age: false };
-let userEmail = '';
-let userId = '';
-let termsScrolled = false;
+// INIT
+(async function(){
+  try{
+    var sess=await sb.auth.getSession();
+    var session=sess.data.session;
+    if(!session){window.location.href='/login';return;}
+    userId=session.user.id;
+    userEmail=session.user.email;
 
-// ── INIT — check session ─────────────────────────────────────────────────
-(async () => {
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if(!session) { window.location.href = '/login'; return; }
+    var profile=null;
+    var r1=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id').eq('user_id',userId).maybeSingle();
+    profile=r1.data;
 
-    userId    = session.user.id;
-    userEmail = session.user.email;
-
-    // Try by user_id first, then by email (covers invite-before-signup)
-    let { data: profile } = await sb.from('user_profiles')
-      .select('onboarded, plan, company_name, primary_role, user_id').eq('user_id', userId).maybeSingle();
-
-    if(!profile) {
-      const { data: byEmail } = await sb.from('user_profiles')
-        .select('onboarded, plan, company_name, primary_role, user_id').eq('email', userEmail).maybeSingle();
-      if(byEmail) {
-        await sb.from('user_profiles').update({ user_id: userId, updated_at: new Date().toISOString() })
-          .eq('email', userEmail);
-        profile = byEmail;
+    if(!profile){
+      var r2=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id').eq('email',userEmail).maybeSingle();
+      if(r2.data){
+        await sb.from('user_profiles').update({user_id:userId,updated_at:new Date().toISOString()}).eq('email',userEmail);
+        profile=r2.data;
       }
     }
 
-    // Already onboarded → go to dashboard
-    if(profile?.onboarded) { window.location.href = DASHBOARD_URL; return; }
+    if(profile&&profile.onboarded){window.location.href=DASHBOARD_URL;return;}
+    if(!profile||(profile.plan!=='mainuser'&&profile.plan!=='superuser')){window.location.href='/login';return;}
 
-    // Not invited at all → back to login
-    if(!profile || (profile.plan !== 'mainuser' && profile.plan !== 'superuser')) {
-      window.location.href = '/login'; return;
+    if(profile.company_name)document.getElementById('companyName').value=profile.company_name;
+    if(profile.primary_role){
+      selectedRole=profile.primary_role;
+      document.querySelectorAll('.role-card').forEach(function(c){c.classList.toggle('selected',c.dataset.role===profile.primary_role);});
     }
 
-    // Pre-fill from profile if set
-    if(profile.company_name) document.getElementById('companyName').value = profile.company_name;
-    if(profile.primary_role) {
-      selectedRole = profile.primary_role;
-      document.querySelectorAll('.role-card').forEach(c => {
-        c.classList.toggle('selected', c.dataset.role === profile.primary_role);
-      });
-    }
-
-    // Show welcome banner
-    const banner = document.createElement('div');
-    banner.style.cssText = 'background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
-    banner.innerHTML = '<strong style="color:#fff;">Welcome to targetdash</strong><br/>Please confirm your details and accept the legal agreements to activate your dashboard.';
+    var banner=document.createElement('div');
+    banner.style.cssText='background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
+    banner.innerHTML='<strong style="color:#fff;">Welcome to targetdash</strong><br/>Please confirm your details and accept the legal agreements to activate your dashboard.';
     document.querySelector('#step1 .step-body').prepend(banner);
 
-    // Pre-fill name from Google
-    const meta = session.user.user_metadata;
-    if(meta?.full_name) document.getElementById('fullName').value = meta.full_name;
-    else if(meta?.name) document.getElementById('fullName').value = meta.name;
-
-  } catch(e) {
-    console.error('Onboarding init error:', e);
-    window.location.href = '/login';
+    var meta=session.user.user_metadata;
+    if(meta&&meta.full_name)document.getElementById('fullName').value=meta.full_name;
+    else if(meta&&meta.name)document.getElementById('fullName').value=meta.name;
+  }catch(e){
+    console.error('Onboarding init error:',e);
+    window.location.href='/login';
   }
 })();
 
-// ── STEP NAVIGATION (single merged function) ────────────────────────────
-function goStep(n) {
-  document.getElementById('step' + currentStep).classList.remove('active');
-  currentStep = n;
-
-  const el = document.getElementById(n === 'Done' ? 'stepDone' : 'step' + n);
+// STEP NAVIGATION
+function goStep(n){
+  document.getElementById('step'+currentStep).classList.remove('active');
+  currentStep=n;
+  var el=document.getElementById(n==='Done'?'stepDone':'step'+n);
   el.classList.add('active');
-
-  const pct = n === 'Done' ? 100 : (n / 3) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-
-  [1,2,3].forEach(i => {
-    const dot = document.getElementById('dot' + i);
-    dot.className = 'nav-step-dot';
-    if(i < n)  dot.classList.add('done');
-    if(i === n) dot.classList.add('active');
+  var pct=n==='Done'?100:(n/3)*100;
+  document.getElementById('progressFill').style.width=pct+'%';
+  [1,2,3].forEach(function(i){
+    var dot=document.getElementById('dot'+i);
+    dot.className='nav-step-dot';
+    if(i<n)dot.classList.add('done');
+    if(i===n)dot.classList.add('active');
   });
+  var labels={1:'Step 1 of 3',2:'Step 2 of 3',3:'Step 3 of 3',Done:'Complete'};
+  document.getElementById('stepLabel').textContent=labels[n]||'';
 
-  const labels = { 1:'Step 1 of 3', 2:'Step 2 of 3', 3:'Step 3 of 3', Done:'Complete' };
-  document.getElementById('stepLabel').textContent = labels[n] || '';
-
-  // Step 3 — lock checkboxes until terms are scrolled
-  if(n === 3) {
-    termsScrolled = false;
+  if(n===3){
+    termsScrolled=false;
     lockChecks();
-    checks = { terms: false, dpa: false, age: false };
-    ['Terms','Dpa','Age'].forEach(k => {
-      const box = document.getElementById('check' + k + 'Box');
-      if(box) box.className = 'check-box';
+    checks={terms:false,dpa:false,age:false};
+    ['Terms','Dpa','Age'].forEach(function(k){
+      var box=document.getElementById('check'+k+'Box');
+      if(box)box.className='check-box';
     });
-    document.getElementById('btn3').disabled = true;
-
-    setTimeout(() => {
-      const scroll = document.getElementById('termsScroll');
-      if(scroll) {
-        scroll.addEventListener('scroll', () => {
-          const nearBottom = scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 40;
-          if(nearBottom) unlockChecks();
+    document.getElementById('btn3').disabled=true;
+    setTimeout(function(){
+      var scroll=document.getElementById('termsScroll');
+      if(scroll){
+        scroll.addEventListener('scroll',function(){
+          var nearBottom=scroll.scrollTop+scroll.clientHeight>=scroll.scrollHeight-40;
+          if(nearBottom)unlockChecks();
         });
       }
-    }, 100);
+    },100);
   }
 }
 
-// ── ROLE SELECTION ───────────────────────────────────────────────────────
-document.getElementById('roleGrid').addEventListener('click', e => {
-  const card = e.target.closest('.role-card');
-  if(!card) return;
-  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+// ROLE SELECTION
+document.getElementById('roleGrid').addEventListener('click',function(e){
+  var card=e.target.closest('.role-card');
+  if(!card)return;
+  document.querySelectorAll('.role-card').forEach(function(c){c.classList.remove('selected');});
   card.classList.add('selected');
-  selectedRole = card.dataset.role;
+  selectedRole=card.dataset.role;
 });
 
-// ── LEGAL SCROLL ENFORCEMENT ─────────────────────────────────────────────
-function lockChecks() {
-  ['checkTerms','checkDpa','checkAge'].forEach(id => {
-    const el = document.getElementById(id);
-    el.style.opacity = '0.4';
-    el.style.pointerEvents = 'none';
-    el.style.cursor = 'not-allowed';
+// LEGAL SCROLL
+function lockChecks(){
+  ['checkTerms','checkDpa','checkAge'].forEach(function(id){
+    var el=document.getElementById(id);
+    el.style.opacity='0.4';el.style.pointerEvents='none';el.style.cursor='not-allowed';
   });
 }
-
-function unlockChecks() {
-  if(termsScrolled) return;
-  termsScrolled = true;
-  ['checkTerms','checkDpa','checkAge'].forEach(id => {
-    const el = document.getElementById(id);
-    el.style.opacity = '';
-    el.style.pointerEvents = '';
-    el.style.cursor = '';
+function unlockChecks(){
+  if(termsScrolled)return;
+  termsScrolled=true;
+  ['checkTerms','checkDpa','checkAge'].forEach(function(id){
+    var el=document.getElementById(id);
+    el.style.opacity='';el.style.pointerEvents='';el.style.cursor='';
   });
-  const hint = document.getElementById('scrollHint');
-  if(hint) { hint.textContent = '✓ You\'ve read the full agreement — please accept below'; hint.style.color = 'var(--green)'; }
+  var hint=document.getElementById('scrollHint');
+  if(hint){hint.textContent='\u2713 You have read the full agreement \u2014 please accept below';hint.style.color='var(--green)';}
 }
 
-// ── CHECKBOX ─────────────────────────────────────────────────────────────
-function toggleCheck(key) {
-  checks[key] = !checks[key];
-  const box = document.getElementById('check' + key.charAt(0).toUpperCase() + key.slice(1) + 'Box');
-  box.className = 'check-box' + (checks[key] ? ' checked' : '');
-  document.getElementById('btn3').disabled = !(checks.terms && checks.dpa && checks.age);
+// CHECKBOX
+function toggleCheck(key){
+  checks[key]=!checks[key];
+  var box=document.getElementById('check'+key.charAt(0).toUpperCase()+key.slice(1)+'Box');
+  box.className='check-box'+(checks[key]?' checked':'');
+  document.getElementById('btn3').disabled=!(checks.terms&&checks.dpa&&checks.age);
 }
 
-// ── STEP 1 → 2 ───────────────────────────────────────────────────────────
-document.getElementById('btn1').addEventListener('click', () => {
-  const name = document.getElementById('companyName').value.trim();
-  if(!name) {
-    showMsg('step1Msg', 'Please enter your company name.'); return;
-  }
+// STEP 1 -> 2
+document.getElementById('btn1').addEventListener('click',function(){
+  var name=document.getElementById('companyName').value.trim();
+  if(!name){showMsg('step1Msg','Please enter your company name.');return;}
   goStep(2);
 });
 
-// ── STEP 2 → 3 ───────────────────────────────────────────────────────────
-document.getElementById('btn2').addEventListener('click', () => {
-  const name = document.getElementById('fullName').value.trim();
-  if(!name) {
-    alert('Please enter your name.'); return;
-  }
+// STEP 2 -> 3
+document.getElementById('btn2').addEventListener('click',function(){
+  var name=document.getElementById('fullName').value.trim();
+  if(!name){alert('Please enter your name.');return;}
   goStep(3);
 });
 
-// ── STEP 3 → SAVE ────────────────────────────────────────────────────────
-document.getElementById('btn3').addEventListener('click', async () => {
-  const btn = document.getElementById('btn3');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Setting up your dashboard…';
+// STEP 3 -> SAVE
+document.getElementById('btn3').addEventListener('click',async function(){
+  var btn=document.getElementById('btn3');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Setting up your dashboard...';
 
-  // Fetch existing plan from profile (preserve what admin set)
-  let existingPlan = 'mainuser';
-  try {
-    const { data: p } = await sb.from('user_profiles').select('plan').eq('user_id', userId).maybeSingle();
-    existingPlan = p?.plan || 'mainuser';
-  } catch(e) {}
+  var existingPlan='mainuser';
+  try{
+    var r=await sb.from('user_profiles').select('plan').eq('user_id',userId).maybeSingle();
+    if(r.data&&r.data.plan)existingPlan=r.data.plan;
+  }catch(e){}
 
-  const payload = {
-    user_id:      userId,
-    email:        userEmail,
-    full_name:    document.getElementById('fullName').value.trim(),
-    company_name: document.getElementById('companyName').value.trim(),
-    business_id:  document.getElementById('businessId').value.trim() || null,
-    fiscal_year:  parseInt(document.getElementById('fiscalYear').value),
-    country:      document.getElementById('country').value,
-    currency:     document.getElementById('currency').value,
-    primary_role: selectedRole,
-    plan:         existingPlan,
-    agreed_terms: true,
-    agreed_dpa:   true,
-    agreed_at:    new Date().toISOString(),
-    onboarded:    true,
+  var payload={
+    user_id:userId,
+    email:userEmail,
+    full_name:document.getElementById('fullName').value.trim(),
+    company_name:document.getElementById('companyName').value.trim(),
+    business_id:document.getElementById('businessId').value.trim()||null,
+    fiscal_year:parseInt(document.getElementById('fiscalYear').value),
+    country:document.getElementById('country').value,
+    currency:document.getElementById('currency').value,
+    primary_role:selectedRole,
+    plan:existingPlan,
+    agreed_terms:true,
+    agreed_dpa:true,
+    agreed_at:new Date().toISOString(),
+    onboarded:true
   };
 
-  try {
-    const { error } = await sb.from('user_profiles').upsert(payload, { onConflict: 'user_id' });
-    if(error) throw error;
+  try{
+    var result=await sb.from('user_profiles').upsert(payload,{onConflict:'user_id'});
+    if(result.error)throw result.error;
 
-    const redirectTo = DASHBOARD_URL;
-
-    // Show success and launch
-    currentStep = 'x';
+    var redirectTo=DASHBOARD_URL;
+    currentStep='x';
     document.getElementById('step3').classList.remove('active');
     document.getElementById('stepDone').classList.add('active');
-    document.getElementById('progressFill').style.width = '100%';
-    document.getElementById('stepLabel').textContent = 'Complete';
-    [1,2,3].forEach(i => document.getElementById('dot'+i).className='nav-step-dot done');
+    document.getElementById('progressFill').style.width='100%';
+    document.getElementById('stepLabel').textContent='Complete';
+    [1,2,3].forEach(function(i){document.getElementById('dot'+i).className='nav-step-dot done';});
 
-    const firstName = payload.full_name.split(' ')[0];
-    document.getElementById('successMsg').textContent = 'Welcome, ' + firstName + '! Your dashboard is ready. Time to be a financial hero.';
+    var firstName=payload.full_name.split(' ')[0];
+    document.getElementById('successMsg').textContent='Welcome, '+firstName+'! Your dashboard is ready. Time to be a financial hero.';
 
-    // Auto-redirect after 3 seconds
-    setTimeout(() => {
-      window.location.href = redirectTo;
-    }, 3000);
-
-  } catch(e) {
-    console.error('Onboarding error:', e);
-    btn.disabled = false;
-    btn.textContent = 'Activate my dashboard →';
-    showMsg('step3Msg', 'Something went wrong: ' + (e.message || 'Please try again.'));
+    setTimeout(function(){window.location.href=redirectTo;},3000);
+  }catch(e){
+    console.error('Onboarding error:',e);
+    btn.disabled=false;
+    btn.textContent='Activate my dashboard \u2192';
+    showMsg('step3Msg','Something went wrong: '+(e.message||'Please try again.'));
   }
 });
 
-// ── LAUNCH BUTTON ───────────────────────────────────────────────────────
-document.getElementById('btnLaunch').addEventListener('click', () => {
-  window.location.href = DASHBOARD_URL;
+// LAUNCH BUTTON
+document.getElementById('btnLaunch').addEventListener('click',function(){
+  window.location.href=DASHBOARD_URL;
 });
 
-// ── MESSAGE HELPER ──────────────────────────────────────────────────────
-function showMsg(id, text) {
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.className = 'msg-box error';
-  el.textContent = text;
-  setTimeout(() => { el.className = 'msg-box'; }, 5000);
+// MESSAGE HELPER
+function showMsg(id,text){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.className='msg-box error';
+  el.textContent=text;
+  setTimeout(function(){el.className='msg-box';},5000);
 }
 </script>
 </body>
