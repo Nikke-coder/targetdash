@@ -1513,8 +1513,8 @@ footer {
     <span class="strip-item"><span class="dot"></span>Budget vs Actuals</span>
     <span class="strip-item lit"><span class="dot"></span>Risk Monitoring</span>
     <span class="strip-item"><span class="dot"></span>Custom Dashboards</span>
-    <span class="strip-item lit"><span class="dot"></span>Netvisor Sync</span>
-    <span class="strip-item"><span class="dot"></span>Procountor API</span>
+    <span class="strip-item lit"><span class="dot"></span>API Sync (TBA)</span>
+    <span class="strip-item"><span class="dot"></span>API Sync (TBA)</span>
     <span class="strip-item lit"><span class="dot"></span>FX Conversion</span>
     <span class="strip-item"><span class="dot"></span>CEO · CFO · CMO · CRO · CTO · HR Mode</span>
     <span class="strip-item lit"><span class="dot"></span>Member Access Control</span>
@@ -1525,8 +1525,8 @@ footer {
     <span class="strip-item"><span class="dot"></span>Budget vs Actuals</span>
     <span class="strip-item lit"><span class="dot"></span>Risk Monitoring</span>
     <span class="strip-item"><span class="dot"></span>Custom Dashboards</span>
-    <span class="strip-item lit"><span class="dot"></span>Netvisor Sync</span>
-    <span class="strip-item"><span class="dot"></span>Procountor API</span>
+    <span class="strip-item lit"><span class="dot"></span>API Sync (TBA)</span>
+    <span class="strip-item"><span class="dot"></span>API Sync (TBA)</span>
     <span class="strip-item lit"><span class="dot"></span>FX Conversion</span>
     <span class="strip-item"><span class="dot"></span>CEO · CFO · CMO · CRO · CTO · HR Mode</span>
     <span class="strip-item lit"><span class="dot"></span>Member Access Control</span>
@@ -1687,8 +1687,8 @@ footer {
     <div class="feat rv d2">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg></div>
-      <div class="feat-title">Netvisor & Procountor</div>
-      <p class="feat-body">Direct API sync from Finland's leading accounting platforms. Fully automated — no exports, no manual work ever.</p>
+      <div class="feat-title">Accounting API (coming soon)</div>
+      <p class="feat-body">Direct API integration with Finland's leading accounting software firms. Coming soon — currently in partnership discussions.</p>
       <span class="feat-tag">Integrated</span>
     </div>
   </div>
@@ -2475,7 +2475,7 @@ const FACTS = [
   '💡 <em>Did you know?</em> Role-switching changes the answer, not just the tone. Ask the same question as CFO vs CMO and you\'ll get genuinely different insights.',
   'FX conversion runs on <span class="pv">ECB and Suomen Pankki rates</span> — updated daily. Multi-currency reporting with zero manual work.',
   '💡 <em>Did you know?</em> Short, direct questions get the sharpest answers. "What\'s driving the payroll increase?" beats "can you tell me a bit about what might be happening with our personnel costs?"',
-  'I sync with <span class="pv">Netvisor and Procountor</span> via direct API — your data updates automatically, nothing to export.',
+  'I sync with <span class="pv">Finland's leading accounting software</span> via direct API — your data updates automatically, nothing to export.',
   '💡 <em>Did you know?</em> You can ask the AI to draft board commentary: "write a 3-sentence summary of our Q2 financials for the board deck" is a great use of 1 credit.',
   'Every dashboard saves a <span class="pv">snapshot history</span> — go back and compare how your numbers looked last month, last quarter, anytime.',
   '💡 <em>Did you know?</em> The AI works best when you tell it what decision you\'re trying to make. "Should we hire in Q3?" gives it the context to give you a useful answer.',
@@ -2579,7 +2579,7 @@ function sendPopupMsg(text) {
       reply = FACTS[5];
     else if(q.includes('vat') || q.includes('cancel') || q.includes('fee'))
       reply = FACTS[6];
-    else if(q.includes('netvisor') || q.includes('procountor') || q.includes('sync'))
+    else if(q.includes('sync') || q.includes('api') || q.includes('accounting'))
       reply = FACTS[7];
     else if(q.includes('contact') || q.includes('niklas') || q.includes('email'))
       reply = FACTS[14];
