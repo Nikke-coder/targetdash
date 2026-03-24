@@ -497,18 +497,19 @@ var termsScrolled=false;
     userEmail=session.user.email;
 
     var profile=null;
-    var r1=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id').eq('user_id',userId).maybeSingle();
+    var r1=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id,agreed_terms,agreed_dpa,full_name').eq('user_id',userId).maybeSingle();
     profile=r1.data;
 
     if(!profile){
-      var r2=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id').eq('email',userEmail).maybeSingle();
+      var r2=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id,agreed_terms,agreed_dpa,full_name').eq('email',userEmail).maybeSingle();
       if(r2.data){
         await sb.from('user_profiles').update({user_id:userId,updated_at:new Date().toISOString()}).eq('email',userEmail);
         profile=r2.data;
       }
     }
 
-    if(profile&&profile.onboarded){window.location.href=DASHBOARD_URL;return;}
+    // Only redirect to dashboard if fully onboarded AND terms accepted
+    if(profile&&profile.onboarded&&profile.agreed_terms&&profile.agreed_dpa){window.location.href=DASHBOARD_URL;return;}
     if(!profile||(profile.plan!=='mainuser'&&profile.plan!=='superuser')){window.location.href='/login';return;}
 
     if(profile.company_name){
@@ -525,7 +526,7 @@ var termsScrolled=false;
     // Check if mode=legal — skip to terms only (created by admin, needs legal acceptance)
     var urlParams=new URLSearchParams(window.location.search);
     var mode=urlParams.get('mode');
-    if(mode==='legal'&&profile.onboarded){
+    if((mode==='legal'||profile.onboarded)&&(!profile.agreed_terms||!profile.agreed_dpa)){
       // Pre-fill from existing profile
       if(profile.full_name)document.getElementById('fullName').value=profile.full_name;
       var banner=document.createElement('div');
@@ -678,16 +679,11 @@ document.getElementById('btn3').addEventListener('click',async function(){
     [1,2,3].forEach(function(i){document.getElementById('dot'+i).className='nav-step-dot done';});
 
     var firstName=payload.full_name.split(' ')[0];
-    document.getElementById('successMsg').textContent='Welcome, '+firstName+'! Your dashboard is ready. Please sign in to set up two-factor authentication.';
+    document.getElementById('successMsg').textContent='Welcome, '+firstName+'! Setting up your dashboard...';
     
-    // Sign out on www — user needs a fresh session on app.targetdash.ai
-    await sb.auth.signOut();
-    
-    var launchBtn=document.getElementById('btnLaunch');
-    if(launchBtn){
-      launchBtn.textContent='Sign in to your dashboard →';
-      launchBtn.onclick=function(){window.location.href='https://app.targetdash.ai';};
-    }
+    // Redirect back to login — it will auto-route to app.targetdash.ai
+    // Session exists on www domain, route() will see onboarded+agreed and redirect
+    setTimeout(function(){window.location.href='/login';},1500);
   }catch(e){
     console.error('Onboarding error:',e);
     btn.disabled=false;
