@@ -8,7 +8,7 @@
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0a0a0f;--bg2:#0e0e16;--bg3:#12121c;--panel:rgba(255,255,255,0.04);--phi:rgba(255,255,255,0.07);--border:rgba(255,255,255,0.08);--bhi:rgba(255,255,255,0.14);--v:#7c3aed;--vh:#9d5ffc;--vl:#5b21b6;--lilac:#c4b5fd;--w:#fff;--text:#f1f0f5;--mid:#8b8a9a;--dim:#3d3c52;--green:#34d399;--red:#f87171;--sans:'Outfit',sans-serif;--ui:'Instrument Sans',sans-serif;}
+:root{--bg:#0a0a0f;--bg2:#0e0e16;--panel:rgba(255,255,255,0.04);--phi:rgba(255,255,255,0.07);--border:rgba(255,255,255,0.08);--bhi:rgba(255,255,255,0.14);--v:#7c3aed;--vh:#9d5ffc;--lilac:#c4b5fd;--w:#fff;--text:#f1f0f5;--mid:#8b8a9a;--dim:#3d3c52;--green:#34d399;--red:#f87171;--sans:'Outfit',sans-serif;--ui:'Instrument Sans',sans-serif;}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);}
 .wrap{min-height:100vh;display:grid;grid-template-columns:1fr 480px;}
 .left{position:relative;display:flex;flex-direction:column;justify-content:center;padding:60px;overflow:hidden;background:var(--bg);}
@@ -34,26 +34,21 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
 .divider-line{flex:1;height:1px;background:var(--border);}
 .divider-text{font-family:var(--ui);font-size:11px;color:var(--dim);}
-.email-input{width:100%;padding:12px 14px;background:var(--panel);border:1px solid var(--border);border-radius:10px;outline:none;font-family:var(--ui);font-size:14px;color:var(--text);transition:border-color .2s;margin-bottom:12px;box-sizing:border-box;}
-.email-input:focus{border-color:rgba(124,58,237,0.5);}
-.email-input::placeholder{color:var(--dim);}
-.btn-magic{width:100%;padding:13px;background:var(--v);border:none;border-radius:10px;font-family:var(--ui);font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-magic:hover{background:var(--vh);}
-.btn-magic:disabled{opacity:0.6;cursor:not-allowed;}
+.inp{width:100%;padding:12px 14px;background:var(--panel);border:1px solid var(--border);border-radius:10px;outline:none;font-family:var(--ui);font-size:14px;color:var(--text);transition:border-color .2s;margin-bottom:12px;box-sizing:border-box;}
+.inp:focus{border-color:rgba(124,58,237,0.5);}
+.inp::placeholder{color:var(--dim);}
+.btn-main{width:100%;padding:13px;background:var(--v);border:none;border-radius:10px;font-family:var(--ui);font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-main:hover{background:var(--vh);}
+.btn-main:disabled{opacity:0.6;cursor:not-allowed;}
 .btn-google{width:100%;padding:13px;background:var(--phi);border:1px solid var(--bhi);border-radius:10px;cursor:pointer;font-family:var(--ui);font-size:14px;font-weight:500;color:var(--text);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
-.btn-google:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);}
+.btn-google:hover{background:rgba(255,255,255,0.1);}
 .btn-google:disabled{opacity:0.6;cursor:not-allowed;}
 .btn-google svg{width:18px;height:18px;}
+.btn-toggle{background:none;border:none;color:var(--mid);font-family:var(--ui);font-size:12px;cursor:pointer;text-decoration:underline;opacity:0.7;}
+.btn-toggle:hover{opacity:1;}
 .msg-box{display:none;padding:12px 14px;border-radius:10px;font-family:var(--ui);font-size:13px;line-height:1.5;margin-bottom:16px;}
 .msg-box.error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--red);display:block;}
 .msg-box.success{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:var(--green);display:block;}
-.magic-sent{text-align:center;padding:20px 0;}
-.magic-sent-icon{font-size:48px;margin-bottom:16px;}
-.magic-sent-title{font-size:20px;font-weight:700;color:var(--w);margin-bottom:8px;}
-.magic-sent-text{font-family:var(--ui);font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:20px;}
-.magic-sent-email{color:var(--lilac);font-weight:600;}
-.btn-back{background:none;border:1px solid var(--border);border-radius:10px;padding:10px 20px;color:var(--mid);font-family:var(--ui);font-size:13px;cursor:pointer;transition:all .2s;}
-.btn-back:hover{color:var(--text);border-color:var(--bhi);}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:900px){.wrap{grid-template-columns:1fr;}.left{display:none;}.right{padding:40px 24px;}}
@@ -70,14 +65,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
       <h1 class="left-headline">Start your engine.<br/><span class="hl">Unlock the<br/>potential.</span></h1>
       <p class="left-sub">Your financial data is sitting there. Sign in and turn it into superpowers — live KPIs, AI insights and cost centre intelligence, all in one place.</p>
       <div class="feature-list">
-        <div class="feature-item"><span class="feature-check">✓</span> 6 AI advisor roles — CEO, CFO, CMO and more</div>
-        <div class="feature-item"><span class="feature-check">✓</span> Cost centre dashboards by country, city, channel</div>
-        <div class="feature-item"><span class="feature-check">✓</span> CSV import with AI field mapping</div>
-        <div class="feature-item"><span class="feature-check">✓</span> FX conversion via ECB / Suomen Pankki</div>
-        <div class="feature-item"><span class="feature-check">✓</span> Accounting API integrations (coming soon)</div>
+        <div class="feature-item"><span class="feature-check">&#10003;</span> 6 AI advisor roles — CEO, CFO, CMO and more</div>
+        <div class="feature-item"><span class="feature-check">&#10003;</span> Cost centre dashboards by country, city, channel</div>
+        <div class="feature-item"><span class="feature-check">&#10003;</span> CSV import with AI field mapping</div>
+        <div class="feature-item"><span class="feature-check">&#10003;</span> FX conversion via ECB / Suomen Pankki</div>
+        <div class="feature-item"><span class="feature-check">&#10003;</span> Accounting API integrations (coming soon)</div>
       </div>
     </div>
-    <div class="left-footer">&copy; 2026 targetdash.ai &middot; VAT 0%</div>
+    <div class="left-footer">&copy; 2026 targetdash.ai</div>
   </div>
   <div class="right">
     <div class="form-box">
@@ -85,21 +80,27 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
         <div class="form-title">Welcome back</div>
         <div class="form-sub">Sign in to your dashboard</div>
         <div class="msg-box" id="signinMsg"></div>
-        <input type="email" class="email-input" id="magicEmail" placeholder="Enter your work email" autocomplete="email" onkeydown="if(event.key==='Enter')sendMagicLink()"/>
-        <button class="btn-magic" id="magicBtn" onclick="sendMagicLink()">&#9993; Send sign-in link</button>
+        <input type="email" class="inp" id="emailInput" placeholder="Enter your work email" autocomplete="email"/>
+        <div id="pwField" style="display:none;">
+          <input type="password" class="inp" id="pwInput" placeholder="Password" autocomplete="current-password"/>
+        </div>
+        <button class="btn-main" id="mainBtn" onclick="doMain()">&#9993; Send sign-in link</button>
+        <div style="text-align:center;margin-top:10px;">
+          <button class="btn-toggle" id="toggleBtn" onclick="toggleMode()">Sign in with password instead</button>
+        </div>
         <div class="divider"><div class="divider-line"></div><div class="divider-text">or</div><div class="divider-line"></div></div>
-        <button class="btn-google" id="googleBtn" onclick="signInWithGoogle()">
+        <button class="btn-google" id="googleBtn" onclick="doGoogle()">
           <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
         </button>
         <div style="text-align:center;margin-top:24px;font-family:var(--ui);font-size:12px;color:var(--dim);">Access is by invitation only. <a href="mailto:niklas@targetdash.ai" style="color:var(--lilac);text-decoration:none;">Contact us &rarr;</a></div>
       </div>
       <div id="viewMagicSent" style="display:none;">
-        <div class="magic-sent">
-          <div class="magic-sent-icon">&#128231;</div>
-          <div class="magic-sent-title">Check your email</div>
-          <div class="magic-sent-text">We sent a sign-in link to<br/><span class="magic-sent-email" id="sentEmail"></span><br/><br/>Click the link to sign in. It expires in 1 hour.<br/>Check your spam folder if you don't see it.</div>
-          <button class="btn-back" onclick="showSignin()">&larr; Try a different email</button>
+        <div style="text-align:center;padding:20px 0;">
+          <div style="font-size:48px;margin-bottom:16px;">&#128231;</div>
+          <div style="font-size:20px;font-weight:700;color:var(--w);margin-bottom:8px;">Check your email</div>
+          <div style="font-family:var(--ui);font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:20px;">We sent a sign-in link to<br/><span id="sentEmail" style="color:var(--lilac);font-weight:600;"></span><br/><br/>Click the link to sign in. Check spam if you don't see it.</div>
+          <button onclick="showSignin()" style="background:none;border:1px solid var(--border);border-radius:10px;padding:10px 20px;color:var(--mid);font-family:var(--ui);font-size:13px;cursor:pointer;">&larr; Try a different email</button>
         </div>
       </div>
     </div>
@@ -110,58 +111,93 @@ var SUPABASE_URL='https://nghlvfngpfrhhigkoeem.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 var sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 var done=false;
+var mode='magic';
 
 async function route(session){
   if(done||!session)return;
   done=true;
   var profile=null;
-  var res=await sb.from('user_profiles').select('onboarded,plan').eq('user_id',session.user.id).maybeSingle();
-  profile=res.data;
+  var r1=await sb.from('user_profiles').select('onboarded,plan,agreed_terms,agreed_dpa').eq('user_id',session.user.id).maybeSingle();
+  profile=r1.data;
   if(!profile&&session.user.email){
-    var res2=await sb.from('user_profiles').select('onboarded,plan').eq('email',session.user.email).maybeSingle();
-    if(res2.data){
+    var r2=await sb.from('user_profiles').select('onboarded,plan,agreed_terms,agreed_dpa').eq('email',session.user.email).maybeSingle();
+    if(r2.data){
       await sb.from('user_profiles').update({user_id:session.user.id,updated_at:new Date().toISOString()}).eq('email',session.user.email);
-      profile=res2.data;
+      profile=r2.data;
     }
   }
   var plan=profile?profile.plan:null;
   var onboarded=profile?profile.onboarded:false;
-  if((plan==='mainuser'||plan==='superuser')&&onboarded){window.location.href='https://app.targetdash.ai';return;}
-  if(plan==='mainuser'||plan==='superuser'){window.location.href='/onboarding?mode=invite';return;}
+  if((plan==='mainuser'||plan==='superuser')&&onboarded&&profile.agreed_terms&&profile.agreed_dpa){
+    window.location.href='https://app.targetdash.ai';return;
+  }
+  if((plan==='mainuser'||plan==='superuser')&&onboarded&&(!profile.agreed_terms||!profile.agreed_dpa)){
+    window.location.href='/onboarding?mode=legal';return;
+  }
+  if(plan==='mainuser'||plan==='superuser'){
+    window.location.href='/onboarding?mode=invite';return;
+  }
   done=false;
   showMsg('signinMsg','error','No invitation found for this email. Access is by invitation only.');
   await sb.auth.signOut();
 }
 
 (async function(){var s=await sb.auth.getSession();if(s.data.session)await route(s.data.session);})();
-sb.auth.onAuthStateChange(function(event,session){if(event==='SIGNED_IN')route(session);});
+sb.auth.onAuthStateChange(function(ev,session){if(ev==='SIGNED_IN')route(session);});
 
-async function sendMagicLink(){
-  var email=document.getElementById('magicEmail').value.trim();
-  if(!email||email.indexOf('@')<0){showMsg('signinMsg','error','Please enter a valid email address.');return;}
-  var btn=document.getElementById('magicBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending...';
-  var result=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:'https://www.targetdash.ai/login'}});
-  btn.disabled=false;btn.innerHTML='&#9993; Send sign-in link';
-  if(result.error){showMsg('signinMsg','error',result.error.message);return;}
-  document.getElementById('sentEmail').textContent=email;
-  document.getElementById('viewSignin').style.display='none';
-  document.getElementById('viewMagicSent').style.display='block';
+function toggleMode(){
+  mode=mode==='magic'?'password':'magic';
+  document.getElementById('pwField').style.display=mode==='password'?'block':'none';
+  document.getElementById('mainBtn').innerHTML=mode==='password'?'Sign in &rarr;':'&#9993; Send sign-in link';
+  document.getElementById('toggleBtn').textContent=mode==='password'?'Sign in with magic link instead':'Sign in with password instead';
+  hideMsg('signinMsg');
 }
 
-async function signInWithGoogle(){
+async function doMain(){
+  var email=document.getElementById('emailInput').value.trim();
+  if(!email||email.indexOf('@')<0){showMsg('signinMsg','error','Please enter a valid email address.');return;}
+  var btn=document.getElementById('mainBtn');
+  btn.disabled=true;
+
+  if(mode==='password'){
+    var pw=document.getElementById('pwInput').value;
+    if(!pw||pw.length<6){showMsg('signinMsg','error','Please enter your password.');btn.disabled=false;return;}
+    btn.innerHTML='<span class="spinner"></span> Signing in...';
+    var result=await sb.auth.signInWithPassword({email:email,password:pw});
+    btn.disabled=false;
+    btn.innerHTML='Sign in &rarr;';
+    if(result.error){
+      showMsg('signinMsg','error',result.error.message==='Invalid login credentials'?'Invalid email or password.':result.error.message);
+    }
+  } else {
+    btn.innerHTML='<span class="spinner"></span> Sending...';
+    var result=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:'https://www.targetdash.ai/login'}});
+    btn.disabled=false;
+    btn.innerHTML='&#9993; Send sign-in link';
+    if(result.error){showMsg('signinMsg','error',result.error.message);return;}
+    document.getElementById('sentEmail').textContent=email;
+    document.getElementById('viewSignin').style.display='none';
+    document.getElementById('viewMagicSent').style.display='block';
+  }
+}
+
+async function doGoogle(){
   var btn=document.getElementById('googleBtn');
   btn.disabled=true;btn.style.opacity='0.6';
   await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://app.targetdash.ai'}});
 }
 
+document.getElementById('emailInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){if(mode==='password'){document.getElementById('pwInput').focus();}else{doMain();}}
+});
+document.getElementById('pwInput').addEventListener('keydown',function(e){if(e.key==='Enter')doMain();});
+
 function showSignin(){
   document.getElementById('viewSignin').style.display='block';
   document.getElementById('viewMagicSent').style.display='none';
-  document.getElementById('magicEmail').value='';
+  document.getElementById('emailInput').value='';
   hideMsg('signinMsg');
 }
-
 function showMsg(id,type,text){var el=document.getElementById(id);if(!el)return;el.className='msg-box '+type;el.textContent=text;}
 function hideMsg(id){var el=document.getElementById(id);if(el)el.className='msg-box';}
 </script>
