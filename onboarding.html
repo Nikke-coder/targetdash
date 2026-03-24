@@ -528,7 +528,7 @@ function lockField(id){var el=document.getElementById(id);if(!el)return;if(el.ta
   try{
     var sess=await sb.auth.getSession();
     var session=sess.data.session;
-    if(!session){window.location.href='/login';return;}
+    if(!session){window.location.href='https://app.targetdash.ai';return;}
     userId=session.user.id;
     userEmail=session.user.email;
 
@@ -546,7 +546,7 @@ function lockField(id){var el=document.getElementById(id);if(!el)return;if(el.ta
 
     // Only redirect to dashboard if fully onboarded AND terms accepted
     if(profile&&profile.onboarded&&profile.agreed_terms&&profile.agreed_dpa){window.location.href=DASHBOARD_URL;return;}
-    if(!profile||(profile.plan!=='mainuser'&&profile.plan!=='superuser')){window.location.href='/login';return;}
+    if(!profile||(profile.plan!=='mainuser'&&profile.plan!=='superuser')){window.location.href='https://app.targetdash.ai';return;}
 
     // Pre-fill all known fields + lock admin-set ones
     if(profile.company_name){document.getElementById('companyName').value=profile.company_name;lockField('companyName');}
@@ -596,7 +596,7 @@ function lockField(id){var el=document.getElementById(id);if(!el)return;if(el.ta
     }
   }catch(e){
     console.error('Onboarding init error:',e);
-    window.location.href='/login';
+    window.location.href='https://app.targetdash.ai';
   }
 })();
 
@@ -735,7 +735,7 @@ document.getElementById('btn3').addEventListener('click',async function(){
     
     // Redirect back to login — it will auto-route to app.targetdash.ai
     // Session exists on www domain, route() will see onboarded+agreed and redirect
-    setTimeout(function(){window.location.href='/login';},1500);
+    setTimeout(function(){window.location.href='https://app.targetdash.ai';},1500);
   }catch(e){
     console.error('Onboarding error:',e);
     btn.disabled=false;
