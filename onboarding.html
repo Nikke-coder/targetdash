@@ -294,6 +294,12 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
               <option value="DK">Denmark</option>
               <option value="DE">Germany</option>
               <option value="GB">United Kingdom</option>
+              <option value="EE">Estonia</option>
+              <option value="LV">Latvia</option>
+              <option value="LT">Lithuania</option>
+              <option value="PL">Poland</option>
+              <option value="NL">Netherlands</option>
+              <option value="US">United States</option>
               <option value="OTHER">Other</option>
             </select>
           </div>
@@ -308,9 +314,15 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
               <option value="DKK">DKK — Danish Krone</option>
               <option value="GBP">GBP — British Pound</option>
               <option value="USD">USD — US Dollar</option>
+              <option value="PLN">PLN — Polish Zloty</option>
             </select>
           </div>
         </div>
+      </div>
+      <div class="field">
+        <label>Business description</label>
+        <textarea id="businessDesc" rows="3" placeholder="Describe your business: what you do, your industry, products/services..." style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#f1f0f5;font-family:var(--ui);font-size:13px;resize:vertical;outline:none;box-sizing:border-box;transition:border-color .2s;"></textarea>
+        <div style="font-size:10px;color:#3d3c52;margin-top:4px;">Used by AI advisor for context and industry news feed</div>
       </div>
       <div class="btn-row">
         <button class="btn-next" id="btn1">Continue →</button>
@@ -358,6 +370,11 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
             <div class="role-card-label">HR</div>
           </div>
         </div>
+      </div>
+      <div class="field">
+        <label>Areas of interest</label>
+        <div style="font-size:11px;color:#8b8a9a;margin-bottom:8px;">Select countries/regions you operate in or want news from. Click to toggle.</div>
+        <div id="areasGrid" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
       </div>
       <div class="btn-row">
         <button class="btn-back" onclick="goStep(1)">← Back</button>
@@ -486,6 +503,25 @@ var checks={terms:false,dpa:false,age:false};
 var userEmail='';
 var userId='';
 var termsScrolled=false;
+var selectedAreas=[];
+var AREA_OPTIONS=[
+  {code:'FI',label:'Finland',flag:'🇫🇮'},{code:'SE',label:'Sweden',flag:'🇸🇪'},
+  {code:'NO',label:'Norway',flag:'🇳🇴'},{code:'DK',label:'Denmark',flag:'🇩🇰'},
+  {code:'DE',label:'Germany',flag:'🇩🇪'},{code:'GB',label:'UK',flag:'🇬🇧'},
+  {code:'EE',label:'Estonia',flag:'🇪🇪'},{code:'LV',label:'Latvia',flag:'🇱🇻'},
+  {code:'LT',label:'Lithuania',flag:'🇱🇹'},{code:'PL',label:'Poland',flag:'🇵🇱'},
+  {code:'NL',label:'Netherlands',flag:'🇳🇱'},{code:'US',label:'USA',flag:'🇺🇸'},
+  {code:'EU',label:'EU / Europe',flag:'🇪🇺'},{code:'GLOBAL',label:'Global',flag:'🌍'},
+];
+function renderAreasGrid(){
+  var grid=document.getElementById('areasGrid');if(!grid)return;
+  grid.innerHTML=AREA_OPTIONS.map(function(a){
+    var on=selectedAreas.indexOf(a.code)>=0;
+    return '<button type="button" onclick="toggleArea(\''+a.code+'\')" style="padding:5px 10px;border-radius:8px;font-family:var(--ui);font-size:11px;cursor:pointer;border:1px solid '+(on?'rgba(124,58,237,0.4)':'rgba(255,255,255,0.08)')+';background:'+(on?'rgba(124,58,237,0.15)':'rgba(255,255,255,0.04)')+';color:'+(on?'#c4b5fd':'#8b8a9a')+';">'+a.flag+' '+a.label+'</button>';
+  }).join('');
+}
+function toggleArea(code){var i=selectedAreas.indexOf(code);if(i>=0)selectedAreas.splice(i,1);else selectedAreas.push(code);renderAreasGrid();}
+function lockField(id){var el=document.getElementById(id);if(!el)return;if(el.tagName==='SELECT'){el.disabled=true;el.style.opacity='0.6';}else if(el.tagName==='TEXTAREA'){el.readOnly=true;el.style.opacity='0.6';}else{el.readOnly=true;el.style.opacity='0.6';el.style.cursor='not-allowed';}}
 
 // INIT
 (async function(){
@@ -497,11 +533,11 @@ var termsScrolled=false;
     userEmail=session.user.email;
 
     var profile=null;
-    var r1=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id,agreed_terms,agreed_dpa,full_name').eq('user_id',userId).maybeSingle();
+    var r1=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id,agreed_terms,agreed_dpa,full_name,business_id,business_description,areas_of_interest,country,currency,fiscal_year').eq('user_id',userId).maybeSingle();
     profile=r1.data;
 
     if(!profile){
-      var r2=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id,agreed_terms,agreed_dpa,full_name').eq('email',userEmail).maybeSingle();
+      var r2=await sb.from('user_profiles').select('onboarded,plan,company_name,primary_role,user_id,agreed_terms,agreed_dpa,full_name,business_id,business_description,areas_of_interest,country,currency,fiscal_year').eq('email',userEmail).maybeSingle();
       if(r2.data){
         await sb.from('user_profiles').update({user_id:userId,updated_at:new Date().toISOString()}).eq('email',userEmail);
         profile=r2.data;
@@ -512,37 +548,51 @@ var termsScrolled=false;
     if(profile&&profile.onboarded&&profile.agreed_terms&&profile.agreed_dpa){window.location.href=DASHBOARD_URL;return;}
     if(!profile||(profile.plan!=='mainuser'&&profile.plan!=='superuser')){window.location.href='/login';return;}
 
-    if(profile.company_name){
-      document.getElementById('companyName').value=profile.company_name;
-      document.getElementById('companyName').readOnly=true;
-      document.getElementById('companyName').style.opacity='0.6';
-      document.getElementById('companyName').style.cursor='not-allowed';
-    }
+    // Pre-fill all known fields + lock admin-set ones
+    if(profile.company_name){document.getElementById('companyName').value=profile.company_name;lockField('companyName');}
+    if(profile.full_name){document.getElementById('fullName').value=profile.full_name;lockField('fullName');}
     if(profile.primary_role){
       selectedRole=profile.primary_role;
       document.querySelectorAll('.role-card').forEach(function(c){c.classList.toggle('selected',c.dataset.role===profile.primary_role);});
     }
+    if(profile.business_id)document.getElementById('businessId').value=profile.business_id;
+    if(profile.country)document.getElementById('country').value=profile.country;
+    if(profile.currency)document.getElementById('currency').value=profile.currency;
+    if(profile.fiscal_year)document.getElementById('fiscalYear').value=profile.fiscal_year;
+    if(profile.business_description)document.getElementById('businessDesc').value=profile.business_description;
+    if(profile.areas_of_interest&&Array.isArray(profile.areas_of_interest)){selectedAreas=profile.areas_of_interest.slice();}
+    else if(profile.country){selectedAreas=[profile.country];}
+    renderAreasGrid();
 
-    // Check if mode=legal — skip to terms only (created by admin, needs legal acceptance)
+    // Smart step routing
     var urlParams=new URLSearchParams(window.location.search);
     var mode=urlParams.get('mode');
+
     if((mode==='legal'||profile.onboarded)&&(!profile.agreed_terms||!profile.agreed_dpa)){
-      // Pre-fill from existing profile
-      if(profile.full_name)document.getElementById('fullName').value=profile.full_name;
+      // Skip straight to terms
       var banner=document.createElement('div');
       banner.style.cssText='background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
       banner.innerHTML='<strong style="color:#fff;">Almost there!</strong><br/>Your dashboard is ready. Please review and accept the terms and data processing agreement to activate your account.';
       document.querySelector('#step3 .step-body').prepend(banner);
       goStep(3);
+    } else if(profile.company_name && profile.full_name && profile.primary_role){
+      // Company + name + role all set by admin — skip to step 2 for areas of interest
+      var banner=document.createElement('div');
+      banner.style.cssText='background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
+      banner.innerHTML='<strong style="color:#fff;">Welcome to targetdash</strong><br/>Your company details are set. Tell us about your areas of interest, then accept the legal terms.';
+      document.querySelector('#step2 .step-body').prepend(banner);
+      goStep(2);
     } else {
+      // Full onboarding — pre-fill name from Google if available
+      if(!profile.full_name){
+        var meta=session.user.user_metadata;
+        if(meta&&meta.full_name)document.getElementById('fullName').value=meta.full_name;
+        else if(meta&&meta.name)document.getElementById('fullName').value=meta.name;
+      }
       var banner=document.createElement('div');
       banner.style.cssText='background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
       banner.innerHTML='<strong style="color:#fff;">Welcome to targetdash</strong><br/>Please confirm your details and accept the legal agreements to activate your dashboard.';
       document.querySelector('#step1 .step-body').prepend(banner);
-
-      var meta=session.user.user_metadata;
-      if(meta&&meta.full_name)document.getElementById('fullName').value=meta.full_name;
-      else if(meta&&meta.name)document.getElementById('fullName').value=meta.name;
     }
   }catch(e){
     console.error('Onboarding init error:',e);
@@ -655,6 +705,8 @@ document.getElementById('btn3').addEventListener('click',async function(){
     full_name:document.getElementById('fullName').value.trim(),
     company_name:document.getElementById('companyName').value.trim(),
     business_id:document.getElementById('businessId').value.trim()||null,
+    business_description:document.getElementById('businessDesc').value.trim()||null,
+    areas_of_interest:selectedAreas.length>0?selectedAreas:null,
     fiscal_year:parseInt(document.getElementById('fiscalYear').value),
     country:document.getElementById('country').value,
     currency:document.getElementById('currency').value,
