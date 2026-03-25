@@ -155,7 +155,7 @@ async function doMain(){
     }
   }else{
     btn.innerHTML='<span class="spinner"></span> Sending...';
-    var r=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:'https://app.targetdash.ai'}});
+    var r=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:'https://www.targetdash.ai/login'}});
     btn.disabled=false;btn.innerHTML='&#9993; Send sign-in link';
     if(r.error){smsg(r.error.message);return;}
     document.getElementById('sentEmail').textContent=email;
