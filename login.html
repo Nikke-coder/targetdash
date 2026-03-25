@@ -111,9 +111,13 @@ async function route(session){
     if(r2.data){await sb.from('user_profiles').update({user_id:session.user.id,updated_at:new Date().toISOString()}).eq('email',session.user.email);p=r2.data;}
   }
   var plan=p?p.plan:null;
-  if((plan==='mainuser'||plan==='superuser')&&p.onboarded&&p.agreed_terms&&p.agreed_dpa){window.location.href='https://app.targetdash.ai';return;}
-  if((plan==='mainuser'||plan==='superuser')&&p.onboarded&&(!p.agreed_terms||!p.agreed_dpa)){window.location.href='https://app.targetdash.ai';return;}
-  if(plan==='mainuser'||plan==='superuser'){window.location.href='https://app.targetdash.ai';return;}
+  if(plan==='mainuser'||plan==='superuser'){
+    // Pass session to app domain via URL hash — avoids double login
+    var at=session.access_token;
+    var rt=session.refresh_token;
+    window.location.href='https://app.targetdash.ai#access_token='+at+'&refresh_token='+rt+'&type=transfer';
+    return;
+  }
   done=false;
   smsg('No invitation found for this email. Access is by invitation only.');
   await sb.auth.signOut();
