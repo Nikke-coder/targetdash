@@ -80,36 +80,26 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
         <div class="form-sub">Sign in to your dashboard</div>
         <div class="msg-box" id="signinMsg"></div>
         <input type="email" class="inp" id="emailInput" placeholder="Enter your work email" autocomplete="email"/>
-        <div id="pwField" style="display:none;">
+        <div id="pwField">
           <input type="password" class="inp" id="pwInput" placeholder="Password" autocomplete="current-password"/>
         </div>
-        <button class="btn-main" id="mainBtn" onclick="doMain()">&#9993; Send sign-in link</button>
-        <div style="text-align:center;margin-top:10px;">
-          <button class="btn-toggle" id="toggleBtn" onclick="toggleMode()">Sign in with password instead</button>
-        </div>
+        <button class="btn-main" id="mainBtn" onclick="doMain()">Sign in &rarr;</button>
+
         <div class="divider"><div class="divider-line"></div><div class="divider-text">or</div><div class="divider-line"></div></div>
         <button class="btn-google" id="googleBtn" onclick="doGoogle()">
           <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
         </button>
-        <div style="text-align:center;margin-top:24px;font-family:var(--ui);font-size:12px;color:var(--dim);">Access is by invitation only. <a href="mailto:niklas@targetdash.ai" style="color:var(--lilac);text-decoration:none;">Contact us &rarr;</a></div>
+        <div style="text-align:center;margin-top:24px;font-family:var(--ui);font-size:12px;color:var(--dim);">Access is by invitation only. <a href="/cdn-cgi/l/email-protection#b0ded9dbdcd1c3f0c4d1c2d7d5c4d4d1c3d89ed1d9" style="color:var(--lilac);text-decoration:none;">Contact us &rarr;</a></div>
       </div>
-      <div id="viewMagicSent" style="display:none;">
-        <div style="text-align:center;padding:20px 0;">
-          <div style="font-size:48px;margin-bottom:16px;">&#128231;</div>
-          <div style="font-size:20px;font-weight:700;color:var(--w);margin-bottom:8px;">Check your email</div>
-          <div style="font-family:var(--ui);font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:20px;">We sent a sign-in link to<br/><span id="sentEmail" style="color:var(--lilac);font-weight:600;"></span><br/><br/>Click the link to sign in. Check spam if needed.</div>
-          <button onclick="showSignin()" style="background:none;border:1px solid var(--border);border-radius:10px;padding:10px 20px;color:var(--mid);font-family:var(--ui);font-size:13px;cursor:pointer;">&larr; Try a different email</button>
-        </div>
-      </div>
-    </div>
+      
   </div>
 </div>
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 var SB_URL='https://nghlvfngpfrhhigkoeem.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
 var sb=supabase.createClient(SB_URL,SB_KEY);
-var done=false,mode='magic';
+var done=false;
 
 async function route(session){
   if(done||!session)return;done=true;
@@ -132,19 +122,13 @@ async function route(session){
 (async function(){var s=await sb.auth.getSession();if(s.data.session)await route(s.data.session);})();
 sb.auth.onAuthStateChange(function(ev,s){if(ev==='SIGNED_IN')route(s);});
 
-function toggleMode(){
-  mode=mode==='magic'?'password':'magic';
-  document.getElementById('pwField').style.display=mode==='password'?'block':'none';
-  document.getElementById('mainBtn').innerHTML=mode==='password'?'Sign in &rarr;':'&#9993; Send sign-in link';
-  document.getElementById('toggleBtn').textContent=mode==='password'?'Sign in with magic link instead':'Sign in with password instead';
-  document.getElementById('signinMsg').className='msg-box';
-}
+
 
 async function doMain(){
   var email=document.getElementById('emailInput').value.trim();
   if(!email||email.indexOf('@')<0){smsg('Please enter a valid email.');return;}
   var btn=document.getElementById('mainBtn');btn.disabled=true;
-  if(mode==='password'){
+  {
     var pw=document.getElementById('pwInput').value;
     if(!pw||pw.length<6){smsg('Please enter your password.');btn.disabled=false;return;}
     btn.innerHTML='<span class="spinner"></span> Signing in...';
@@ -153,14 +137,6 @@ async function doMain(){
     if(r.error){smsg(r.error.message==='Invalid login credentials'?'Invalid email or password.':r.error.message);
       try{fetch('https://app.targetdash.ai/api/security',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_type:'failed_login',severity:'medium',email:email,details:{method:'password',source:'www'}})});}catch(x){}
     }
-  }else{
-    btn.innerHTML='<span class="spinner"></span> Sending...';
-    var r=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:'https://www.targetdash.ai/login'}});
-    btn.disabled=false;btn.innerHTML='&#9993; Send sign-in link';
-    if(r.error){smsg(r.error.message);return;}
-    document.getElementById('sentEmail').textContent=email;
-    document.getElementById('viewSignin').style.display='none';
-    document.getElementById('viewMagicSent').style.display='block';
   }
 }
 
@@ -169,10 +145,9 @@ async function doGoogle(){
   await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://app.targetdash.ai'}});
 }
 
-document.getElementById('emailInput').addEventListener('keydown',function(e){if(e.key==='Enter'){if(mode==='password')document.getElementById('pwInput').focus();else doMain();}});
+document.getElementById('emailInput').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('pwInput').focus();});
 document.getElementById('pwInput').addEventListener('keydown',function(e){if(e.key==='Enter')doMain();});
 
-function showSignin(){document.getElementById('viewSignin').style.display='block';document.getElementById('viewMagicSent').style.display='none';document.getElementById('emailInput').value='';document.getElementById('signinMsg').className='msg-box';}
 function smsg(t){var el=document.getElementById('signinMsg');el.className='msg-box error';el.textContent=t;}
 </script>
 </body>
