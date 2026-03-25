@@ -132,9 +132,4 @@ $('mainbtn').onclick=async function(){
 
 $('gbtn').onclick=async function(){$('gbtn').disabled=true;$('gbtn').style.opacity='0.6';await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://app.targetdash.ai'}});};
 $('email').onkeydown=function(e){if(e.key==='Enter'){if(mode==='password')$('pw').focus();else $('mainbtn').click();}};
-$('pw').onkeydown=function(e){if(e.key==='Enter')$('mainbtn').click();};
-
-function smsg(t){var el=$('msg');el.className='mb error';el.textContent=t;}
-</script>
-</body>
-</html>
+$('pw').onkeydown=functi
