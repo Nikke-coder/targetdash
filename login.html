@@ -112,8 +112,8 @@ async function route(session){
   }
   var plan=p?p.plan:null;
   if((plan==='mainuser'||plan==='superuser')&&p.onboarded&&p.agreed_terms&&p.agreed_dpa){window.location.href='https://app.targetdash.ai';return;}
-  if((plan==='mainuser'||plan==='superuser')&&p.onboarded&&(!p.agreed_terms||!p.agreed_dpa)){window.location.href='/onboarding?mode=legal';return;}
-  if(plan==='mainuser'||plan==='superuser'){window.location.href='/onboarding?mode=invite';return;}
+  if((plan==='mainuser'||plan==='superuser')&&p.onboarded&&(!p.agreed_terms||!p.agreed_dpa)){window.location.href='https://app.targetdash.ai';return;}
+  if(plan==='mainuser'||plan==='superuser'){window.location.href='https://app.targetdash.ai';return;}
   done=false;
   smsg('No invitation found for this email. Access is by invitation only.');
   await sb.auth.signOut();
