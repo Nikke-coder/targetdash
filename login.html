@@ -4,155 +4,25 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>targetdash › Sign in</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0a0a0f;--bg2:#0e0e16;--panel:rgba(255,255,255,0.04);--phi:rgba(255,255,255,0.07);--border:rgba(255,255,255,0.08);--bhi:rgba(255,255,255,0.14);--v:#7c3aed;--vh:#9d5ffc;--lilac:#c4b5fd;--w:#fff;--text:#f1f0f5;--mid:#8b8a9a;--dim:#3d3c52;--green:#34d399;--red:#f87171;--sans:'Outfit',sans-serif;--ui:'Instrument Sans',sans-serif;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);}
-.wrap{min-height:100vh;display:grid;grid-template-columns:1fr 480px;}
-.left{position:relative;display:flex;flex-direction:column;justify-content:center;padding:60px;overflow:hidden;background:var(--bg);}
-.left-orb{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.18),transparent 70%);top:20%;left:-10%;filter:blur(80px);pointer-events:none;}
-.left-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
-.brand{position:absolute;top:28px;left:40px;display:flex;align-items:center;text-decoration:none;z-index:1;}
-.brand-name{font-family:var(--ui);font-size:16px;font-weight:600;color:var(--w);}
-.brand-gt{font-size:18px;color:var(--vh);text-shadow:0 0 12px var(--v);}
-.left-body{position:relative;z-index:1;}
-.left-eyebrow{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--vh);display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.left-eyebrow::before{content:'';width:20px;height:1px;background:var(--vh);box-shadow:0 0 8px var(--v);}
-.left-headline{font-size:42px;font-weight:700;color:var(--w);line-height:1.1;letter-spacing:-0.04em;margin-bottom:20px;}
-.hl{background:linear-gradient(135deg,var(--vh),var(--lilac));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.left-sub{font-family:var(--ui);font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:32px;max-width:420px;}
-.feature-list{display:flex;flex-direction:column;gap:10px;}
-.feature-item{font-family:var(--ui);font-size:13px;color:var(--mid);display:flex;align-items:center;gap:10px;}
-.feature-check{color:var(--green);font-weight:700;font-size:12px;}
-.left-footer{position:absolute;bottom:28px;left:40px;font-family:var(--ui);font-size:11px;color:var(--dim);}
-.right{display:flex;align-items:center;justify-content:center;padding:60px 48px;background:var(--bg2);border-left:1px solid var(--border);}
-.form-box{width:100%;max-width:340px;}
-.form-title{font-size:26px;font-weight:700;color:var(--w);letter-spacing:-0.03em;margin-bottom:6px;}
-.form-sub{font-family:var(--ui);font-size:14px;color:var(--mid);margin-bottom:28px;}
-.divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
-.divider-line{flex:1;height:1px;background:var(--border);}
-.divider-text{font-family:var(--ui);font-size:11px;color:var(--dim);}
-.inp{width:100%;padding:12px 14px;background:var(--panel);border:1px solid var(--border);border-radius:10px;outline:none;font-family:var(--ui);font-size:14px;color:var(--text);transition:border-color .2s;margin-bottom:12px;box-sizing:border-box;}
-.inp:focus{border-color:rgba(124,58,237,0.5);}
-.inp::placeholder{color:var(--dim);}
-.btn-main{width:100%;padding:13px;background:var(--v);border:none;border-radius:10px;font-family:var(--ui);font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-main:hover{background:var(--vh);}
-.btn-main:disabled{opacity:0.6;cursor:not-allowed;}
-.btn-google{width:100%;padding:13px;background:var(--phi);border:1px solid var(--bhi);border-radius:10px;cursor:pointer;font-family:var(--ui);font-size:14px;font-weight:500;color:var(--text);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
-.btn-google:hover{background:rgba(255,255,255,0.1);}
-.btn-google:disabled{opacity:0.6;cursor:not-allowed;}
-.btn-google svg{width:18px;height:18px;}
-.btn-toggle{background:none;border:none;color:var(--mid);font-family:var(--ui);font-size:12px;cursor:pointer;text-decoration:underline;opacity:0.7;}
-.btn-toggle:hover{opacity:1;}
-.msg-box{display:none;padding:12px 14px;border-radius:10px;font-family:var(--ui);font-size:13px;line-height:1.5;margin-bottom:16px;}
-.msg-box.error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--red);display:block;}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:900px){.wrap{grid-template-columns:1fr;}.left{display:none;}.right{padding:40px 24px;}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#f1f0f5;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.w{text-align:center;padding:40px 20px}
+.logo{font-size:28px;font-weight:700;letter-spacing:-0.03em;margin-bottom:6px}.logo span{color:#7c3aed}
+.sub{font-size:12px;color:#5a5580;margin-bottom:32px}
+.sp{display:inline-block;width:20px;height:20px;border:2px solid rgba(124,58,237,0.3);border-top-color:#7c3aed;border-radius:50%;animation:s .7s linear infinite;margin-bottom:16px}
+@keyframes s{to{transform:rotate(360deg)}}
+a{color:#c4b5fd;text-decoration:none}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="left">
-    <div class="left-orb"></div>
-    <div class="left-grid"></div>
-    <a href="/" class="brand"><span class="brand-name">targetdash</span><span class="brand-gt">›</span></a>
-    <div class="left-body">
-      <div class="left-eyebrow">Financial intelligence</div>
-      <h1 class="left-headline">Start your engine.<br/><span class="hl">Unlock the<br/>potential.</span></h1>
-      <p class="left-sub">Your financial data is sitting there. Sign in and turn it into superpowers — live KPIs, AI insights and cost centre intelligence, all in one place.</p>
-      <div class="feature-list">
-        <div class="feature-item"><span class="feature-check">&#10003;</span> AI advisor with 6 executive roles</div>
-        <div class="feature-item"><span class="feature-check">&#10003;</span> KPI dashboards with live benchmarks</div>
-        <div class="feature-item"><span class="feature-check">&#10003;</span> Group structure &amp; consolidation</div>
-        <div class="feature-item"><span class="feature-check">&#10003;</span> Industry news feed via PRH</div>
-        <div class="feature-item"><span class="feature-check">&#10003;</span> End-to-end encrypted · EU data · GDPR</div>
-      </div>
-    </div>
-    <div class="left-footer">&copy; 2026 targetdash.ai · Targetflow Talousjohtopalvelut Oy</div>
-  </div>
-  <div class="right">
-    <div class="form-box">
-      <div id="viewSignin">
-        <div class="form-title">Welcome back</div>
-        <div class="form-sub">Sign in to your dashboard</div>
-        <div class="msg-box" id="signinMsg"></div>
-        <input type="email" class="inp" id="emailInput" placeholder="Enter your work email" autocomplete="email"/>
-        <div id="pwField">
-          <input type="password" class="inp" id="pwInput" placeholder="Password" autocomplete="current-password"/>
-        </div>
-        <button class="btn-main" id="mainBtn" onclick="doMain()">Sign in &rarr;</button>
-
-        <div class="divider"><div class="divider-line"></div><div class="divider-text">or</div><div class="divider-line"></div></div>
-        <button class="btn-google" id="googleBtn" onclick="doGoogle()">
-          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          Continue with Google
-        </button>
-        <div style="text-align:center;margin-top:24px;font-family:var(--ui);font-size:12px;color:var(--dim);">Access is by invitation only. <a href="/cdn-cgi/l/email-protection#b0ded9dbdcd1c3f0c4d1c2d7d5c4d4d1c3d89ed1d9" style="color:var(--lilac);text-decoration:none;">Contact us &rarr;</a></div>
-      </div>
-      
-  </div>
+<div class="w">
+  <div class="logo">targetdash<span>›</span></div>
+  <div class="sub">financial intelligence</div>
+  <div class="sp"></div>
+  <div style="font-size:14px;color:#8b8a9a;margin-bottom:20px">Redirecting to sign in...</div>
+  <div style="font-size:12px;color:#3d3c52">Not redirecting? <a href="https://app.targetdash.ai">Click here</a></div>
 </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-var SB_URL='https://nghlvfngpfrhhigkoeem.supabase.co';
-var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5naGx2Zm5ncGZyaGhpZ2tvZWVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NDQyMTgsImV4cCI6MjA4OTIyMDIxOH0.Y4JF1x0m5BKa-btWkQAr1wY1EyTK30nck-hSL2eSNPE';
-var sb=supabase.createClient(SB_URL,SB_KEY);
-var done=false;
-
-async function route(session){
-  if(done||!session)return;done=true;
-  var p=null;
-  var r=await sb.from('user_profiles').select('onboarded,plan,agreed_terms,agreed_dpa').eq('user_id',session.user.id).maybeSingle();
-  p=r.data;
-  if(!p&&session.user.email){
-    var r2=await sb.from('user_profiles').select('onboarded,plan,agreed_terms,agreed_dpa').eq('email',session.user.email).maybeSingle();
-    if(r2.data){await sb.from('user_profiles').update({user_id:session.user.id,updated_at:new Date().toISOString()}).eq('email',session.user.email);p=r2.data;}
-  }
-  var plan=p?p.plan:null;
-  if(plan==='mainuser'||plan==='superuser'){
-    // Pass session to app domain via URL hash — avoids double login
-    var at=session.access_token;
-    var rt=session.refresh_token;
-    window.location.href='https://app.targetdash.ai#access_token='+at+'&refresh_token='+rt+'&type=transfer';
-    return;
-  }
-  done=false;
-  smsg('No invitation found for this email. Access is by invitation only.');
-  await sb.auth.signOut();
-}
-
-(async function(){var s=await sb.auth.getSession();if(s.data.session)await route(s.data.session);})();
-sb.auth.onAuthStateChange(function(ev,s){if(ev==='SIGNED_IN')route(s);});
-
-
-
-async function doMain(){
-  var email=document.getElementById('emailInput').value.trim();
-  if(!email||email.indexOf('@')<0){smsg('Please enter a valid email.');return;}
-  var btn=document.getElementById('mainBtn');btn.disabled=true;
-  {
-    var pw=document.getElementById('pwInput').value;
-    if(!pw||pw.length<6){smsg('Please enter your password.');btn.disabled=false;return;}
-    btn.innerHTML='<span class="spinner"></span> Signing in...';
-    var r=await sb.auth.signInWithPassword({email:email,password:pw});
-    btn.disabled=false;btn.innerHTML='Sign in &rarr;';
-    if(r.error){smsg(r.error.message==='Invalid login credentials'?'Invalid email or password.':r.error.message);
-      try{fetch('https://app.targetdash.ai/api/security',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_type:'failed_login',severity:'medium',email:email,details:{method:'password',source:'www'}})});}catch(x){}
-    }
-  }
-}
-
-async function doGoogle(){
-  var btn=document.getElementById('googleBtn');btn.disabled=true;btn.style.opacity='0.6';
-  await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://app.targetdash.ai'}});
-}
-
-document.getElementById('emailInput').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('pwInput').focus();});
-document.getElementById('pwInput').addEventListener('keydown',function(e){if(e.key==='Enter')doMain();});
-
-function smsg(t){var el=document.getElementById('signinMsg');el.className='msg-box error';el.textContent=t;}
-</script>
+<script>window.location.href='https://app.targetdash.ai';</script>
 </body>
 </html>
