@@ -1102,6 +1102,60 @@ footer {
 @media(max-width:480px){ .chat-popup { width: calc(100vw - 24px); right: 12px; bottom: 88px; } .chat-fab { right: 12px; bottom: 16px; } }
 
 /* ══════════════════════════════════
+   ENHANCED ANIMATIONS
+══════════════════════════════════ */
+
+/* Gradient sweep on hero headline */
+.hero-h1 .hl {
+  background: linear-gradient(90deg, #9d5ffc, #c084fc, #7c3aed, #9d5ffc);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientSweep 6s ease infinite;
+}
+@keyframes gradientSweep {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Subtle shimmer on featured cards */
+.price-card.featured::after {
+  content: '';
+  position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: conic-gradient(from 0deg, transparent, rgba(124,58,237,0.06), transparent, transparent);
+  animation: shimmerRotate 8s linear infinite;
+  pointer-events: none;
+}
+@keyframes shimmerRotate { to { transform: rotate(360deg); } }
+
+/* Glow pulse on active role tab */
+.role-tab.active {
+  animation: roleGlow 2s ease-in-out infinite;
+}
+@keyframes roleGlow {
+  0%, 100% { box-shadow: 0 0 12px rgba(124,58,237,0.15); }
+  50% { box-shadow: 0 0 20px rgba(124,58,237,0.35), 0 0 40px rgba(124,58,237,0.1); }
+}
+
+/* Terminal typing cursor */
+.term-body .trow:last-child .to::after {
+  content: '▌';
+  color: var(--violet-hi);
+  animation: cursorBlink 1s step-end infinite;
+  margin-left: 2px;
+}
+@keyframes cursorBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+/* Parallax-like depth for grid overlay */
+.grid-overlay {
+  transform: translateZ(0);
+  transition: transform 0.1s ease-out;
+}
+
+/* ══════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════ */
 @media(max-width:1100px){
@@ -1157,7 +1211,7 @@ footer {
   <div class="hero-left">
     <div class="hero-badge">
       <span class="badge-dot"></span>
-      Your business intelligence platform — now live
+      9 AI advisor roles · Local AI inference · Invite-only
     </div>
     <div class="hero-headline">
       <h1 class="hero-h1">
@@ -1166,7 +1220,7 @@ footer {
       </h1>
     </div>
     <p class="hero-sub">
-      Unlock <b>superpowers</b> for your business finances — live KPIs, AI-driven insights and cost centre intelligence, all talking back in the language of your role.
+      Unlock <b>superpowers</b> for your business finances — live KPIs, 9 AI advisor roles, P&L &amp; balance sheet forecasting, entity switching and cost centre intelligence — all running on privacy-first local AI.
     </p>
     <div class="hero-actions">
       <a href="/login" class="hero-btn-main">
@@ -1182,7 +1236,7 @@ footer {
       </div>
       <div class="hstat-div"></div>
       <div class="hstat">
-        <span class="hstat-num">6<span>+</span></span>
+        <span class="hstat-num">9<span>+</span></span>
         <span class="hstat-lbl">AI advisor roles</span>
       </div>
       <div class="hstat-div"></div>
@@ -1219,11 +1273,11 @@ footer {
 
           <!-- Logo mark -->
           <rect x="16" y="12" width="20" height="20" rx="5" fill="url(#logoGrad)"/>
-          <text x="26" y="26" fill="#fff" font-family="monospace" font-size="8" font-weight="700" text-anchor="middle">TF</text>
+          <text x="26" y="26" fill="#fff" font-family="monospace" font-size="8" font-weight="700" text-anchor="middle">TD</text>
 
           <!-- Company name -->
-          <text x="44" y="21" fill="#f0ecff" font-family="sans-serif" font-size="11" font-weight="600">Custom Ltd</text>
-          <text x="44" y="33" fill="#5a4f8a" font-family="monospace" font-size="8">targetdash› · 2025</text>
+          <text x="44" y="21" fill="#f0ecff" font-family="sans-serif" font-size="11" font-weight="600">Your Company</text>
+          <text x="44" y="33" fill="#5a4f8a" font-family="monospace" font-size="8">targetdash› · 2026</text>
 
           <!-- Year tabs -->
           <rect x="200" y="14" width="28" height="16" rx="4" fill="none" stroke="#2d2845" stroke-width="0.8"/>
@@ -1249,13 +1303,13 @@ footer {
           <text x="16" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Group</text>
           <text x="58" y="63" fill="#9333ea" font-family="sans-serif" font-size="9" font-weight="600">KPIs</text>
           <rect x="56" y="70" width="22" height="2" rx="1" fill="#9333ea"/>
-          <text x="88" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Scenario</text>
+          <text x="88" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Forecast</text>
           <text x="136" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">P&amp;L</text>
           <text x="158" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Balance</text>
           <text x="202" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Cash Flow</text>
-          <text x="250" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Notifications</text>
-          <text x="306" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Sales Report</text>
-          <text x="358" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">+ My Tab</text>
+          <text x="250" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Cost Centres</text>
+          <text x="316" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">Sales</text>
+          <text x="348" y="63" fill="#5a4f8a" font-family="sans-serif" font-size="9">+ My Tab</text>
 
           <!-- Period bar -->
           <rect y="73" width="520" height="24" fill="#13111f"/>
@@ -1376,11 +1430,11 @@ footer {
           <rect x="357" y="196" width="22" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
           <text x="368" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">CEO</text>
           <rect x="382" y="196" width="22" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
-          <text x="393" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">CMO</text>
+          <text x="393" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">COO</text>
           <rect x="407" y="196" width="22" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
           <text x="418" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">CRO</text>
-          <rect x="432" y="196" width="22" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
-          <text x="443" y="204" fill="#5a4f8a" font-family="monospace" font-size="6" text-anchor="middle">CTO</text>
+          <rect x="432" y="196" width="14" height="11" rx="3" fill="none" stroke="#2d2845" stroke-width="0.7"/>
+          <text x="439" y="204" fill="#5a4f8a" font-family="monospace" font-size="5" text-anchor="middle">+5</text>
 
           <!-- Chat messages -->
           <rect x="332" y="212" width="168" height="28" rx="5" fill="#161424" stroke="#231f3a" stroke-width="0.5"/>
@@ -1424,9 +1478,9 @@ footer {
           <rect y="18" width="120" height="30" fill="#13111f"/>
           <rect y="47" width="120" height="1" fill="#2d2845"/>
           <rect x="8" y="24" width="16" height="16" rx="4" fill="url(#mLogoGrad)"/>
-          <text x="16" y="35" fill="#fff" font-family="monospace" font-size="6" font-weight="700" text-anchor="middle">TF</text>
-          <text x="30" y="31" fill="#f0ecff" font-family="sans-serif" font-size="8" font-weight="600">Custom Ltd</text>
-          <text x="30" y="40" fill="#5a4f8a" font-family="monospace" font-size="6">2025</text>
+          <text x="16" y="35" fill="#fff" font-family="monospace" font-size="6" font-weight="700" text-anchor="middle">TD</text>
+          <text x="30" y="31" fill="#f0ecff" font-family="sans-serif" font-size="8" font-weight="600">Your Company</text>
+          <text x="30" y="40" fill="#5a4f8a" font-family="monospace" font-size="6">2026</text>
           <!-- hamburger + E9K -->
           <rect x="88" y="25" width="24" height="14" rx="4" fill="rgba(124,58,237,0.15)" stroke="rgba(129,140,248,0.25)" stroke-width="0.7"/>
           <text x="100" y="35" fill="#c4b5fd" font-family="monospace" font-size="6" font-weight="700" text-anchor="middle">9K</text>
@@ -1437,8 +1491,8 @@ footer {
           <text x="8" y="61" fill="#9333ea" font-family="sans-serif" font-size="7" font-weight="600">KPIs</text>
           <rect x="6" y="66" width="18" height="1.5" rx="0.8" fill="#9333ea"/>
           <text x="32" y="61" fill="#5a4f8a" font-family="sans-serif" font-size="7">P&amp;L</text>
-          <text x="54" y="61" fill="#5a4f8a" font-family="sans-serif" font-size="7">Balance</text>
-          <text x="85" y="61" fill="#5a4f8a" font-family="sans-serif" font-size="7">Cash</text>
+          <text x="54" y="61" fill="#5a4f8a" font-family="sans-serif" font-size="7">Forecast</text>
+          <text x="90" y="61" fill="#5a4f8a" font-family="sans-serif" font-size="7">Cash</text>
 
           <!-- KPI cards 2x2 -->
           <rect x="6" y="72" width="52" height="38" rx="6" fill="#1c1a2e" stroke="#2d2845" stroke-width="0.7"/>
@@ -1508,28 +1562,30 @@ footer {
 <div class="strip">
   <div class="strip-track">
     <span class="strip-item lit"><span class="dot"></span>KPI Dashboards</span>
-    <span class="strip-item"><span class="dot"></span>Cash Flow Intelligence</span>
-    <span class="strip-item lit"><span class="dot"></span>AI Financial Assistant</span>
+    <span class="strip-item"><span class="dot"></span>P&L &amp; Balance Sheet Forecasting</span>
+    <span class="strip-item lit"><span class="dot"></span>9 AI Advisor Roles</span>
     <span class="strip-item"><span class="dot"></span>Budget vs Actuals</span>
-    <span class="strip-item lit"><span class="dot"></span>Risk Monitoring</span>
-    <span class="strip-item"><span class="dot"></span>Custom Dashboards</span>
-    <span class="strip-item lit"><span class="dot"></span>API Sync (TBA)</span>
-    <span class="strip-item"><span class="dot"></span>API Sync (TBA)</span>
-    <span class="strip-item lit"><span class="dot"></span>FX Conversion</span>
-    <span class="strip-item"><span class="dot"></span>CEO · CFO · CMO · CRO · CTO · HR Mode</span>
+    <span class="strip-item lit"><span class="dot"></span>Entity Switching</span>
+    <span class="strip-item"><span class="dot"></span>Local AI Inference</span>
+    <span class="strip-item lit"><span class="dot"></span>Cost Centre Dashboards</span>
+    <span class="strip-item"><span class="dot"></span>Cash Flow Intelligence</span>
+    <span class="strip-item lit"><span class="dot"></span>FX Conversion (ECB)</span>
+    <span class="strip-item"><span class="dot"></span>CEO · CFO · CMO · CRO · CTO · COO · HR · Auditor · Board Advisor</span>
     <span class="strip-item lit"><span class="dot"></span>Member Access Control</span>
+    <span class="strip-item"><span class="dot"></span>Admin Panel</span>
     <!-- dupe -->
     <span class="strip-item lit"><span class="dot"></span>KPI Dashboards</span>
-    <span class="strip-item"><span class="dot"></span>Cash Flow Intelligence</span>
-    <span class="strip-item lit"><span class="dot"></span>AI Financial Assistant</span>
+    <span class="strip-item"><span class="dot"></span>P&L &amp; Balance Sheet Forecasting</span>
+    <span class="strip-item lit"><span class="dot"></span>9 AI Advisor Roles</span>
     <span class="strip-item"><span class="dot"></span>Budget vs Actuals</span>
-    <span class="strip-item lit"><span class="dot"></span>Risk Monitoring</span>
-    <span class="strip-item"><span class="dot"></span>Custom Dashboards</span>
-    <span class="strip-item lit"><span class="dot"></span>API Sync (TBA)</span>
-    <span class="strip-item"><span class="dot"></span>API Sync (TBA)</span>
-    <span class="strip-item lit"><span class="dot"></span>FX Conversion</span>
-    <span class="strip-item"><span class="dot"></span>CEO · CFO · CMO · CRO · CTO · HR Mode</span>
+    <span class="strip-item lit"><span class="dot"></span>Entity Switching</span>
+    <span class="strip-item"><span class="dot"></span>Local AI Inference</span>
+    <span class="strip-item lit"><span class="dot"></span>Cost Centre Dashboards</span>
+    <span class="strip-item"><span class="dot"></span>Cash Flow Intelligence</span>
+    <span class="strip-item lit"><span class="dot"></span>FX Conversion (ECB)</span>
+    <span class="strip-item"><span class="dot"></span>CEO · CFO · CMO · CRO · CTO · COO · HR · Auditor · Board Advisor</span>
     <span class="strip-item lit"><span class="dot"></span>Member Access Control</span>
+    <span class="strip-item"><span class="dot"></span>Admin Panel</span>
   </div>
 </div>
 
@@ -1539,7 +1595,7 @@ footer {
     <div class="ai-copy">
       <div class="label rv">EBITDA-9000</div>
       <h2 class="section-title rv">Your data,<br/><span class="accent">talking back.</span></h2>
-      <p class="rv">Ask anything about your business finances in plain language. Switch between advisor roles — EBITDA-9000 responds as a <b>CEO, CFO, CMO, CRO, CTO or HR Manager</b> — giving you the exact perspective you need, backed by your live data.</p>
+      <p class="rv">Ask anything about your business finances in plain language. Switch between 9 advisor roles — EBITDA-9000 responds as a <b>CEO, CFO, CMO, CRO, CTO, COO, HR Manager, Auditor or Board Advisor</b> — giving you the exact perspective you need, backed by your live data.</p>
       <p class="rv">No spreadsheets to interpret. No reports to compile. Just ask.</p>
       <div class="role-tabs rv" id="roleTabs">
         <span class="role-tab active" data-role="CFO">CFO</span>
@@ -1547,7 +1603,10 @@ footer {
         <span class="role-tab" data-role="CMO">CMO</span>
         <span class="role-tab" data-role="CRO">CRO</span>
         <span class="role-tab" data-role="CTO">CTO</span>
+        <span class="role-tab" data-role="COO">COO</span>
         <span class="role-tab" data-role="HR Manager">HR</span>
+        <span class="role-tab" data-role="Auditor">Auditor</span>
+        <span class="role-tab" data-role="Board Advisor">Board</span>
       </div>
     </div>
 
@@ -1673,23 +1732,23 @@ footer {
     <div class="feat rv">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-      <div class="feat-title">AI Advisor — 6 Roles</div>
-      <p class="feat-body">Switch between CEO, CFO, CMO, CRO, CTO and HR Manager perspectives. Each role gives targeted insights from your live data.</p>
-      <span class="feat-tag">Restricted AI</span>
+      <div class="feat-title">AI Advisor — 9 Roles</div>
+      <p class="feat-body">Switch between CEO, CFO, CMO, CRO, CTO, COO, HR Manager, Auditor and Board Advisor perspectives. Each role gives targeted insights from your live data.</p>
+      <span class="feat-tag">Local AI</span>
     </div>
     <div class="feat rv d1">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <div class="feat-title">Risk Monitoring</div>
-      <p class="feat-body">Liquidity, credit and operational risk signals with configurable thresholds. Proactive alerts before things go wrong.</p>
-      <span class="feat-tag">Automated</span>
+      <div class="feat-title">P&L &amp; Balance Sheet Forecasting</div>
+      <p class="feat-body">Full forecast mode for profit &amp; loss and balance sheet. Build scenarios, compare actuals vs budget vs forecast, and see the numbers before they happen.</p>
+      <span class="feat-tag">Forecast mode</span>
     </div>
     <div class="feat rv d2">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg></div>
-      <div class="feat-title">Accounting API (coming soon)</div>
-      <p class="feat-body">Direct API integration with Finland's leading accounting software firms. Coming soon — currently in partnership discussions.</p>
-      <span class="feat-tag">Coming soon</span>
+      <div class="feat-title">Entity Switching</div>
+      <p class="feat-body">Manage multiple companies from a single login. Switch between entities instantly — each with its own data, dashboards and AI context. Per-entity data persistence built in.</p>
+      <span class="feat-tag">Multi-entity</span>
     </div>
   </div>
 </section>
@@ -1730,10 +1789,12 @@ footer {
       <div class="label rv">The platform</div>
       <h2 class="section-title rv">One screen.<br/><span class="accent">Your whole business.</span></h2>
       <ul class="plat-list rv">
+        <li><span class="check">✓</span> P&L and Balance Sheet forecast mode with scenario comparison</li>
+        <li><span class="check">✓</span> Entity switching with per-entity data persistence</li>
         <li><span class="check">✓</span> Cost centre dashboards by country, city, channel or department</li>
-        <li><span class="check">✓</span> Persistent snapshot history across all sessions</li>
+        <li><span class="check">✓</span> 9 AI advisor roles — local inference via Ollama</li>
         <li><span class="check">✓</span> FX conversion via ECB / Suomen Pankki rates</li>
-        <li><span class="check">✓</span> Share views with your team, board or advisors</li>
+        <li><span class="check">✓</span> Admin panel at admin.targetdash.ai</li>
         <li><span class="check">✓</span> Google SSO + email auth via Supabase</li>
         <li><span class="check">✓</span> Deployed globally on Vercel edge network</li>
       </ul>
@@ -1745,8 +1806,8 @@ footer {
         <div class="term-indicator">LIVE</div>
       </div>
       <div class="term-body">
-        <div class="trow"><span class="tp">›</span><span class="tc">load company my_company</span></div>
-        <div class="trow"><span class="to ok">✓ connected · 3 sources · synced 0s ago</span></div>
+        <div class="trow"><span class="tp">›</span><span class="tc">load dashboard --entity default</span></div>
+        <div class="trow"><span class="to ok">✓ connected · 2 dashboards · encrypted · synced 0s ago</span></div>
         <div class="tdivider"></div>
         <div class="kpi-row">
           <div class="kpi-cell"><div class="kpi-lbl">Revenue MTD</div><div class="kpi-val">84.2<small>k€</small></div><div class="kpi-delta">↑ +12.4%</div></div>
@@ -1754,7 +1815,7 @@ footer {
           <div class="kpi-cell"><div class="kpi-lbl">Burn rate</div><div class="kpi-val">18.6<small>k€</small></div><div class="kpi-delta" style="color:var(--amber)">→ stable</div></div>
         </div>
         <div class="bars-wrap">
-          <div class="bars-lbl">Cash flow — 6 months</div>
+          <div class="bars-lbl">P&L forecast — 6 months</div>
           <div class="bars">
             <div class="bar" style="height:40%"></div><div class="bar" style="height:55%"></div>
             <div class="bar hi" style="height:64%"></div><div class="bar" style="height:48%"></div>
@@ -1765,8 +1826,8 @@ footer {
           </div>
         </div>
         <div class="tdivider"></div>
-        <div class="trow"><span class="tp">›</span><span class="tc">ai analyze --role CFO --risk</span></div>
-        <div class="trow"><span class="to vio">No critical signals. Runway 14.2 mo. Monitor receivables aging.</span></div>
+        <div class="trow"><span class="tp">›</span><span class="tc">ai analyze --role BoardAdvisor --forecast</span></div>
+        <div class="trow"><span class="to vio">H2 outlook strong. EBIT turning positive Q3. Recommend accelerating Q4 pipeline.</span></div>
       </div>
     </div>
   </div>
@@ -1781,15 +1842,15 @@ footer {
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
       <div class="feat-title">End-to-end encryption</div>
-      <p class="feat-body">All data is encrypted at rest and in transit using AES-256 and TLS 1.3. Your financial data is unreadable to anyone without your credentials — including us.</p>
-      <span class="feat-tag">AES-256 · TLS 1.3</span>
+      <p class="feat-body">All data is encrypted at rest and in transit using AES-256-GCM and TLS 1.3. Client-side encryption for snapshots. Your financial data is unreadable to anyone without your credentials — including us.</p>
+      <span class="feat-tag">AES-256-GCM · TLS 1.3</span>
     </div>
     <div class="feat rv d1">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <div class="feat-title">EU data residency</div>
-      <p class="feat-body">All data is stored exclusively within the European Union. We are fully GDPR compliant — you retain full ownership and control of your data at all times.</p>
-      <span class="feat-tag">GDPR · EU only</span>
+      <div class="feat-title">Local AI — zero external calls</div>
+      <p class="feat-body">AI inference runs locally via Ollama on our infrastructure — your data never leaves your environment. No third-party API calls, no cloud LLM providers in the loop. Complete data sovereignty.</p>
+      <span class="feat-tag">Ollama · Private</span>
     </div>
     <div class="feat rv d2">
       <div class="feat-shine"></div>
@@ -1801,22 +1862,22 @@ footer {
     <div class="feat rv">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
-      <div class="feat-title">Restricted AI capabilities</div>
-      <p class="feat-body">Our AI engine operates under strict data isolation — it can only access the financial data you have explicitly uploaded. It cannot browse the web, call external APIs, or reference any other company's data. Every AI response is generated from your data alone.</p>
-      <span class="feat-tag">Zero data leakage</span>
+      <div class="feat-title">EU data residency</div>
+      <p class="feat-body">All data stored exclusively within the European Union. AI fallback via Mistral AI (EU-hosted) when local inference is unavailable. Fully GDPR compliant — you retain full ownership and control at all times.</p>
+      <span class="feat-tag">GDPR · EU only</span>
     </div>
     <div class="feat rv d1">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
       <div class="feat-title">No AI training on your data</div>
-      <p class="feat-body">Your financial data is never used to train AI models. Prompts are processed in isolated, ephemeral sessions. Nothing is retained, logged or shared beyond what is required to generate your response.</p>
+      <p class="feat-body">Your financial data is never used to train AI models. Local inference means prompts are processed in ephemeral sessions on your infrastructure. Nothing is retained, logged or shared.</p>
       <span class="feat-tag">Private by design</span>
     </div>
     <div class="feat rv d2">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
       <div class="feat-title">Full audit trail</div>
-      <p class="feat-body">Every login, data upload and AI query is logged with timestamps. You always know who accessed what and when. Logs are immutable and available on request.</p>
+      <p class="feat-body">Every login, data upload and AI query is logged with timestamps. Admin panel at admin.targetdash.ai gives full visibility. Logs are immutable and available on request.</p>
       <span class="feat-tag">Compliance-ready</span>
     </div>
   </div>
@@ -1829,9 +1890,9 @@ footer {
   <h2 class="section-title rv">The signal.</h2>
   <div class="stats-grid">
     <div class="stat-cell rv"><span class="stat-num">&lt;1<span class="u">s</span></span><span class="stat-lbl">Data sync latency</span><div class="stat-bar" data-w="95%"></div></div>
-    <div class="stat-cell rv d1"><span class="stat-num">6<span class="u">+</span></span><span class="stat-lbl">AI advisor roles</span><div class="stat-bar" data-w="100%"></div></div>
+    <div class="stat-cell rv d1"><span class="stat-num">9<span class="u">+</span></span><span class="stat-lbl">AI advisor roles</span><div class="stat-bar" data-w="100%"></div></div>
     <div class="stat-cell rv d2"><span class="stat-num">24<span class="u">/7</span></span><span class="stat-lbl">Always-on monitoring</span><div class="stat-bar" data-w="100%"></div></div>
-    <div class="stat-cell rv d3"><span class="stat-num">AI<span class="u">›</span></span><span class="stat-lbl">Enterprise AI engine</span><div class="stat-bar" data-w="75%"></div></div>
+    <div class="stat-cell rv d3"><span class="stat-num">AI<span class="u">›</span></span><span class="stat-lbl">Local AI engine</span><div class="stat-bar" data-w="75%"></div></div>
   </div>
 </section>
 
@@ -1840,13 +1901,13 @@ footer {
   <div class="cta-orb"></div>
   <div class="label rv">Sign in</div>
   <h2 class="cta-h rv">Ready to understand your business<br/><span class="accent">like never before?</span></h2>
-  <p class="cta-sub rv">Invite-only access. No setup fees. Cancel anytime.</p>
+  <p class="cta-sub rv">Invite-only access. 9 AI roles. Local inference. Cancel anytime.</p>
   <div class="cta-btns rv">
     <a href="/login" class="hero-btn-main">
       Sign in
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
-    <a href="mailto:niklas@targetdash.ai" class="hero-btn-sec">Contact us</a>
+    <a href="/cdn-cgi/l/email-protection#4d232426212c3e0d392c3f2a2839292c3e25632c24" class="hero-btn-sec">Contact us</a>
   </div>
 </section>
 
@@ -1873,8 +1934,8 @@ footer {
     </div>
     <div class="contact-modal-title">Get in touch</div>
     <div class="contact-modal-sub">Questions about targetdash? Want a demo or just want to talk numbers? Niklas is happy to hear from you.</div>
-    <a href="mailto:niklas@targetdash.ai" class="contact-email-box">
-      <span class="contact-email-text">niklas@targetdash.ai</span>
+    <a href="/cdn-cgi/l/email-protection#89e7e0e2e5e8fac9fde8fbeeecfdede8fae1a7e8e0" class="contact-email-box">
+      <span class="contact-email-text"><span class="__cf_email__" data-cfemail="533d3a383f3220132732213436273732203b7d323a">[email&#160;protected]</span></span>
       <span class="contact-email-arrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </span>
@@ -1908,7 +1969,7 @@ footer {
   <div class="popup-msgs" id="popupMsgs"></div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── CANVAS — VIOLET AMBIENT ──────────────────────────────────────────────
 const cv = document.getElementById('canvas');
 const cc = cv.getContext('2d');
@@ -2001,6 +2062,24 @@ const CONVOS = {
     {role:'ai',   text:'Personnel costs are <span class="g">€1.84M EST vs €1.85M budget</span> — €3K favorable. Engineering is the largest cost centre at €499K annually. One open hire starts August, adding €5.5K/mo from that point. Holiday dip in July–August is as expected.'},
     {role:'user', text:'Any headcount risks going into H2?'},
     {role:'ai',   text:'Key decision pending: <span class="a">layoff adjustments deferred to July 1</span> — needs a final call before H2 planning locks. Also flagging two concurrent ramp costs in H2 — replacement hire and new dev hire overlap in August. <span class="v">Recommend reviewing the org plan this week</span>.'},
+  ],
+  'COO': [
+    {role:'user', text:'How are operations running vs plan?'},
+    {role:'ai',   text:'Operations are <span class="g">on track overall</span>. Delivery cycle time is averaging 4.2 days vs 5.0 target — 16% ahead. Production throughput +12% YoY. One flag: <span class="a">supplier lead times</span> stretched to 18 days in March, up from 14 average.'},
+    {role:'user', text:'Where are the biggest operational bottlenecks?'},
+    {role:'ai',   text:'Three areas: 1. <span class="a">Onboarding pipeline</span> — 6 new clients in queue, avg setup time 11 days vs 7 target. 2. <span class="a">Support ticket backlog</span> at 23 open, up 40% from Feb. 3. <span class="v">Entity data migration</span> averaging 3h per entity — automating this could save 15h/month.'},
+  ],
+  'Auditor': [
+    {role:'user', text:'Are there any financial statement risks I should know about?'},
+    {role:'ai',   text:'Two items flagged: 1. <span class="a">Receivables aging</span> — €28K outstanding past 45 days. Recommend reviewing the allowance for doubtful accounts. 2. <span class="a">Revenue recognition timing</span> on Q2 contracts — verify milestone completion matches booked revenue. No material misstatements detected.'},
+    {role:'user', text:'How is our internal control environment?'},
+    {role:'ai',   text:'Control environment is <span class="g">adequate with minor gaps</span>. Segregation of duties is maintained for payments. Audit trail is complete — all transactions have timestamps and user attribution. <span class="a">One gap</span>: manual journal entries lack secondary approval in 12% of cases. Recommend implementing dual-sign on entries above €5K.'},
+  ],
+  'Board Advisor': [
+    {role:'user', text:'Summarise the key points for the next board meeting.'},
+    {role:'ai',   text:'Three headlines: 1. <span class="g">Revenue +21.5% YoY</span> at €3.6M FY estimate — ahead of budget by 0.8%. 2. <span class="v">EBIT turning positive in H2</span> — a €297K improvement vs prior year. 3. <span class="a">Cash position strong at €241K</span> but receivables aging needs board-level attention. Entity count now at 8 active dashboards.'},
+    {role:'user', text:'What strategic risks should the board discuss?'},
+    {role:'ai',   text:'Four strategic risks to table: 1. <span class="a">Client concentration</span> — top 3 clients represent 42% of revenue. 2. <span class="a">Key person dependency</span> — sole founder/operator model limits scale. 3. <span class="v">Competitive moat</span> — local AI inference is a differentiator but needs continued investment. 4. <span class="g">Expansion timing</span> — Nordic base is solid, international push requires dedicated resourcing.'},
   ],
 };
 
@@ -2124,7 +2203,38 @@ window.addEventListener('scroll', () => {
   orbs.forEach((o, i) => {
     o.a = [.05, .035, .025, .02][i] * (1 + depth * 1.4);
   });
+  // Subtle grid parallax
+  const grid = document.querySelector('.grid-overlay');
+  if(grid) grid.style.backgroundPosition = `0 ${window.scrollY * 0.15}px`;
 }, { passive: true });
+
+// ── COUNT-UP ANIMATION — hero stats ──────────────────────────────────────
+function countUp(el, target, suffix, duration) {
+  let start = 0;
+  const startTime = performance.now();
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(start + (target - start) * eased);
+    el.innerHTML = current + '<span>' + suffix + '</span>';
+    if(progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Trigger count-up when hero stats enter view
+const heroStats = document.querySelector('.hero-stats');
+if(heroStats) {
+  new IntersectionObserver(([e]) => {
+    if(e.isIntersecting) {
+      const nums = heroStats.querySelectorAll('.hstat-num');
+      // <1s, 9+, 24/7, 100%
+      if(nums[1]) countUp(nums[1], 9, '+', 1200);
+      if(nums[3]) countUp(nums[3], 100, '%', 1800);
+    }
+  }, { threshold: .5 }).observe(heroStats);
+}
 
 // ── COST CENTRE WIDGET ────────────────────────────────────────────────────
 const CC_DATA = {
@@ -2463,23 +2573,23 @@ document.querySelectorAll('.stat-bar').forEach(b => {
 
 // ── EBITDA-9000 POPUP CHAT ────────────────────────────────────────────────
 const FACTS = [
-  'targetdash &gt; starts at <span class="pv">€80/mo</span> — includes 100 AI credits, 2 configurable dashboards, and all 6 advisor roles. VAT 0%.',
+  'EBITDA-9000 runs on <span class="pv">local AI inference via Ollama</span> — your data never leaves your infrastructure. No third-party API calls. Complete data sovereignty.',
   '💡 <em>Did you know?</em> The more specific your question, the better the AI response. Instead of "how are we doing?" try "why did gross margin drop in Q3?"',
-  'I can respond as <span class="pv">CEO, CFO, CMO, CRO, CTO or HR Manager</span> — switch roles to get a completely different lens on the same numbers.',
+  'I can respond as <span class="pv">CEO, CFO, CMO, CRO, CTO, COO, HR Manager, Auditor or Board Advisor</span> — switch roles to get a completely different lens on the same numbers.',
   '💡 <em>Did you know?</em> Giving the AI context makes a big difference. Start with "I\'m reviewing Q2 results for the board" before asking your question.',
-  'Additional users are <span class="pv">€50/mo</span> each — own dashboards, own AI credits, own role preferences.',
+  'All financial data is encrypted with <span class="pv">AES-256-GCM</span> client-side before it touches the database. Even we can\'t read your numbers.',
   '💡 <em>Did you know?</em> You can ask the AI to compare two time periods: "compare our H1 this year vs last year" works better than a vague "how has revenue changed?"',
   'Upload any CSV or Excel file and I\'ll <span class="pv">automatically map your columns</span> to the right fields — no templates, no manual setup.',
   '💡 <em>Did you know?</em> Asking "what should I be worried about?" is one of the most powerful prompts — the AI will surface risks you might not have thought to look for.',
-  'Cost centre dashboards can be sliced by <span class="pv">marketing channel, country, city, department or product line</span> — any dimension in your data.',
-  '💡 <em>Did you know?</em> Role-switching changes the answer, not just the tone. Ask the same question as CFO vs CMO and you\'ll get genuinely different insights.',
-  'FX conversion runs on <span class="pv">ECB and Suomen Pankki rates</span> — updated daily. Multi-currency reporting with zero manual work.',
+  'NEW: <span class="pv">P&L and Balance Sheet forecast mode</span> — build scenarios, compare actuals vs budget vs forecast, all from the same dashboard.',
+  '💡 <em>Did you know?</em> Role-switching changes the answer, not just the tone. Ask the same question as CFO vs Board Advisor and you\'ll get genuinely different insights.',
+  'AI fallback uses <span class="pv">Mistral AI — fully EU-hosted</span>. No data crosses outside the European Union. Ever.',
   '💡 <em>Did you know?</em> Short, direct questions get the sharpest answers. "What\'s driving the payroll increase?" beats "can you tell me a bit about what might be happening with our personnel costs?"',
-  'I sync with <span class="pv">Netvisor and Procountor</span> via direct API — your data updates automatically, nothing to export.',
+  'NEW: <span class="pv">Entity switching</span> — manage multiple companies from one login. Each entity has its own data, dashboards and AI context with full per-entity persistence.',
   '💡 <em>Did you know?</em> You can ask the AI to draft board commentary: "write a 3-sentence summary of our Q2 financials for the board deck" is a great use of 1 credit.',
-  'Every dashboard saves a <span class="pv">snapshot history</span> — go back and compare how your numbers looked last month, last quarter, anytime.',
+  'Every dashboard uses <span class="pv">row-level security</span> at the database layer. It is architecturally impossible for one client to access another client\'s data.',
   '💡 <em>Did you know?</em> The AI works best when you tell it what decision you\'re trying to make. "Should we hire in Q3?" gives it the context to give you a useful answer.',
-  'targetdash is <span class="pv">100% Nordic-built</span>, hosted on Vercel edge. Data never leaves EU infrastructure.',
+  'targetdash is <span class="pv">100% Nordic-built</span>, hosted on Vercel edge. Data never leaves EU infrastructure. AI runs locally — zero external dependencies.',
   'Questions? Reach Niklas at <span class="pv">niklas@targetdash.ai</span>',
 ];
 
@@ -2502,7 +2612,7 @@ function openPopup() {
   if(!popupGreeted) {
     popupGreeted = true;
     setTimeout(() => {
-      addPopupMsg('ai', 'Hi 👋 I\'m <strong>EBITDA-9000</strong> — ask me about targetdash features, pricing or capabilities. Or just watch — I\'ll keep the facts coming.');
+      addPopupMsg('ai', 'Hi 👋 I\'m <strong>EBITDA-9000</strong> — ask me about targetdash\'s AI capabilities, security architecture, or how local inference works. Or just watch — I\'ll keep the facts coming.');
     }, 400);
     setTimeout(() => startFactStream(), 2000);
   }
@@ -2565,35 +2675,37 @@ function sendPopupMsg(text) {
     // respond with a relevant fact or capability answer
     const q = text.toLowerCase();
     let reply;
-    if(q.includes('price') || q.includes('cost') || q.includes('€') || q.includes('plan'))
+    if(q.includes('ai') || q.includes('local') || q.includes('ollama') || q.includes('inference'))
       reply = FACTS[0];
     else if(q.includes('role') || q.includes('cfo') || q.includes('ceo') || q.includes('advisor'))
-      reply = FACTS[1];
-    else if(q.includes('credit'))
       reply = FACTS[2];
-    else if(q.includes('user') || q.includes('team') || q.includes('member'))
-      reply = FACTS[3];
-    else if(q.includes('dashboard') || q.includes('cost centre') || q.includes('custom'))
+    else if(q.includes('encrypt') || q.includes('security') || q.includes('aes'))
       reply = FACTS[4];
-    else if(q.includes('csv') || q.includes('upload') || q.includes('import'))
-      reply = FACTS[5];
-    else if(q.includes('vat') || q.includes('cancel') || q.includes('fee'))
-      reply = FACTS[6];
-    else if(q.includes('sync') || q.includes('api') || q.includes('accounting'))
-      reply = FACTS[7];
-    else if(q.includes('contact') || q.includes('niklas') || q.includes('email'))
+    else if(q.includes('user') || q.includes('team') || q.includes('member'))
       reply = FACTS[14];
+    else if(q.includes('dashboard') || q.includes('cost centre') || q.includes('custom'))
+      reply = FACTS[8];
+    else if(q.includes('csv') || q.includes('upload') || q.includes('import'))
+      reply = FACTS[6];
+    else if(q.includes('gdpr') || q.includes('eu') || q.includes('data'))
+      reply = FACTS[10];
+    else if(q.includes('entity') || q.includes('switch') || q.includes('company'))
+      reply = FACTS[12];
+    else if(q.includes('contact') || q.includes('niklas') || q.includes('email'))
+      reply = FACTS[17];
     else
       reply = FACTS[Math.floor(Math.random() * FACTS.length)];
     addPopupMsg('ai', reply);
-    setTimeout(() => { factTimer = setInterval(deliverFact, 7000); }, 3000);
-  }, 1200);
-}
+    setTimeout(() => startFactStream(), 3000);
+  }, 1500);
+};
 
-window.openPopup    = openPopup;
-window.closePopup   = closePopup;
-window.sendPopupMsg = sendPopupMsg;
+document.getElementById('popupInput')?.addEventListener('keydown', e => {
+  if(e.key === 'Enter') sendPopupMsg(e.target.value);
+});
+document.querySelector('.popup-send')?.addEventListener('click', () => {
+  sendPopupMsg(document.getElementById('popupInput')?.value || '');
+});
 </script>
-
 </body>
 </html>
