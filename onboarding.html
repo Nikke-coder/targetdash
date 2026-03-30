@@ -340,7 +340,7 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
     <div class="step-body">
       <div class="field">
         <label>Your name <span class="req">*</span></label>
-        <input type="text" id="fullName" placeholder="Your full name"/>
+        <input type="text" id="fullName" placeholder="Niklas Isaksson"/>
       </div>
       <div class="field">
         <label>Primary role <span class="req">*</span></label>
@@ -365,21 +365,9 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
             <div class="role-card-icon">⚙️</div>
             <div class="role-card-label">CTO</div>
           </div>
-          <div class="role-card" data-role="COO">
-            <div class="role-card-icon">🔄</div>
-            <div class="role-card-label">COO</div>
-          </div>
           <div class="role-card" data-role="HR Manager">
             <div class="role-card-icon">👥</div>
             <div class="role-card-label">HR</div>
-          </div>
-          <div class="role-card" data-role="Auditor">
-            <div class="role-card-icon">🔍</div>
-            <div class="role-card-label">Auditor</div>
-          </div>
-          <div class="role-card" data-role="Board Advisor">
-            <div class="role-card-icon">🏛️</div>
-            <div class="role-card-label">Board</div>
           </div>
         </div>
       </div>
@@ -419,13 +407,13 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
         <p>You are responsible for maintaining the confidentiality of your login credentials. Each account is for a single organisation. You must not share access with users outside your organisation without purchasing additional user licences.</p>
 
         <h4>3. Subscription & Payment</h4>
-        <p>Subscriptions are billed monthly. The MainUser plan is €80/month (VAT 0%). Additional users are €50/month each. AI credits (1 credit = 1 AI response) are included in your plan and may be topped up. All prices are exclusive of applicable taxes unless stated otherwise. Payments are processed securely via Stripe.</p>
+        <p>Access to the Service is provided on a subscription or invitation basis. Pricing is agreed separately for each account. AI capabilities are included and may be subject to usage limits. Payments are processed securely via Stripe.</p>
 
         <h4>4. Data & Privacy</h4>
         <p>You retain full ownership of all financial data you upload or connect to the Service. We process your data solely to provide the Service. We do not sell, share or use your data for any other purpose. Full details are set out in our Privacy Policy and Data Processing Agreement below.</p>
 
         <h4>5. AI Services</h4>
-        <p>The AI assistant (EBITDA-9000) uses your financial data to generate insights. AI responses are for informational purposes only and do not constitute financial, legal or investment advice. You remain responsible for all business decisions made based on AI output.</p>
+        <p>The AI assistant (EBITDA-9000) uses your financial data to generate insights. AI inference runs locally on our own servers — your data never leaves the platform for AI purposes. AI responses are for informational purposes only and do not constitute financial, legal or investment advice. You remain responsible for all business decisions made based on AI output.</p>
 
         <h4>6. Intellectual Property</h4>
         <p>The Service, including all software, design and content, is owned by Targetflow Oy. You may not copy, reproduce or distribute any part of the Service without written permission.</p>
@@ -443,27 +431,27 @@ html,body{ background:var(--bg); color:var(--text); font-family:var(--sans); min
         <p>Targetflow Oy ("we", "us") is the data controller for personal data processed through targetdash. This policy explains what data we collect and how we use it, in accordance with EU GDPR and Finnish data protection law.</p>
 
         <h4>Data We Collect</h4>
-        <p>Account data: name, email address, company name, business ID, country and role. Usage data: login timestamps, feature usage, AI credit consumption. Financial data: aggregated figures you upload via CSV or Excel. We do not collect payment card details — these are handled by Stripe.</p>
+        <p>Account data: name, email address, company name, business ID, country and role. Usage data: login timestamps, feature usage. Financial data: aggregated figures you upload via CSV or Excel. We do not collect payment card details — these are handled by Stripe.</p>
 
         <h4>How We Use Your Data</h4>
         <p>To provide and improve the Service; to authenticate you and maintain your session; to power AI-generated insights based on your financial data; to send transactional emails (login, billing, alerts); to comply with legal obligations.</p>
 
         <h4>Data Storage & Security</h4>
-        <p>All data is stored in the European Union. Data is encrypted at rest and in transit. We implement strict data isolation to ensure users can only access their own data. We conduct regular security reviews.</p>
+        <p>All data is stored in the European Union via Supabase (PostgreSQL). Data is encrypted at rest and in transit. We implement row-level security to ensure users can only access their own data. We conduct regular security reviews.</p>
 
         <h4>Data Retention</h4>
-        <p>Your data is retained for as long as your account is active. Upon account deletion, data is permanently purged within 30 days. You may request export of your data at any time by contacting <a href="/cdn-cgi/l/email-protection#c9a7a0a2a5a8ba89bda8bbaeacbdada8baa1e7a8a0" style="color:#c4b5fd;text-decoration:none;"><span class="__cf_email__" data-cfemail="a1cfc8cacdc0d2e1d5c0d3c6c4d5c5c0d2c98fc0c8">[email&#160;protected]</span></a>.</p>
+        <p>Your data is retained for as long as your account is active. Upon account deletion, data is permanently purged within 30 days. You may request export of your data at any time by contacting <a href="/cdn-cgi/l/email-protection#620c0b090e0311221603100507160603110a4c030b" style="color:#c4b5fd;text-decoration:none;"><span class="__cf_email__" data-cfemail="0e606765626f7d4e7a6f7c696b7a6a6f7d66206f67">[email&#160;protected]</span></a>.</p>
 
         <h4>Your Rights (GDPR)</h4>
-        <p>You have the right to access, correct, export or delete your personal data. You may withdraw consent at any time. To exercise these rights, contact <a href="/cdn-cgi/l/email-protection#f896919394998bb88c998a9f9d8c9c998b90d69991" style="color:#c4b5fd;text-decoration:none;"><span class="__cf_email__" data-cfemail="bcd2d5d7d0ddcffcc8ddcedbd9c8d8ddcfd492ddd5">[email&#160;protected]</span></a>. You also have the right to lodge a complaint with the Finnish Data Protection Ombudsman (tietosuojavaltuutettu.fi).</p>
+        <p>You have the right to access, correct, export or delete your personal data. You may withdraw consent at any time. To exercise these rights, contact <a href="/cdn-cgi/l/email-protection#98f6f1f3f4f9ebd8ecf9eafffdecfcf9ebf0b6f9f1" style="color:#c4b5fd;text-decoration:none;"><span class="__cf_email__" data-cfemail="432d2a282f2230033722312426372722302b6d222a">[email&#160;protected]</span></a>. You also have the right to lodge a complaint with the Finnish Data Protection Ombudsman (tietosuojavaltuutettu.fi).</p>
 
         <h4>Data Processing Agreement</h4>
         <p>When you use targetdash to process financial data relating to individuals (e.g. payroll data), Targetflow Oy acts as a data processor on your behalf. You, as the business, are the data controller. By accepting these terms you enter into a Data Processing Agreement with Targetflow Oy under Article 28 GDPR.</p>
         <p>We will: process personal data only on your documented instructions; ensure persons authorised to process the data are bound by confidentiality; implement appropriate technical and organisational security measures; not engage sub-processors without your authorisation; assist you in responding to data subject rights requests; delete or return all personal data upon termination of the service.</p>
-        <p>Our current sub-processors include: EU-based database infrastructure provider (data storage); EU-based AI processing provider (AI insights — prompts contain only anonymised financial figures, not personal data); Stripe Inc. (payment processing).</p>
+        <p>Our current sub-processors include: Supabase Inc. (database infrastructure, EU region); Stripe Inc. (payment processing). AI processing runs on our own local servers — your financial data never leaves the platform for AI purposes.</p>
 
         <h4>Contact</h4>
-        <p>Data controller: Targetflow Oy · <a href="/cdn-cgi/l/email-protection#127c7b797e7361526673607577667673617a3c737b" style="color:#c4b5fd;text-decoration:none;"><span class="__cf_email__" data-cfemail="bfd1d6d4d3deccffcbdecdd8dacbdbdeccd791ded6">[email&#160;protected]</span></a> · Helsinki, Finland</p>
+        <p>Data controller: Targetflow Oy · <a href="/cdn-cgi/l/email-protection#8ee0e7e5e2effdcefaeffce9ebfaeaeffde6a0efe7" style="color:#c4b5fd;text-decoration:none;"><span class="__cf_email__" data-cfemail="fd939496919c8ebd899c8f9a9889999c8e95d39c94">[email&#160;protected]</span></a> · Helsinki, Finland</p>
         <p>Last updated: March 2026</p>
       </div>
 
@@ -558,9 +546,10 @@ function lockField(id){var el=document.getElementById(id);if(!el)return;if(el.ta
 
     // Only redirect to dashboard if fully onboarded AND terms accepted
     if(profile&&profile.onboarded&&profile.agreed_terms&&profile.agreed_dpa){window.location.href=DASHBOARD_URL;return;}
-    if(!profile||(profile.plan!=='mainuser'&&profile.plan!=='superuser'&&profile.plan!=='member')){window.location.href='https://app.targetdash.ai';return;}
+    if(!profile||(profile.plan!=='mainuser'&&profile.plan!=='superuser'&&profile.plan!=='user')){window.location.href='https://app.targetdash.ai';return;}
 
-    var isMember = profile.plan === 'member';
+    // 'user' plan gets legal-only onboarding — skip straight to terms
+    var isUserPlan = profile.plan === 'user';
 
     // Pre-fill all known fields + lock admin-set ones
     if(profile.company_name){document.getElementById('companyName').value=profile.company_name;lockField('companyName');}
@@ -578,51 +567,11 @@ function lockField(id){var el=document.getElementById(id);if(!el)return;if(el.ta
     else if(profile.country){selectedAreas=[profile.country];}
     renderAreasGrid();
 
-    // ── MEMBER FLOW — terms only ──
-    if(isMember) {
-      // Hide step dots 1 and 2, show single dot
-      document.getElementById('dot1').style.display='none';
-      document.getElementById('dot2').style.display='none';
-      document.getElementById('dot3').className='nav-step-dot active';
-      document.getElementById('stepLabel').textContent='Accept terms';
-      document.getElementById('progressFill').style.width='50%';
-
-      // Pre-fill name from profile or Google metadata
-      if(!profile.full_name){
-        var meta=session.user.user_metadata;
-        if(meta&&meta.full_name)profile.full_name=meta.full_name;
-        else if(meta&&meta.name)profile.full_name=meta.name;
-      }
-
-      // Add name field + welcome banner to step 3 for members
-      var memberHeader = document.querySelector('#step3 .step-header');
-      memberHeader.querySelector('.step-eyebrow').textContent='Welcome';
-      memberHeader.querySelector('.step-title').textContent='Accept & get started';
-      memberHeader.querySelector('.step-sub').textContent='You\'ve been invited to targetdash. Confirm your name and accept the legal agreements to access your dashboard.';
-
-      var memberFields = document.createElement('div');
-      memberFields.innerHTML = '<div class="field" style="margin-bottom:20px;"><label>Your name <span class="req">*</span></label><input type="text" id="memberName" placeholder="Your full name" value="'+(profile.full_name||'')+'"/></div>';
-      var step3Body = document.querySelector('#step3 .step-body');
-      step3Body.insertBefore(memberFields, step3Body.firstChild);
-
-      // Hide back button for members
-      var backBtn = document.querySelector('#step3 .btn-back');
-      if(backBtn) backBtn.style.display='none';
-
-      // Change activate button text
-      document.getElementById('btn3').textContent='Accept & open dashboard →';
-
-      goStep(3);
-      return;
-    }
-
-    // ── MAINUSER / SUPERUSER FLOW — full onboarding ──
-
     // Smart step routing
     var urlParams=new URLSearchParams(window.location.search);
     var mode=urlParams.get('mode');
 
-    if((mode==='legal'||profile.onboarded)&&(!profile.agreed_terms||!profile.agreed_dpa)){
+    if(isUserPlan || (mode==='legal'||profile.onboarded)&&(!profile.agreed_terms||!profile.agreed_dpa)){
       // Skip straight to terms
       var banner=document.createElement('div');
       banner.style.cssText='background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-family:var(--ui);font-size:13px;color:#c4b5fd;line-height:1.5;';
@@ -753,51 +702,33 @@ document.getElementById('btn3').addEventListener('click',async function(){
     if(r.data&&r.data.plan)existingPlan=r.data.plan;
   }catch(e){}
 
-  var isMemberSave = existingPlan === 'member';
+  var payload={
+    user_id:userId,
+    email:userEmail,
+    plan:existingPlan,
+    agreed_terms:true,
+    agreed_dpa:true,
+    agreed_at:new Date().toISOString(),
+    onboarded:true
+  };
 
-  var payload;
-  if(isMemberSave) {
-    // Member — simplified payload, just name + legal agreements
-    var memberNameEl = document.getElementById('memberName');
-    var memberName = memberNameEl ? memberNameEl.value.trim() : '';
-    if(!memberName){
-      btn.disabled=false;
-      btn.textContent='Accept & open dashboard →';
-      var msg=document.getElementById('step3Msg');
-      if(msg){msg.className='msg-box error';msg.textContent='Please enter your name.';msg.style.display='block';}
-      return;
-    }
-    payload={
-      user_id:userId,
-      email:userEmail,
-      full_name:memberName,
-      plan:existingPlan,
-      agreed_terms:true,
-      agreed_dpa:true,
-      agreed_at:new Date().toISOString(),
-      onboarded:true
-    };
-  } else {
-    // MainUser / Superuser — full payload
-    payload={
-      user_id:userId,
-      email:userEmail,
-      full_name:document.getElementById('fullName').value.trim(),
-      company_name:document.getElementById('companyName').value.trim(),
-      business_id:document.getElementById('businessId').value.trim()||null,
-      business_description:document.getElementById('businessDesc').value.trim()||null,
-      areas_of_interest:selectedAreas.length>0?selectedAreas:null,
-      fiscal_year:parseInt(document.getElementById('fiscalYear').value),
-      country:document.getElementById('country').value,
-      currency:document.getElementById('currency').value,
-      primary_role:selectedRole,
-      plan:existingPlan,
-      agreed_terms:true,
-      agreed_dpa:true,
-      agreed_at:new Date().toISOString(),
-      onboarded:true
-    };
-  }
+  // Only include profile fields if they have values (user plan skips these steps)
+  var fn=document.getElementById('fullName').value.trim();
+  var cn=document.getElementById('companyName').value.trim();
+  if(fn)payload.full_name=fn;
+  if(cn)payload.company_name=cn;
+  var bid=document.getElementById('businessId').value.trim();
+  if(bid)payload.business_id=bid;
+  var bd=document.getElementById('businessDesc').value.trim();
+  if(bd)payload.business_description=bd;
+  if(selectedAreas.length>0)payload.areas_of_interest=selectedAreas;
+  var fy=document.getElementById('fiscalYear').value;
+  if(fy)payload.fiscal_year=parseInt(fy);
+  var ctr=document.getElementById('country').value;
+  if(ctr)payload.country=ctr;
+  var cur=document.getElementById('currency').value;
+  if(cur)payload.currency=cur;
+  if(selectedRole)payload.primary_role=selectedRole;
 
   try{
     var result=await sb.from('user_profiles').upsert(payload,{onConflict:'user_id'});
@@ -820,26 +751,4 @@ document.getElementById('btn3').addEventListener('click',async function(){
   }catch(e){
     console.error('Onboarding error:',e);
     btn.disabled=false;
-    btn.textContent='Activate my dashboard →';
-    var msg=document.getElementById('step3Msg');
-    msg.className='msg-box error';
-    msg.textContent='Something went wrong. Please try again.';
-    msg.style.display='block';
-  }
-});
-
-// Launch button
-document.getElementById('btnLaunch').addEventListener('click',function(){
-  window.location.href=DASHBOARD_URL;
-});
-
-function showMsg(id,text){
-  var el=document.getElementById(id);
-  if(!el)return;
-  el.className='msg-box error';
-  el.textContent=text;
-  el.style.display='block';
-}
-</script>
-</body>
-</html>
+    btn.text
