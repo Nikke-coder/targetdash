@@ -540,60 +540,6 @@ section { padding: 120px 52px; }
 .bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--violet); border-radius: 1px; box-shadow: 0 0 6px var(--violet); }
 .bar.hi { background: linear-gradient(to top, var(--bg2), rgba(124,58,237,0.2)); }
 
-/* ══════════════════════════════════
-   PRICING
-══════════════════════════════════ */
-.pricing-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.pricing-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 20px; margin-top: 56px; max-width: 860px;
-}
-.price-card {
-  background: var(--bg3); border: 1px solid var(--border);
-  border-radius: 16px; padding: 36px; position: relative; overflow: hidden;
-  transition: border-color .3s;
-}
-.price-card:hover { border-color: rgba(124,58,237,0.35); }
-.price-card.featured {
-  border-color: rgba(124,58,237,0.4);
-  background: linear-gradient(135deg, var(--bg3), rgba(124,58,237,0.05));
-}
-.price-card.featured::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--violet), transparent);
-}
-.price-badge {
-  display: inline-block; font-family: var(--ui); font-size: 9px; font-weight: 700;
-  letter-spacing: 0.15em; text-transform: uppercase; color: var(--lilac);
-  background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
-  border-radius: 100px; padding: 3px 10px; margin-bottom: 20px;
-}
-.price-tier { font-family: var(--ui); font-size: 13px; font-weight: 600; color: var(--mid); margin-bottom: 8px; }
-.price-amount {
-  font-family: var(--sans); font-size: 48px; font-weight: 700;
-  color: var(--white); letter-spacing: -0.04em; line-height: 1; margin-bottom: 4px;
-}
-.price-amount .curr { font-size: 24px; color: var(--violet-hi); vertical-align: top; margin-top: 8px; display: inline-block; }
-.price-amount .period { font-size: 16px; color: var(--mid); font-weight: 400; }
-.price-sub { font-family: var(--ui); font-size: 12px; color: var(--dim); margin-bottom: 28px; margin-top: 6px; }
-.price-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
-.price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-.price-features li {
-  display: flex; align-items: flex-start; gap: 10px;
-  font-family: var(--ui); font-size: 13px; color: var(--mid); line-height: 1.4;
-}
-.price-features li::before {
-  content: '✓'; color: var(--violet-hi); font-weight: 700; font-size: 12px; flex-shrink: 0; margin-top: 1px;
-}
-.price-features li b { color: var(--text); font-weight: 600; }
-
-.price-credit-box {
-  background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2);
-  border-radius: 10px; padding: 14px 16px; margin-top: 20px;
-}
-.credit-label { font-family: var(--ui); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--violet-hi); margin-bottom: 4px; }
-.credit-desc { font-family: var(--ui); font-size: 12px; color: var(--mid); line-height: 1.5; }
-.credit-desc b { color: var(--text); }
 
 /* ══════════════════════════════════
    STATS
@@ -673,7 +619,7 @@ footer {
 .d3{transition-delay:.3s} .d4{transition-delay:.4s}
 
 /* ── SECTION PANELS — dim until scrolled ── */
-.feat, .stat-cell, .price-card, .plat-list li {
+.feat, .stat-cell, .plat-list li {
   transition: background .3s, border-color .3s, filter .6s ease, opacity .6s ease;
 }
 
@@ -685,9 +631,6 @@ footer {
 .stat-cell { filter: brightness(0.6); }
 .stat-cell.bright { filter: brightness(1); }
 
-/* price cards */
-.price-card { filter: brightness(0.65); }
-.price-card.bright { filter: brightness(1); }
 
 /* ── SECTION TITLE GLOW-IN ── */
 .section-title {
@@ -1120,17 +1063,6 @@ footer {
   100% { background-position: 0% 50%; }
 }
 
-/* Subtle shimmer on featured cards */
-.price-card.featured::after {
-  content: '';
-  position: absolute; top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: conic-gradient(from 0deg, transparent, rgba(124,58,237,0.06), transparent, transparent);
-  animation: shimmerRotate 8s linear infinite;
-  pointer-events: none;
-}
-@keyframes shimmerRotate { to { transform: rotate(360deg); } }
-
 /* Glow pulse on active role tab */
 .role-tab.active {
   animation: roleGlow 2s ease-in-out infinite;
@@ -1155,6 +1087,36 @@ footer {
   transition: transform 0.1s ease-out;
 }
 
+/* ── Agent section animations ── */
+@keyframes agentSweep {
+  0% { width: 0%; opacity: 0; }
+  30% { width: 100%; opacity: 1; }
+  60% { width: 100%; opacity: 0; }
+  100% { width: 0%; opacity: 0; }
+}
+@keyframes agentProgress {
+  0% { width: 0%; }
+  40% { width: 100%; }
+  100% { width: 100%; }
+}
+@keyframes agentEmailFade {
+  0%, 50% { opacity: 0; transform: translateY(6px); }
+  65% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-2px); }
+}
+.agent-demo-card {
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.agent-demo-card:hover {
+  border-color: rgba(124,58,237,0.45);
+  box-shadow: 0 0 20px rgba(124,58,237,0.1);
+}
+
+@media(max-width:1100px){
+  #agents > div { grid-template-columns: 1fr !important; }
+}
+
 /* ══════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════ */
@@ -1163,7 +1125,6 @@ footer {
   .plat-inner{grid-template-columns:1fr;gap:48px;}
   .feat-grid{grid-template-columns:repeat(2,1fr);}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .pricing-grid{grid-template-columns:1fr;}
   .stat-cell:nth-child(2){border-right:none;}
   .stat-cell:nth-child(1),.stat-cell:nth-child(2){border-bottom:1px solid var(--border);}
 }
@@ -1195,6 +1156,7 @@ footer {
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#ai">AI advisor</a>
+    <a href="#agents">Agents</a>
     <a href="#security">Security</a>
     
   </div>
@@ -1617,7 +1579,7 @@ footer {
             <div class="agent-role" id="agentRole"><span class="agent-status-dot"></span>Responding as CFO</div>
           </div>
         </div>
-        <div class="credit-tag">1 credit = <span>1 response</span></div>
+        <div class="credit-tag"><span>Private AI</span> · EU only</div>
       </div>
       <div class="chat-msgs" id="chatMsgs"></div>
       <div class="chat-footer">
@@ -1627,6 +1589,107 @@ footer {
         </button>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- AGENTS SECTION -->
+<section id="agents" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:start;">
+
+    <div>
+      <div class="label rv">AI Agents</div>
+      <h2 class="section-title rv">Set it once.<br/><span class="accent">It works forever.</span></h2>
+      <p class="rv" style="font-family:var(--ui);font-size:15px;color:var(--mid);line-height:1.75;margin-top:20px;">Create automated agents that run on a schedule — <b style="color:var(--text)">weekly summaries, budget watchdogs, variance analysis, board briefings</b>. EBITDA-9000 generates the report from your live data and emails it directly to you.</p>
+      <p class="rv" style="font-family:var(--ui);font-size:15px;color:var(--mid);line-height:1.75;margin-top:12px;">Pick a template or describe what you need in plain language. Preview before activating. <b style="color:var(--text)">10 credits per run</b> — every run is logged with full audit trail.</p>
+
+      <div class="rv" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;">
+        <span class="role-tab active">Weekly Summary</span>
+        <span class="role-tab">Budget Watchdog</span>
+        <span class="role-tab">Variance Detective</span>
+        <span class="role-tab">Board Brief</span>
+        <span class="role-tab">Cash Monitor</span>
+        <span class="role-tab">Forecast Drift</span>
+      </div>
+    </div>
+
+    <!-- Animated agent widget -->
+    <div class="rv" id="agentWidget" style="background:var(--bg3);border:1px solid var(--border-hi);border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(124,58,237,0.1);position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);opacity:0.6;"></div>
+
+      <!-- Widget header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(124,58,237,0.06);border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:10;">
+          <div style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--violet-lo),var(--violet-hi));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;">🤖</div>
+          <div>
+            <div style="font-family:var(--ui);font-size:12px;font-weight:600;color:var(--white);">AI Agents</div>
+            <div style="font-family:var(--ui);font-size:9px;color:var(--violet-hi);">3 active · 2 paused</div>
+          </div>
+        </div>
+        <div style="font-family:var(--ui);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--violet-hi);background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);padding:3px 10px;border-radius:100px;">AUTOMATED</div>
+      </div>
+
+      <!-- Agent cards -->
+      <div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+        <!-- Agent 1 — animating -->
+        <div id="agentCard1" class="agent-demo-card" style="background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.25);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;height:100%;width:0%;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.08));animation:agentSweep 4s ease-in-out infinite;pointer-events:none;"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:14px;">📊</span>
+              <span style="font-family:var(--ui);font-size:12px;font-weight:600;color:var(--white);">Weekly CFO Summary</span>
+            </div>
+            <span style="font-family:var(--ui);font-size:8px;font-weight:700;color:#34d399;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:100px;padding:2px 8px;letter-spacing:0.08em;">ACTIVE</span>
+          </div>
+          <div style="font-family:var(--ui);font-size:9px;color:var(--dim);">CFO · Every Monday · 08:00 UTC</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+            <div style="flex:1;height:3px;background:rgba(124,58,237,0.1);border-radius:2px;overflow:hidden;">
+              <div style="height:100%;background:linear-gradient(90deg,var(--violet-lo),var(--violet-hi));border-radius:2px;animation:agentProgress 4s ease infinite;"></div>
+            </div>
+            <span style="font-family:var(--ui);font-size:8px;color:var(--violet-hi);">Last: 2h ago</span>
+          </div>
+        </div>
+
+        <!-- Agent 2 -->
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:14px;">🔔</span>
+              <span style="font-family:var(--ui);font-size:12px;font-weight:600;color:var(--white);">Budget Watchdog</span>
+            </div>
+            <span style="font-family:var(--ui);font-size:8px;font-weight:700;color:#34d399;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:100px;padding:2px 8px;letter-spacing:0.08em;">ACTIVE</span>
+          </div>
+          <div style="font-family:var(--ui);font-size:9px;color:var(--dim);">CFO · Every day · 07:00 UTC</div>
+        </div>
+
+        <!-- Agent 3 -->
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:14px;">🏛</span>
+              <span style="font-family:var(--ui);font-size:12px;font-weight:600;color:var(--white);">Board Brief</span>
+            </div>
+            <span style="font-family:var(--ui);font-size:8px;font-weight:700;color:var(--mid);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:100px;padding:2px 8px;letter-spacing:0.08em;">MONTHLY</span>
+          </div>
+          <div style="font-family:var(--ui);font-size:9px;color:var(--dim);">Board Advisor · 1st of month · 08:00 UTC</div>
+        </div>
+
+        <!-- Email preview animation -->
+        <div id="agentEmail" style="margin-top:4px;background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.15);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;opacity:0;animation:agentEmailFade 4s ease-in-out infinite;">
+          <div style="font-size:16px;">📧</div>
+          <div>
+            <div style="font-family:var(--ui);font-size:11px;font-weight:600;color:#34d399;">Report delivered</div>
+            <div style="font-family:var(--ui);font-size:9px;color:var(--dim);">Weekly CFO Summary emailed to you · 10 credits used</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-family:var(--ui);font-size:9px;color:var(--dim);">10 credits per agent run</div>
+        <div style="font-family:var(--ui);font-size:9px;color:var(--violet-hi);">Full audit trail ✓</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -2073,7 +2136,7 @@ const CONVOS = {
   ],
   'Board Advisor': [
     {role:'user', text:'Summarise the key points for the next board meeting.'},
-    {role:'ai',   text:'Three headlines: 1. <span class="g">Revenue +21.5% YoY</span> at €3.6M FY estimate — ahead of budget by 0.8%. 2. <span class="v">EBIT turning positive in H2</span> — a €297K improvement vs prior year. 3. <span class="a">Cash position strong at €241K</span> but receivables aging needs board-level attention. Entity count now at 8 active dashboards.'},
+    {role:'ai',   text:'Three headlines: 1. <span class="g">Revenue +21.5% YoY</span> at €3.6M FY estimate — ahead of budget by 0.8%. 2. <span class="v">EBIT turning positive in H2</span> — a €297K improvement vs prior year. 3. <span class="a">Cash position strong at €241K</span> but receivables aging needs board-level attention.'},
     {role:'user', text:'What strategic risks should the board discuss?'},
     {role:'ai',   text:'Four strategic risks to table: 1. <span class="a">Client concentration</span> — top 3 clients represent 42% of revenue. 2. <span class="a">Key person dependency</span> — sole founder/operator model limits scale. 3. <span class="v">Competitive moat</span> — private AI infrastructure is a differentiator but needs continued investment. 4. <span class="g">Expansion timing</span> — Nordic base is solid, international push requires dedicated resourcing.'},
   ],
@@ -2171,7 +2234,7 @@ const brightObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if(e.isIntersecting) {
       // stagger siblings slightly
-      const siblings = e.target.parentElement.querySelectorAll('.feat, .stat-cell, .price-card');
+      const siblings = e.target.parentElement.querySelectorAll('.feat, .stat-cell');
       siblings.forEach((s, i) => {
         setTimeout(() => s.classList.add('bright'), i * 80);
       });
@@ -2180,7 +2243,7 @@ const brightObs = new IntersectionObserver(entries => {
     }
   });
 }, { threshold: .15 });
-document.querySelectorAll('.feat, .stat-cell, .price-card').forEach(el => brightObs.observe(el));
+document.querySelectorAll('.feat, .stat-cell').forEach(el => brightObs.observe(el));
 
 // Section glow — accent text glows when section title enters view
 const glowObs = new IntersectionObserver(entries => {
@@ -2582,7 +2645,7 @@ const FACTS = [
   'All AI infrastructure is <span class="pv">100% EU-based</span>. No data crosses outside the European Union. Ever.',
   '💡 <em>Did you know?</em> Short, direct questions get the sharpest answers. "What\'s driving the payroll increase?" beats "can you tell me a bit about what might be happening with our personnel costs?"',
   'NEW: <span class="pv">Entity switching</span> — manage multiple companies from one login. Each entity has its own data, dashboards and AI context with full per-entity persistence.',
-  '💡 <em>Did you know?</em> You can ask the AI to draft board commentary: "write a 3-sentence summary of our Q2 financials for the board deck" is a great use of 1 credit.',
+  '💡 <em>Did you know?</em> You can ask the AI to draft board commentary: "write a 3-sentence summary of our Q2 financials for the board deck" — one prompt, one polished output.',
   'Every dashboard is <span class="pv">architecturally isolated</span>. It is impossible for one client to access another client\'s data.',
   '💡 <em>Did you know?</em> The AI works best when you tell it what decision you\'re trying to make. "Should we hire in Q3?" gives it the context to give you a useful answer.',
   'targetdash is <span class="pv">100% Nordic-built</span>, deployed on EU infrastructure. Your data never leaves the EU. AI runs on our own servers — zero external dependencies.',
