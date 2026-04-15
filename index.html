@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>targetdash > financial intelligence</title>
+<title>targetdash › financial intelligence</title>
+<meta name="description" content="AI-powered financial dashboards for growing companies. Budget builder, scenario planning, group consolidation, and board-ready reports."/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%237c3aed'/%3E%3Cstop offset='100%25' stop-color='%2334d399'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='7' fill='%230a0a14'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='monospace' font-weight='800' font-size='17' fill='url(%23g)'%3Etd›%3C/text%3E%3C/svg%3E"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1947,26 +1949,42 @@ footer {
         <span style="padding:4px 10px;border-radius:16px;font-size:10px;font-family:'DM Mono',monospace;color:var(--mid);border:1px solid var(--border);background:var(--panel)">DSO / DIO / DPO</span>
       </div>
     </div>
-    <div class="rv d2" id="budgetWidget" style="background:rgba(10,10,20,0.9);border:1px solid rgba(124,58,237,0.1);border-radius:16px;padding:20px;font-family:'DM Mono',monospace;overflow:hidden">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-        <div style="font-size:11px;font-weight:700;color:var(--text)">📊 Budget Builder · 2026</div>
-        <div style="font-size:9px;color:var(--dim)">P&L</div>
-      </div>
-      <table style="width:100%;border-collapse:collapse;font-size:10px">
-        <tr style="color:var(--dim)"><td></td><td style="text-align:right;padding:2px 6px">Jan</td><td style="text-align:right;padding:2px 6px">Feb</td><td style="text-align:right;padding:2px 6px">Mar</td><td style="text-align:right;padding:2px 6px;color:var(--violet-hi)">Gr.%</td></tr>
-        <tr class="bw-row"><td style="color:var(--text);padding:4px 0">Revenue</td><td style="text-align:right;padding:4px 6px;color:var(--green)">285</td><td style="text-align:right;padding:4px 6px;color:var(--green)">301</td><td style="text-align:right;padding:4px 6px;color:var(--green)">318</td><td style="text-align:right;padding:4px 6px;color:var(--violet-hi)">+8%</td></tr>
-        <tr class="bw-row"><td style="color:var(--text);padding:4px 0">Materials</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-142</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-150</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-159</td><td style="text-align:right;padding:4px 6px;color:var(--violet-hi)">+5%</td></tr>
-        <tr class="bw-row"><td style="color:var(--text);padding:4px 0">Personnel</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-68</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-68</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-68</td><td style="text-align:right;padding:4px 6px;color:var(--dim)">0%</td></tr>
-        <tr class="bw-row" style="border-top:1px solid rgba(124,58,237,0.15)"><td style="color:var(--violet-hi);padding:6px 0;font-weight:700">EBITDA</td><td style="text-align:right;padding:6px 6px;color:var(--violet-hi);font-weight:700">75</td><td style="text-align:right;padding:6px 6px;color:var(--violet-hi);font-weight:700">83</td><td style="text-align:right;padding:6px 6px;color:var(--violet-hi);font-weight:700">91</td><td></td></tr>
-      </table>
-      <div class="bw-card" style="margin-top:12px;padding:10px 12px;background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.1);border-radius:8px">
-        <div style="font-size:9px;color:var(--green);font-weight:600;margin-bottom:4px">🏗️ Capex · Office renovation</div>
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dim)"><span>€120K · 10yr · straight-line</span><span style="color:var(--red)">Dep: -1K/mo</span></div>
-      </div>
-      <div class="bw-card" style="margin-top:6px;padding:10px 12px;background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.1);border-radius:8px">
-        <div style="font-size:9px;color:#60a5fa;font-weight:600;margin-bottom:4px">🏦 Loan · OP growth facility</div>
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dim)"><span>€200K · 3.2%+Euribor · 3mo</span><span style="color:var(--amber)">Int: -€583/mo</span></div>
-      </div>
+    <div class="rv d2" id="budgetWidget" style="position:relative">
+      <svg viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;animation:floatDesktop 6s ease-in-out infinite;filter:drop-shadow(0 20px 60px rgba(124,58,237,0.12));">
+        <rect width="520" height="380" rx="14" fill="#0c0c18" stroke="rgba(124,58,237,0.15)" stroke-width="1"/>
+        <rect x="0" y="0" width="520" height="36" rx="14" fill="#101020"/><rect x="0" y="20" width="520" height="16" fill="#101020"/>
+        <circle cx="16" cy="18" r="4" fill="#2a2a40"/><circle cx="30" cy="18" r="4" fill="#2a2a40"/><circle cx="44" cy="18" r="4" fill="#2a2a40"/>
+        <text x="260" y="22" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" fill="#5a5970">Tools &gt; Budget Builder &middot; 2026</text>
+        <rect x="16" y="46" width="52" height="20" rx="6" fill="rgba(124,58,237,0.12)" stroke="rgba(124,58,237,0.25)" stroke-width="0.5"/>
+        <text x="42" y="59" text-anchor="middle" font-family="'DM Mono',monospace" font-size="7.5" fill="#c4b5fd" font-weight="600">P&amp;L</text>
+        <text x="94" y="59" font-family="'DM Mono',monospace" font-size="7.5" fill="#5a5970">Balance</text>
+        <text x="152" y="59" font-family="'DM Mono',monospace" font-size="7.5" fill="#5a5970">Capex</text>
+        <text x="206" y="59" font-family="'DM Mono',monospace" font-size="7.5" fill="#5a5970">Loans</text>
+        <text x="28" y="88" font-family="'DM Mono',monospace" font-size="8" fill="#5a5970">Field</text>
+        <text x="195" y="88" text-anchor="end" font-family="'DM Mono',monospace" font-size="8" fill="#5a5970">Jan</text>
+        <text x="250" y="88" text-anchor="end" font-family="'DM Mono',monospace" font-size="8" fill="#5a5970">Feb</text>
+        <text x="305" y="88" text-anchor="end" font-family="'DM Mono',monospace" font-size="8" fill="#5a5970">Mar</text>
+        <text x="365" y="88" text-anchor="end" font-family="'DM Mono',monospace" font-size="8" fill="#5a5970">Apr</text>
+        <text x="490" y="88" text-anchor="end" font-family="'DM Mono',monospace" font-size="8" fill="#9d5ffc">Growth %</text>
+        <line x1="16" y1="93" x2="504" y2="93" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+        <g class="bw-row"><text x="28" y="110" font-family="'DM Mono',monospace" font-size="9" fill="#eae9f0">Revenue</text><text x="195" y="110" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#34d399">285</text><text x="250" y="110" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#34d399">301</text><text x="305" y="110" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#34d399">318</text><text x="365" y="110" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#34d399">336</text><rect x="420" y="100" width="60" height="14" rx="3" fill="rgba(124,58,237,0.08)" stroke="rgba(124,58,237,0.2)" stroke-width="0.5"/><text x="450" y="110" text-anchor="middle" font-family="'DM Mono',monospace" font-size="8" fill="#c4b5fd">+8.0%</text></g>
+        <g class="bw-row"><text x="28" y="130" font-family="'DM Mono',monospace" font-size="9" fill="#eae9f0">Materials</text><text x="195" y="130" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-142</text><text x="250" y="130" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-150</text><text x="305" y="130" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-159</text><text x="365" y="130" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-168</text><rect x="420" y="120" width="60" height="14" rx="3" fill="rgba(124,58,237,0.08)" stroke="rgba(124,58,237,0.2)" stroke-width="0.5"/><text x="450" y="130" text-anchor="middle" font-family="'DM Mono',monospace" font-size="8" fill="#c4b5fd">+5.0%</text></g>
+        <g class="bw-row"><text x="28" y="150" font-family="'DM Mono',monospace" font-size="9" fill="#eae9f0">Personnel</text><text x="195" y="150" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-68</text><text x="250" y="150" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-68</text><text x="305" y="150" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-68</text><text x="365" y="150" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-68</text><text x="450" y="150" text-anchor="middle" font-family="'DM Mono',monospace" font-size="8" fill="#5a5970">0%</text></g>
+        <g class="bw-row"><text x="28" y="170" font-family="'DM Mono',monospace" font-size="9" fill="#eae9f0">Other opex</text><text x="195" y="170" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-22</text><text x="250" y="170" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-23</text><text x="305" y="170" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-24</text><text x="365" y="170" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#f87171">-25</text><rect x="420" y="160" width="60" height="14" rx="3" fill="rgba(124,58,237,0.08)" stroke="rgba(124,58,237,0.2)" stroke-width="0.5"/><text x="450" y="170" text-anchor="middle" font-family="'DM Mono',monospace" font-size="8" fill="#c4b5fd">+3.0%</text></g>
+        <line x1="16" y1="180" x2="504" y2="180" stroke="rgba(124,58,237,0.15)" stroke-width="0.5"/>
+        <g class="bw-row"><text x="28" y="197" font-family="'DM Mono',monospace" font-size="9.5" fill="#c4b5fd" font-weight="700">EBITDA</text><text x="195" y="197" text-anchor="end" font-family="'DM Mono',monospace" font-size="9.5" fill="#c4b5fd" font-weight="700">53</text><text x="250" y="197" text-anchor="end" font-family="'DM Mono',monospace" font-size="9.5" fill="#c4b5fd" font-weight="700">60</text><text x="305" y="197" text-anchor="end" font-family="'DM Mono',monospace" font-size="9.5" fill="#c4b5fd" font-weight="700">67</text><text x="365" y="197" text-anchor="end" font-family="'DM Mono',monospace" font-size="9.5" fill="#c4b5fd" font-weight="700">75</text></g>
+        <rect class="bw-card" x="16" y="214" width="488" height="44" rx="8" fill="rgba(52,211,153,0.03)" stroke="rgba(52,211,153,0.12)" stroke-width="0.5"/>
+        <text x="30" y="232" font-family="'DM Mono',monospace" font-size="8.5" fill="#34d399" font-weight="600">Capex &middot; Office renovation</text>
+        <text x="30" y="248" font-family="'DM Mono',monospace" font-size="7.5" fill="#5a5970">120K &middot; 10yr straight-line</text>
+        <text x="490" y="248" text-anchor="end" font-family="'DM Mono',monospace" font-size="7.5" fill="#f87171">Dep: -1K/mo</text>
+        <rect class="bw-card" x="16" y="266" width="488" height="44" rx="8" fill="rgba(59,130,246,0.03)" stroke="rgba(59,130,246,0.12)" stroke-width="0.5"/>
+        <text x="30" y="284" font-family="'DM Mono',monospace" font-size="8.5" fill="#60a5fa" font-weight="600">Loan &middot; OP growth facility</text>
+        <text x="30" y="300" font-family="'DM Mono',monospace" font-size="7.5" fill="#5a5970">200K &middot; Fixed 1.5% + Euribor 1.7% &middot; Quarterly</text>
+        <text x="490" y="300" text-anchor="end" font-family="'DM Mono',monospace" font-size="7.5" fill="#fbbf24">Int: -583/mo</text>
+        <rect x="16" y="324" width="488" height="36" rx="10" fill="url(#budSaveGrad)"/>
+        <text x="260" y="346" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#fff" font-weight="600">Save BUD 2026</text>
+        <defs><linearGradient id="budSaveGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#6d28d9"/></linearGradient></defs>
+      </svg>
     </div>
   </div>
 </section>
@@ -1974,63 +1992,58 @@ footer {
 <!-- FORECAST TOOL DEMO -->
 <section style="overflow:hidden">
   <div style="max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding:0 52px">
-    <div class="rv d1" id="forecastWidget" style="background:rgba(10,10,20,0.9);border:1px solid rgba(52,211,153,0.1);border-radius:16px;padding:20px;position:relative;overflow:hidden">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <div style="font-size:11px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace">🔮 Revenue Forecast</div>
-        <div style="display:flex;gap:8px">
-          <span style="font-size:8px;padding:2px 8px;border-radius:10px;background:rgba(52,211,153,0.1);color:var(--green);border:1px solid rgba(52,211,153,0.2)">ACT</span>
-          <span style="font-size:8px;padding:2px 8px;border-radius:10px;background:rgba(124,58,237,0.1);color:var(--violet-hi);border:1px solid rgba(124,58,237,0.2)">FC</span>
-        </div>
-      </div>
-      <svg viewBox="0 0 400 160" style="width:100%;display:block">
+    <div class="rv d1" id="forecastWidget" style="position:relative">
+      <svg viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;animation:floatMobile 6s ease-in-out infinite;filter:drop-shadow(0 20px 60px rgba(52,211,153,0.08));">
+        <rect width="520" height="360" rx="14" fill="#0c0c18" stroke="rgba(52,211,153,0.1)" stroke-width="1"/>
+        <rect x="0" y="0" width="520" height="36" rx="14" fill="#101020"/><rect x="0" y="20" width="520" height="16" fill="#101020"/>
+        <circle cx="16" cy="18" r="4" fill="#2a2a40"/><circle cx="30" cy="18" r="4" fill="#2a2a40"/><circle cx="44" cy="18" r="4" fill="#2a2a40"/>
+        <text x="260" y="22" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" fill="#5a5970">Scenario Builder &middot; Revenue Forecast</text>
+        <circle cx="360" cy="18" r="3" fill="#34d399"/><text x="368" y="22" font-family="'DM Mono',monospace" font-size="7" fill="#5a5970">ACT</text>
+        <circle cx="400" cy="18" r="3" fill="#7c3aed"/><text x="408" y="22" font-family="'DM Mono',monospace" font-size="7" fill="#5a5970">FC</text>
+        <line x1="60" y1="60" x2="500" y2="60" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+        <line x1="60" y1="105" x2="500" y2="105" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+        <line x1="60" y1="150" x2="500" y2="150" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+        <line x1="60" y1="195" x2="500" y2="195" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+        <line x1="60" y1="240" x2="500" y2="240" stroke="rgba(255,255,255,0.025)" stroke-width="0.5"/>
+        <text x="52" y="64" text-anchor="end" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">400K</text>
+        <text x="52" y="109" text-anchor="end" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">300K</text>
+        <text x="52" y="154" text-anchor="end" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">200K</text>
+        <text x="52" y="199" text-anchor="end" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">100K</text>
+        <text x="52" y="244" text-anchor="end" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">0</text>
+        <text x="97" y="258" text-anchor="middle" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">Jan</text>
+        <text x="170" y="258" text-anchor="middle" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">Mar</text>
+        <text x="243" y="258" text-anchor="middle" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">May</text>
+        <text x="316" y="258" text-anchor="middle" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">Jul</text>
+        <text x="389" y="258" text-anchor="middle" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">Sep</text>
+        <text x="462" y="258" text-anchor="middle" font-family="'DM Mono',monospace" font-size="7" fill="rgba(255,255,255,0.12)">Nov</text>
         <defs>
-          <linearGradient id="actGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(52,211,153,0.15)"/><stop offset="100%" stop-color="rgba(52,211,153,0)"/></linearGradient>
-          <linearGradient id="fcGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(124,58,237,0.1)"/><stop offset="100%" stop-color="rgba(124,58,237,0)"/></linearGradient>
+          <linearGradient id="aGr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(52,211,153,0.15)"/><stop offset="100%" stop-color="rgba(52,211,153,0)"/></linearGradient>
+          <linearGradient id="fGr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(124,58,237,0.1)"/><stop offset="100%" stop-color="rgba(124,58,237,0)"/></linearGradient>
         </defs>
-        <line x1="40" y1="20" x2="390" y2="20" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
-        <line x1="40" y1="55" x2="390" y2="55" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
-        <line x1="40" y1="90" x2="390" y2="90" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
-        <line x1="40" y1="125" x2="390" y2="125" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
-        <text x="35" y="24" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="end" font-family="'DM Mono',monospace">400K</text>
-        <text x="35" y="59" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="end" font-family="'DM Mono',monospace">300K</text>
-        <text x="35" y="94" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="end" font-family="'DM Mono',monospace">200K</text>
-        <text x="35" y="129" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="end" font-family="'DM Mono',monospace">100K</text>
-        <text x="69" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Jan</text>
-        <text x="127" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Mar</text>
-        <text x="186" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">May</text>
-        <text x="244" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Jul</text>
-        <text x="302" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Sep</text>
-        <text x="361" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Nov</text>
-        <!-- Actuals area + line -->
-        <path class="fw-area fw-area-act" d="M69,100 L98,85 L127,92 L157,78 L186,65 L215,58 L215,135 L69,135 Z" fill="url(#actGrad)"/>
-        <polyline class="fw-act-line" points="69,100 98,85 127,92 157,78 186,65 215,58" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"/>
-        <!-- Actuals dots -->
-        <circle class="fw-dot" cx="69" cy="100" r="3" fill="#34d399"/>
-        <circle class="fw-dot" cx="98" cy="85" r="3" fill="#34d399"/>
-        <circle class="fw-dot" cx="127" cy="92" r="3" fill="#34d399"/>
-        <circle class="fw-dot" cx="157" cy="78" r="3" fill="#34d399"/>
-        <circle class="fw-dot" cx="186" cy="65" r="3" fill="#34d399"/>
-        <circle class="fw-dot" cx="215" cy="58" r="3" fill="#34d399"/>
-        <!-- Divider -->
-        <line class="fw-divider" x1="215" y1="15" x2="215" y2="140" stroke="rgba(124,58,237,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
-        <!-- Forecast area + line -->
-        <path class="fw-area fw-area-fc" d="M215,58 L244,48 L273,42 L302,35 L332,30 L361,25 L361,135 L215,135 Z" fill="url(#fcGrad)"/>
-        <polyline class="fw-fc-line" points="215,58 244,48 273,42 302,35 332,30 361,25" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-dasharray="5,5"/>
-        <!-- Labels -->
+        <path class="fw-area fw-area-act" d="M97,190 L133,172 L170,180 L206,160 L243,140 L280,130 L280,240 L97,240 Z" fill="url(#aGr)"/>
+        <polyline class="fw-act-line" points="97,190 133,172 170,180 206,160 243,140 280,130" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"/>
+        <circle class="fw-dot" cx="97" cy="190" r="4" fill="#34d399"/><circle class="fw-dot" cx="133" cy="172" r="4" fill="#34d399"/><circle class="fw-dot" cx="170" cy="180" r="4" fill="#34d399"/><circle class="fw-dot" cx="206" cy="160" r="4" fill="#34d399"/><circle class="fw-dot" cx="243" cy="140" r="4" fill="#34d399"/><circle class="fw-dot" cx="280" cy="130" r="4" fill="#34d399"/>
+        <line class="fw-divider" x1="280" y1="48" x2="280" y2="248" stroke="rgba(124,58,237,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+        <path class="fw-area fw-area-fc" d="M280,130 L316,115 L353,102 L389,88 L426,78 L462,68 L462,240 L280,240 Z" fill="url(#fGr)"/>
+        <polyline class="fw-fc-line" points="280,130 316,115 353,102 389,88 426,78 462,68" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,6"/>
         <g class="fw-labels">
-          <text x="140" y="115" fill="#34d399" font-size="8" text-anchor="middle" font-family="'DM Mono',monospace">ACT</text>
-          <text x="300" y="50" fill="#7c3aed" font-size="8" text-anchor="middle" font-family="'DM Mono',monospace">FORECAST</text>
+          <text x="185" y="215" fill="#34d399" font-size="9" text-anchor="middle" font-family="'DM Mono',monospace" font-weight="600">ACTUALS</text>
+          <text x="380" y="112" fill="#7c3aed" font-size="9" text-anchor="middle" font-family="'DM Mono',monospace" font-weight="600">FORECAST</text>
         </g>
+        <rect class="fw-callout" x="16" y="272" width="488" height="40" rx="8" fill="rgba(251,191,36,0.04)" stroke="rgba(251,191,36,0.15)" stroke-width="0.5"/>
+        <text class="fw-callout" x="30" y="290" font-family="'DM Mono',monospace" font-size="8" fill="#fbbf24" font-weight="600">EBITDA-9000</text>
+        <text class="fw-callout" x="30" y="304" font-family="'DM Mono',monospace" font-size="7.5" fill="#a09fb0">FC assumes 12% Q4 growth. Historical Q4 avg is 5%. Consider revising to 7-8%.</text>
+        <circle cx="462" cy="68" r="8" fill="none" stroke="rgba(124,58,237,0.3)" stroke-width="1">
+          <animate attributeName="r" values="6;12;6" dur="2.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0.15;0.6" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
       </svg>
-      <div class="fw-callout" style="margin-top:10px;padding:8px 12px;background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.12);border-radius:8px;font-size:9px;color:var(--amber);font-family:'DM Mono',monospace">
-        ⚠ AI: FC assumes 12% growth — historical Q4 avg is 5%. Consider revising to 7–8%.
-      </div>
     </div>
     <div>
       <div class="label rv">Scenario Planning</div>
       <h2 class="section-title rv">See the future<br/><span class="accent">before it happens.</span></h2>
       <p class="rv d1" style="color:var(--mid);font-size:14px;line-height:1.7;margin-bottom:16px">Build forecasts manually or let AI generate them from your historical patterns. Compare actuals vs budget vs forecast side by side. Run what-if scenarios to stress-test your assumptions.</p>
-      <p class="rv d2" style="color:var(--mid);font-size:13px;line-height:1.7">The AI doesn't just forecast — it <b style="color:var(--text)">challenges your assumptions</b>. If your growth rate doesn't match history or the macro environment, it will tell you.</p>
+      <p class="rv d2" style="color:var(--mid);font-size:13px;line-height:1.7">The AI doesn't just forecast &mdash; it <b style="color:var(--text)">challenges your assumptions</b>. If your growth rate doesn't match history or the macro environment, it will tell you.</p>
     </div>
   </div>
 </section>
