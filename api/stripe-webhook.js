@@ -1,5 +1,7 @@
 export const config = { runtime: 'nodejs', api: { bodyParser: false } };
 
+import crypto from 'crypto';
+
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 const SUPABASE_URL           = process.env.SUPABASE_URL || 'https://nghlvfngpfrhhigkoeem.supabase.co';
 const SUPABASE_SERVICE_KEY   = process.env.SUPABASE_SERVICE_KEY;
@@ -13,6 +15,8 @@ async function verifyStripeSignature(payload, signature, secret) {
 
   const timestamp = parts['t'];
   const sig = parts['v1'];
+  if (!timestamp || !sig) return false;
+
   const signedPayload = `${timestamp}.${payload}`;
 
   const key = await crypto.subtle.importKey(
@@ -33,7 +37,13 @@ async function verifyStripeSignature(payload, signature, secret) {
     .map(b => b.toString(16).padStart(2, '0'))
     .join('');
 
-  return expected === sig;
+  // Timing-safe comparison
+  try {
+    const bufA = Buffer.from(expected, 'hex');
+    const bufB = Buffer.from(sig, 'hex');
+    if (bufA.length !== bufB.length) return false;
+    return crypto.timingSafeEqual(bufA, bufB);
+  } catch { return false; }
 }
 
 export default async function handler(req) {
@@ -65,7 +75,6 @@ export default async function handler(req) {
       return new Response('No user info', { status: 400 });
     }
 
-    // Update user_profiles in Supabase
     const query = user_id
       ? `user_id=eq.${user_id}`
       : `email=eq.${encodeURIComponent(user_email)}`;
