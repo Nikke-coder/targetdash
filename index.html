@@ -2151,6 +2151,20 @@ footer {
       <p class="feat-body">We deliberately do not connect to your accounting system via API. All data is uploaded manually as CSV or Excel — you decide exactly what enters the platform and when. No background syncing, no standing access to your books.</p>
       <span class="feat-tag">Manual upload · Full control</span>
     </div>
+    <div class="feat rv d1">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+      <div class="feat-title">Data minimisation</div>
+      <p class="feat-body">Upload only aggregated financial totals — revenue, costs, balance sheet lines. The platform is designed for company-level data, not transaction-level detail. Less data in means less data at risk.</p>
+      <span class="feat-tag">Less is more</span>
+    </div>
+    <div class="feat rv d2">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg></div>
+      <div class="feat-title">Compliant by default</div>
+      <p class="feat-body">GDPR, EU AI Act (2024/1689), and EU Data Act compliance are built into the architecture — not bolted on. Data Processing Agreement, Terms of Service, and Privacy Policy are presented at first login and versioned for audit.</p>
+      <span class="feat-tag">GDPR · EU AI Act · EU Data Act</span>
+    </div>
   </div>
 </section>
 
@@ -2165,7 +2179,7 @@ footer {
       Sign in
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
-    <a href="/cdn-cgi/l/email-protection#4d232426212c3e0d392c3f2a2839292c3e25632c24" class="hero-btn-sec">Contact us</a>
+    <a href="mailto:niklas@targetdash.ai" class="hero-btn-sec">Contact us</a>
   </div>
 </section>
 
@@ -2198,8 +2212,8 @@ footer {
     </div>
     <div class="contact-modal-title">Get in touch</div>
     <div class="contact-modal-sub">Questions about targetdash? Want a demo or just want to talk numbers? Niklas is happy to hear from you.</div>
-    <a href="/cdn-cgi/l/email-protection#89e7e0e2e5e8fac9fde8fbeeecfdede8fae1a7e8e0" class="contact-email-box">
-      <span class="contact-email-text"><span class="__cf_email__" data-cfemail="533d3a383f3220132732213436273732203b7d323a">[email&#160;protected]</span></span>
+    <a href="mailto:niklas@targetdash.ai" class="contact-email-box">
+      <span class="contact-email-text">niklas@targetdash.ai</span>
       <span class="contact-email-arrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </span>
@@ -2231,18 +2245,9 @@ footer {
     </button>
   </div>
   <div class="popup-msgs" id="popupMsgs"></div>
-  <div id="popupPrompts" style="padding:8px 16px;display:flex;gap:6px;flex-wrap:wrap">
-    <button onclick="sendPopupMsg('What is targetdash?')" style="padding:4px 10px;border-radius:12px;border:1px solid var(--border);background:var(--panel);color:var(--mid);font-size:10px;cursor:pointer;font-family:var(--ui)">What is targetdash?</button>
-    <button onclick="sendPopupMsg('How does the AI work?')" style="padding:4px 10px;border-radius:12px;border:1px solid var(--border);background:var(--panel);color:var(--mid);font-size:10px;cursor:pointer;font-family:var(--ui)">How does the AI work?</button>
-    <button onclick="sendPopupMsg('Is my data safe?')" style="padding:4px 10px;border-radius:12px;border:1px solid var(--border);background:var(--panel);color:var(--mid);font-size:10px;cursor:pointer;font-family:var(--ui)">Is my data safe?</button>
-  </div>
-  <div style="padding:8px 12px 12px;display:flex;gap:8px">
-    <input id="popupInput" type="text" placeholder="Ask about targetdash..." onkeydown="if(event.key==='Enter')sendPopupMsg(this.value)" style="flex:1;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:12px;font-family:var(--ui);outline:none"/>
-    <button onclick="sendPopupMsg(document.getElementById('popupInput').value)" style="padding:8px 14px;border-radius:10px;border:none;background:var(--violet);color:#fff;font-size:12px;cursor:pointer;font-family:var(--ui);font-weight:600">→</button>
-  </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── CANVAS — VIOLET AMBIENT ──────────────────────────────────────────────
 const cv = document.getElementById('canvas');
 const cc = cv.getContext('2d');
@@ -2937,58 +2942,6 @@ function addTypingPopup() {
   msgs.scrollTop = msgs.scrollHeight;
 }
 
-function sendPopupMsg(text) {
-  if(!text.trim()) return;
-  addPopupMsg('user', text);
-  document.getElementById('popupInput').value = '';
-  document.getElementById('popupPrompts').style.display = 'none';
-  clearInterval(factTimer);
-  setTimeout(() => addTypingPopup(), 300);
-  setTimeout(() => {
-    const t = document.getElementById('popupTyping');
-    if(t) t.remove();
-    // respond with a relevant fact or capability answer
-    const q = text.toLowerCase();
-    let reply;
-    if(q.includes('ai') || q.includes('hosting') || q.includes('server') || q.includes('inference'))
-      reply = FACTS[0];
-    else if(q.includes('role') || q.includes('cfo') || q.includes('ceo') || q.includes('advisor'))
-      reply = FACTS[2];
-    else if(q.includes('encrypt') || q.includes('security') || q.includes('safe'))
-      reply = FACTS[4];
-    else if(q.includes('user') || q.includes('team') || q.includes('member'))
-      reply = FACTS[14];
-    else if(q.includes('budget') || q.includes('capex') || q.includes('loan') || q.includes('forecast'))
-      reply = FACTS[8];
-    else if(q.includes('consolidat') || q.includes('group') || q.includes('subsidiary'))
-      reply = FACTS[16];
-    else if(q.includes('what-if') || q.includes('scenario') || q.includes('heatmap'))
-      reply = FACTS[12];
-    else if(q.includes('board') || q.includes('report') || q.includes('pack'))
-      reply = 'Generate <span class="pv">professional board packs</span> in one click — P&amp;L variance, balance sheet, KPIs, AI insights, and sensitivity analysis. Pin AI insights directly to your report.';
-    else if(q.includes('dashboard') || q.includes('cost centre') || q.includes('custom'))
-      reply = FACTS[8];
-    else if(q.includes('csv') || q.includes('upload') || q.includes('import'))
-      reply = FACTS[6];
-    else if(q.includes('gdpr') || q.includes('eu') || q.includes('data'))
-      reply = FACTS[10];
-    else if(q.includes('entity') || q.includes('switch') || q.includes('company'))
-      reply = FACTS[12];
-    else if(q.includes('contact') || q.includes('niklas') || q.includes('email'))
-      reply = FACTS[17];
-    else
-      reply = FACTS[Math.floor(Math.random() * FACTS.length)];
-    addPopupMsg('ai', reply);
-    setTimeout(() => startFactStream(), 3000);
-  }, 1500);
-};
-
-document.getElementById('popupInput')?.addEventListener('keydown', e => {
-  if(e.key === 'Enter') sendPopupMsg(e.target.value);
-});
-document.querySelector('.popup-send')?.addEventListener('click', () => {
-  sendPopupMsg(document.getElementById('popupInput')?.value || '');
-});
 </script>
 </body>
 </html>
