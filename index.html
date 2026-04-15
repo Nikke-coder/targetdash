@@ -1089,6 +1089,40 @@ footer {
 
 /* ── Agent section animations ── */
 @keyframes agentSweep {
+
+/* ── Budget widget: rows cascade ── */
+#budgetWidget .bw-row { opacity:0; transform:translateX(-12px); transition: opacity .5s ease, transform .5s ease; }
+#budgetWidget.playing .bw-row { opacity:1; transform:none; }
+#budgetWidget.playing .bw-row:nth-child(2){transition-delay:.15s}
+#budgetWidget.playing .bw-row:nth-child(3){transition-delay:.3s}
+#budgetWidget.playing .bw-row:nth-child(4){transition-delay:.45s}
+#budgetWidget.playing .bw-row:nth-child(5){transition-delay:.6s}
+#budgetWidget .bw-card { opacity:0; transform:translateY(10px); transition: opacity .45s ease, transform .45s ease; }
+#budgetWidget.playing .bw-card:nth-of-type(1){opacity:1;transform:none;transition-delay:.8s}
+#budgetWidget.playing .bw-card:nth-of-type(2){opacity:1;transform:none;transition-delay:1s}
+
+/* ── Forecast widget: line draw + area fade ── */
+#forecastWidget .fw-act-line { stroke-dasharray:300; stroke-dashoffset:300; transition: stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1); }
+#forecastWidget.playing .fw-act-line { stroke-dashoffset:0; }
+#forecastWidget .fw-fc-line { stroke-dasharray:300; stroke-dashoffset:300; transition: stroke-dashoffset 1.2s cubic-bezier(.16,1,.3,1) .7s; opacity:0; }
+#forecastWidget.playing .fw-fc-line { stroke-dashoffset:0; opacity:1; }
+#forecastWidget .fw-area { opacity:0; transition: opacity .6s ease; }
+#forecastWidget.playing .fw-area-act { opacity:.8; transition-delay:.3s; }
+#forecastWidget.playing .fw-area-fc { opacity:.6; transition-delay:1s; }
+#forecastWidget .fw-dot { opacity:0; transform-origin:center; transition: opacity .2s ease, transform .2s ease; transform:scale(0); }
+#forecastWidget.playing .fw-dot { opacity:1; transform:scale(1); }
+#forecastWidget.playing .fw-dot:nth-of-type(1){transition-delay:.15s}
+#forecastWidget.playing .fw-dot:nth-of-type(2){transition-delay:.3s}
+#forecastWidget.playing .fw-dot:nth-of-type(3){transition-delay:.45s}
+#forecastWidget.playing .fw-dot:nth-of-type(4){transition-delay:.6s}
+#forecastWidget.playing .fw-dot:nth-of-type(5){transition-delay:.75s}
+#forecastWidget.playing .fw-dot:nth-of-type(6){transition-delay:.9s}
+#forecastWidget .fw-divider { opacity:0; transition: opacity .4s ease .5s; }
+#forecastWidget.playing .fw-divider { opacity:1; }
+#forecastWidget .fw-labels text { opacity:0; transition: opacity .4s ease 1.5s; }
+#forecastWidget.playing .fw-labels text { opacity:.7; }
+#forecastWidget .fw-callout { opacity:0; transform:translateY(8px); transition: opacity .5s ease 1.8s, transform .5s ease 1.8s; }
+#forecastWidget.playing .fw-callout { opacity:1; transform:none; }
   0% { width: 0%; opacity: 0; }
   30% { width: 100%; opacity: 1; }
   60% { width: 100%; opacity: 0; }
@@ -1137,6 +1171,11 @@ footer {
   .stats-grid{grid-template-columns:1fr 1fr;}
   footer{flex-direction:column;gap:20px;}
   .hero-stats{flex-wrap:wrap;gap:20px;}
+  #budgetDemo + div, #forecastDemo + div { grid-template-columns:1fr !important; }
+}
+@media(max-width:900px){
+  #budgetDemo { margin-top: 24px; }
+  section > div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; gap:24px !important; padding:0 24px !important; }
 }
 </style>
 </head>
@@ -1158,7 +1197,7 @@ footer {
     <a href="#ai">AI advisor</a>
     <a href="#agents">Agents</a>
     <a href="#security">Security</a>
-    
+    <a href="#responsible-ai">Responsible AI</a>
   </div>
   <div class="nav-right">
     <button class="btn-ghost" onclick="document.getElementById('contactModal').classList.add('open')" style="border:none;cursor:pointer;background:transparent;">Contact</button>
@@ -1173,16 +1212,16 @@ footer {
   <div class="hero-left">
     <div class="hero-badge">
       <span class="badge-dot"></span>
-      9 AI advisor roles · Private AI · Invite-only
+      Budget Builder · Group Consolidation · EU-hosted AI · Invite-only
     </div>
     <div class="hero-headline">
       <h1 class="hero-h1">
-        Be a<br/>
-        <span class="hl">financial hero.</span>
+        Wield financial<br/>
+        <span class="hl">superpowers.</span>
       </h1>
     </div>
     <p class="hero-sub">
-      Unlock <b>superpowers</b> for your business finances — live KPIs, 9 AI advisor roles, P&L &amp; balance sheet forecasting, entity switching and cost centre intelligence — all running on privacy-first self-hosted AI.
+      Unlock <b>superpowers</b> for your business finances — live KPIs, 9 AI advisor roles, P&L &amp; balance sheet forecasting, entity switching and cost centre intelligence — all running on EU-hosted AI.
     </p>
     <div class="hero-actions">
       <a href="/login" class="hero-btn-main">
@@ -1524,28 +1563,28 @@ footer {
 <div class="strip">
   <div class="strip-track">
     <span class="strip-item lit"><span class="dot"></span>KPI Dashboards</span>
-    <span class="strip-item"><span class="dot"></span>P&L &amp; Balance Sheet Forecasting</span>
+    <span class="strip-item"><span class="dot"></span>Budget Builder</span>
     <span class="strip-item lit"><span class="dot"></span>9 AI Advisor Roles</span>
-    <span class="strip-item"><span class="dot"></span>Budget vs Actuals</span>
-    <span class="strip-item lit"><span class="dot"></span>Entity Switching</span>
-    <span class="strip-item"><span class="dot"></span>Private AI Infrastructure</span>
-    <span class="strip-item lit"><span class="dot"></span>Cost Centre Dashboards</span>
-    <span class="strip-item"><span class="dot"></span>Cash Flow Intelligence</span>
+    <span class="strip-item"><span class="dot"></span>Capex &amp; Loan Schedules</span>
+    <span class="strip-item lit"><span class="dot"></span>Group Consolidation</span>
+    <span class="strip-item"><span class="dot"></span>What-if Analysis</span>
+    <span class="strip-item lit"><span class="dot"></span>Board Pack Reports</span>
+    <span class="strip-item"><span class="dot"></span>Scenario Builder</span>
     <span class="strip-item lit"><span class="dot"></span>FX Conversion (ECB)</span>
     <span class="strip-item"><span class="dot"></span>CEO · CFO · CMO · CRO · CTO · COO · HR · Auditor · Board Advisor</span>
-    <span class="strip-item lit"><span class="dot"></span>Member Access Control</span>
+    <span class="strip-item lit"><span class="dot"></span>P&amp;L · Balance Sheet · Cash Flow</span>
     <!-- dupe -->
     <span class="strip-item lit"><span class="dot"></span>KPI Dashboards</span>
-    <span class="strip-item"><span class="dot"></span>P&L &amp; Balance Sheet Forecasting</span>
+    <span class="strip-item"><span class="dot"></span>Budget Builder</span>
     <span class="strip-item lit"><span class="dot"></span>9 AI Advisor Roles</span>
-    <span class="strip-item"><span class="dot"></span>Budget vs Actuals</span>
-    <span class="strip-item lit"><span class="dot"></span>Entity Switching</span>
-    <span class="strip-item"><span class="dot"></span>Private AI Infrastructure</span>
-    <span class="strip-item lit"><span class="dot"></span>Cost Centre Dashboards</span>
-    <span class="strip-item"><span class="dot"></span>Cash Flow Intelligence</span>
+    <span class="strip-item"><span class="dot"></span>Capex &amp; Loan Schedules</span>
+    <span class="strip-item lit"><span class="dot"></span>Group Consolidation</span>
+    <span class="strip-item"><span class="dot"></span>What-if Analysis</span>
+    <span class="strip-item lit"><span class="dot"></span>Board Pack Reports</span>
+    <span class="strip-item"><span class="dot"></span>Scenario Builder</span>
     <span class="strip-item lit"><span class="dot"></span>FX Conversion (ECB)</span>
     <span class="strip-item"><span class="dot"></span>CEO · CFO · CMO · CRO · CTO · COO · HR · Auditor · Board Advisor</span>
-    <span class="strip-item lit"><span class="dot"></span>Member Access Control</span>
+    <span class="strip-item lit"><span class="dot"></span>P&amp;L · Balance Sheet · Cash Flow</span>
   </div>
 </div>
 
@@ -1579,7 +1618,7 @@ footer {
             <div class="agent-role" id="agentRole"><span class="agent-status-dot"></span>Responding as CFO</div>
           </div>
         </div>
-        <div class="credit-tag"><span>Private AI</span> · EU only</div>
+        <div class="credit-tag"><span>EU-hosted AI</span> · GDPR</div>
       </div>
       <div class="chat-msgs" id="chatMsgs"></div>
       <div class="chat-footer">
@@ -1698,10 +1737,10 @@ footer {
   <div class="cc-inner">
 
     <div class="cc-copy">
-      <div class="label rv">Cost Centre Dashboards</div>
-      <h2 class="section-title rv">Slice your numbers<br/><span class="accent">any way you need.</span></h2>
-      <p class="rv">Build complex dashboards by any dimension — marketing channel, country, city, department or product line. Switch views instantly and see exactly what's driving your costs and revenue.</p>
-      <p class="rv">No pivot tables. No exports. Just <b>click a dimension and your dashboard rebuilds itself</b> around it.</p>
+      <div class="label rv">Group Consolidation</div>
+      <h2 class="section-title rv">Multiple entities,<br/><span class="accent">one consolidated view.</span></h2>
+      <p class="rv">Manage multi-entity groups with elimination entries. Switch between subsidiaries instantly or view consolidated financials across the entire group.</p>
+      <p class="rv">Supports <b>multiple currencies with ECB FX rates</b>, ownership percentages, and inter-company eliminations — just like your auditors expect.</p>
       <div class="dim-tabs rv" id="dimTabs">
         <span class="dim-tab active" data-dim="Marketing">Marketing</span>
         <span class="dim-tab" data-dim="Country">Country</span>
@@ -1786,30 +1825,30 @@ footer {
     <div class="feat rv d2">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></div>
-      <div class="feat-title">Cost Centre Dashboards</div>
-      <p class="feat-body">Build complex dashboards by any dimension — marketing channel, country, city, department or product line. Drill down into exactly what drives your numbers.</p>
-      <span class="feat-tag">Flexible</span>
+      <div class="feat-title">Budget Builder</div>
+      <p class="feat-body">Build budgets with growth assumptions, line-item sub-tables, capex investment schedules, and loan amortisation tables. All flows automatically to P&amp;L and balance sheet.</p>
+      <span class="feat-tag">Capex · Loans · Sub-tables</span>
     </div>
     <div class="feat rv">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
       <div class="feat-title">AI Advisor — 9 Roles</div>
       <p class="feat-body">Switch between CEO, CFO, CMO, CRO, CTO, COO, HR Manager, Auditor and Board Advisor perspectives. Each role gives targeted insights from your live data.</p>
-      <span class="feat-tag">Private AI</span>
+      <span class="feat-tag">EU-hosted AI</span>
     </div>
     <div class="feat rv d1">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <div class="feat-title">P&L &amp; Balance Sheet Forecasting</div>
-      <p class="feat-body">Full forecast mode for profit &amp; loss and balance sheet. Build scenarios, compare actuals vs budget vs forecast, and see the numbers before they happen.</p>
-      <span class="feat-tag">Forecast mode</span>
+      <div class="feat-title">Scenario &amp; What-if Analysis</div>
+      <p class="feat-body">Build multi-year forecasts manually or with AI. Run what-if heatmaps to see how revenue and cost changes affect EBITDA, equity, and cash.</p>
+      <span class="feat-tag">What-if heatmaps</span>
     </div>
     <div class="feat rv d2">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg></div>
-      <div class="feat-title">Entity Switching</div>
-      <p class="feat-body">Manage multiple companies from a single login. Switch between entities instantly — each with its own data, dashboards and AI context. Per-entity data persistence built in.</p>
-      <span class="feat-tag">Multi-entity</span>
+      <div class="feat-title">Board Pack Reports</div>
+      <p class="feat-body">Generate professional board reports in one click. P&amp;L with variance commentary, balance sheet, KPIs, AI insights, and sensitivity analysis — ready for your next board meeting.</p>
+      <span class="feat-tag">One-click PDF</span>
     </div>
   </div>
 </section>
@@ -1850,13 +1889,13 @@ footer {
       <div class="label rv">The platform</div>
       <h2 class="section-title rv">One screen.<br/><span class="accent">Your whole business.</span></h2>
       <ul class="plat-list rv">
-        <li><span class="check">✓</span> P&L and Balance Sheet forecast mode with scenario comparison</li>
-        <li><span class="check">✓</span> Entity switching with per-entity data persistence</li>
-        <li><span class="check">✓</span> Cost centre dashboards by country, city, channel or department</li>
-        <li><span class="check">✓</span> 9 AI advisor roles — runs on our own servers</li>
-        <li><span class="check">✓</span> FX conversion via ECB / Suomen Pankki rates</li>
-        <li><span class="check">✓</span> Google SSO + email authentication</li>
-        <li><span class="check">✓</span> Deployed on EU edge infrastructure</li>
+        <li><span class="check">✓</span> Budget Builder with capex schedules and loan amortisation tables</li>
+        <li><span class="check">✓</span> Scenario builder and what-if heatmap analysis</li>
+        <li><span class="check">✓</span> Group consolidation with elimination entries and multi-currency</li>
+        <li><span class="check">✓</span> Board Pack reports with AI insights and variance commentary</li>
+        <li><span class="check">✓</span> 9 AI advisor roles — EU-hosted, challenges your forecasts</li>
+        <li><span class="check">✓</span> FX conversion via ECB rates · 3 years history + 3 years forecast</li>
+        <li><span class="check">✓</span> Encrypted and hosted entirely within the EU</li>
       </ul>
     </div>
     <div class="terminal rv">
@@ -1893,6 +1932,109 @@ footer {
   </div>
 </section>
 
+<!-- BUDGET BUILDER DEMO -->
+<section style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden">
+  <div style="max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding:0 52px">
+    <div>
+      <div class="label rv">Budget Builder</div>
+      <h2 class="section-title rv">Build budgets<br/><span class="accent">that actually work.</span></h2>
+      <p class="rv d1" style="color:var(--mid);font-size:14px;line-height:1.7;margin-bottom:16px">Set growth assumptions per line item. Add investment schedules with automatic depreciation. Model loan repayments with fixed and variable rates. Everything flows to your P&L and balance sheet — no formulas, no spreadsheets.</p>
+      <div class="rv d2" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px">
+        <span style="padding:4px 10px;border-radius:16px;font-size:10px;font-family:'DM Mono',monospace;color:var(--violet-hi);border:1px solid rgba(124,58,237,0.2);background:rgba(124,58,237,0.06)">Growth %</span>
+        <span style="padding:4px 10px;border-radius:16px;font-size:10px;font-family:'DM Mono',monospace;color:var(--green);border:1px solid rgba(52,211,153,0.2);background:rgba(52,211,153,0.04)">Capex schedules</span>
+        <span style="padding:4px 10px;border-radius:16px;font-size:10px;font-family:'DM Mono',monospace;color:var(--amber);border:1px solid rgba(251,191,36,0.2);background:rgba(251,191,36,0.04)">Loan amortisation</span>
+        <span style="padding:4px 10px;border-radius:16px;font-size:10px;font-family:'DM Mono',monospace;color:var(--mid);border:1px solid var(--border);background:var(--panel)">Sub-tables</span>
+        <span style="padding:4px 10px;border-radius:16px;font-size:10px;font-family:'DM Mono',monospace;color:var(--mid);border:1px solid var(--border);background:var(--panel)">DSO / DIO / DPO</span>
+      </div>
+    </div>
+    <div class="rv d2" id="budgetWidget" style="background:rgba(10,10,20,0.9);border:1px solid rgba(124,58,237,0.1);border-radius:16px;padding:20px;font-family:'DM Mono',monospace;overflow:hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--text)">📊 Budget Builder · 2026</div>
+        <div style="font-size:9px;color:var(--dim)">P&L</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:10px">
+        <tr style="color:var(--dim)"><td></td><td style="text-align:right;padding:2px 6px">Jan</td><td style="text-align:right;padding:2px 6px">Feb</td><td style="text-align:right;padding:2px 6px">Mar</td><td style="text-align:right;padding:2px 6px;color:var(--violet-hi)">Gr.%</td></tr>
+        <tr class="bw-row"><td style="color:var(--text);padding:4px 0">Revenue</td><td style="text-align:right;padding:4px 6px;color:var(--green)">285</td><td style="text-align:right;padding:4px 6px;color:var(--green)">301</td><td style="text-align:right;padding:4px 6px;color:var(--green)">318</td><td style="text-align:right;padding:4px 6px;color:var(--violet-hi)">+8%</td></tr>
+        <tr class="bw-row"><td style="color:var(--text);padding:4px 0">Materials</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-142</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-150</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-159</td><td style="text-align:right;padding:4px 6px;color:var(--violet-hi)">+5%</td></tr>
+        <tr class="bw-row"><td style="color:var(--text);padding:4px 0">Personnel</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-68</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-68</td><td style="text-align:right;padding:4px 6px;color:var(--red)">-68</td><td style="text-align:right;padding:4px 6px;color:var(--dim)">0%</td></tr>
+        <tr class="bw-row" style="border-top:1px solid rgba(124,58,237,0.15)"><td style="color:var(--violet-hi);padding:6px 0;font-weight:700">EBITDA</td><td style="text-align:right;padding:6px 6px;color:var(--violet-hi);font-weight:700">75</td><td style="text-align:right;padding:6px 6px;color:var(--violet-hi);font-weight:700">83</td><td style="text-align:right;padding:6px 6px;color:var(--violet-hi);font-weight:700">91</td><td></td></tr>
+      </table>
+      <div class="bw-card" style="margin-top:12px;padding:10px 12px;background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.1);border-radius:8px">
+        <div style="font-size:9px;color:var(--green);font-weight:600;margin-bottom:4px">🏗️ Capex · Office renovation</div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dim)"><span>€120K · 10yr · straight-line</span><span style="color:var(--red)">Dep: -1K/mo</span></div>
+      </div>
+      <div class="bw-card" style="margin-top:6px;padding:10px 12px;background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.1);border-radius:8px">
+        <div style="font-size:9px;color:#60a5fa;font-weight:600;margin-bottom:4px">🏦 Loan · OP growth facility</div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dim)"><span>€200K · 3.2%+Euribor · 3mo</span><span style="color:var(--amber)">Int: -€583/mo</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORECAST TOOL DEMO -->
+<section style="overflow:hidden">
+  <div style="max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding:0 52px">
+    <div class="rv d1" id="forecastWidget" style="background:rgba(10,10,20,0.9);border:1px solid rgba(52,211,153,0.1);border-radius:16px;padding:20px;position:relative;overflow:hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace">🔮 Revenue Forecast</div>
+        <div style="display:flex;gap:8px">
+          <span style="font-size:8px;padding:2px 8px;border-radius:10px;background:rgba(52,211,153,0.1);color:var(--green);border:1px solid rgba(52,211,153,0.2)">ACT</span>
+          <span style="font-size:8px;padding:2px 8px;border-radius:10px;background:rgba(124,58,237,0.1);color:var(--violet-hi);border:1px solid rgba(124,58,237,0.2)">FC</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 400 160" style="width:100%;display:block">
+        <defs>
+          <linearGradient id="actGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(52,211,153,0.15)"/><stop offset="100%" stop-color="rgba(52,211,153,0)"/></linearGradient>
+          <linearGradient id="fcGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(124,58,237,0.1)"/><stop offset="100%" stop-color="rgba(124,58,237,0)"/></linearGradient>
+        </defs>
+        <line x1="40" y1="20" x2="390" y2="20" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+        <line x1="40" y1="55" x2="390" y2="55" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+        <line x1="40" y1="90" x2="390" y2="90" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+        <line x1="40" y1="125" x2="390" y2="125" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+        <text x="35" y="24" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="end" font-family="'DM Mono',monospace">400K</text>
+        <text x="35" y="59" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="end" font-family="'DM Mono',monospace">300K</text>
+        <text x="35" y="94" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="end" font-family="'DM Mono',monospace">200K</text>
+        <text x="35" y="129" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="end" font-family="'DM Mono',monospace">100K</text>
+        <text x="69" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Jan</text>
+        <text x="127" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Mar</text>
+        <text x="186" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">May</text>
+        <text x="244" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Jul</text>
+        <text x="302" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Sep</text>
+        <text x="361" y="148" fill="rgba(255,255,255,0.15)" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">Nov</text>
+        <!-- Actuals area + line -->
+        <path class="fw-area fw-area-act" d="M69,100 L98,85 L127,92 L157,78 L186,65 L215,58 L215,135 L69,135 Z" fill="url(#actGrad)"/>
+        <polyline class="fw-act-line" points="69,100 98,85 127,92 157,78 186,65 215,58" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"/>
+        <!-- Actuals dots -->
+        <circle class="fw-dot" cx="69" cy="100" r="3" fill="#34d399"/>
+        <circle class="fw-dot" cx="98" cy="85" r="3" fill="#34d399"/>
+        <circle class="fw-dot" cx="127" cy="92" r="3" fill="#34d399"/>
+        <circle class="fw-dot" cx="157" cy="78" r="3" fill="#34d399"/>
+        <circle class="fw-dot" cx="186" cy="65" r="3" fill="#34d399"/>
+        <circle class="fw-dot" cx="215" cy="58" r="3" fill="#34d399"/>
+        <!-- Divider -->
+        <line class="fw-divider" x1="215" y1="15" x2="215" y2="140" stroke="rgba(124,58,237,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+        <!-- Forecast area + line -->
+        <path class="fw-area fw-area-fc" d="M215,58 L244,48 L273,42 L302,35 L332,30 L361,25 L361,135 L215,135 Z" fill="url(#fcGrad)"/>
+        <polyline class="fw-fc-line" points="215,58 244,48 273,42 302,35 332,30 361,25" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-dasharray="5,5"/>
+        <!-- Labels -->
+        <g class="fw-labels">
+          <text x="140" y="115" fill="#34d399" font-size="8" text-anchor="middle" font-family="'DM Mono',monospace">ACT</text>
+          <text x="300" y="50" fill="#7c3aed" font-size="8" text-anchor="middle" font-family="'DM Mono',monospace">FORECAST</text>
+        </g>
+      </svg>
+      <div class="fw-callout" style="margin-top:10px;padding:8px 12px;background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.12);border-radius:8px;font-size:9px;color:var(--amber);font-family:'DM Mono',monospace">
+        ⚠ AI: FC assumes 12% growth — historical Q4 avg is 5%. Consider revising to 7–8%.
+      </div>
+    </div>
+    <div>
+      <div class="label rv">Scenario Planning</div>
+      <h2 class="section-title rv">See the future<br/><span class="accent">before it happens.</span></h2>
+      <p class="rv d1" style="color:var(--mid);font-size:14px;line-height:1.7;margin-bottom:16px">Build forecasts manually or let AI generate them from your historical patterns. Compare actuals vs budget vs forecast side by side. Run what-if scenarios to stress-test your assumptions.</p>
+      <p class="rv d2" style="color:var(--mid);font-size:13px;line-height:1.7">The AI doesn't just forecast — it <b style="color:var(--text)">challenges your assumptions</b>. If your growth rate doesn't match history or the macro environment, it will tell you.</p>
+    </div>
+  </div>
+</section>
+
 <!-- SECURITY -->
 <section id="security">
   <div class="label rv">Security & Privacy</div>
@@ -1902,21 +2044,21 @@ footer {
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
       <div class="feat-title">End-to-end encryption</div>
-      <p class="feat-body">End-to-end encrypted — your data is unreadable before it leaves your browser. Encrypted at rest and in transit. Your financial data is unreadable to anyone without your credentials — including us.</p>
+      <p class="feat-body">Your financial data is encrypted at every stage — in your browser, during transmission, and at rest. Only authorised users can access it.</p>
       <span class="feat-tag">End-to-end encrypted</span>
     </div>
     <div class="feat rv d1">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <div class="feat-title">Private AI — zero external calls</div>
-      <p class="feat-body">AI runs entirely on our own servers — your data never touches a third party. No external API calls, no cloud LLM providers in the loop. Complete data sovereignty.</p>
-      <span class="feat-tag">Private · Self-hosted</span>
+      <div class="feat-title">EU-hosted AI</div>
+      <p class="feat-body">AI runs on European servers. Your financial data is processed within the EU and never leaves our infrastructure. No external data transfers.</p>
+      <span class="feat-tag">EU-hosted</span>
     </div>
     <div class="feat rv d2">
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-      <div class="feat-title">Architecturally isolated</div>
-      <p class="feat-body">Every query is scoped to your company at the database level. It is architecturally impossible for one client to access another client's data — even if credentials were compromised.</p>
+      <div class="feat-title">Complete client isolation</div>
+      <p class="feat-body">Every client's data is completely isolated. It is impossible for one company to see another's financial data.</p>
       <span class="feat-tag">Isolated</span>
     </div>
     <div class="feat rv">
@@ -1930,7 +2072,7 @@ footer {
       <div class="feat-shine"></div>
       <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
       <div class="feat-title">No AI training on your data</div>
-      <p class="feat-body">Your financial data is never used to train AI models. Prompts are processed in isolated, ephemeral sessions on our own servers. Nothing is retained, logged or shared.</p>
+      <p class="feat-body">Your financial data is never used to train AI models. We do not allow API calls to be used for model training or improvement. Every session is ephemeral — nothing is retained or shared.</p>
       <span class="feat-tag">Private by design</span>
     </div>
     <div class="feat rv d2">
@@ -1951,7 +2093,64 @@ footer {
     <div class="stat-cell rv"><span class="stat-num">&lt;1<span class="u">s</span></span><span class="stat-lbl">Data sync latency</span><div class="stat-bar" data-w="95%"></div></div>
     <div class="stat-cell rv d1"><span class="stat-num">9<span class="u">+</span></span><span class="stat-lbl">AI advisor roles</span><div class="stat-bar" data-w="100%"></div></div>
     <div class="stat-cell rv d2"><span class="stat-num">24<span class="u">/7</span></span><span class="stat-lbl">Always-on monitoring</span><div class="stat-bar" data-w="100%"></div></div>
-    <div class="stat-cell rv d3"><span class="stat-num">AI<span class="u">›</span></span><span class="stat-lbl">Private AI engine</span><div class="stat-bar" data-w="75%"></div></div>
+    <div class="stat-cell rv d3"><span class="stat-num">AI<span class="u">›</span></span><span class="stat-lbl">EU-hosted AI</span><div class="stat-bar" data-w="75%"></div></div>
+  </div>
+</section>
+
+<!-- RESPONSIBLE AI -->
+<section id="responsible-ai" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="label rv">Responsible AI</div>
+  <h2 class="section-title rv">AI that knows<br/><span class="accent">its boundaries.</span></h2>
+  <div class="feat-grid">
+    <div class="feat rv">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <div class="feat-title">Aggregated data only</div>
+      <p class="feat-body">The AI analyses aggregated financial totals — revenue, costs, balance sheet items. Never upload personal data such as names, salaries, or individual transactions. The system is designed for company-level financial intelligence, not personal data processing.</p>
+      <span class="feat-tag">Aggregated · Company-level</span>
+    </div>
+    <div class="feat rv d1">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728A9 9 0 015.636 5.636"/></svg></div>
+      <div class="feat-title">Restricted by design</div>
+      <p class="feat-body">The AI is strictly scoped: it cannot access the internet, other clients' data, or external databases. It responds only based on the financial data loaded into your dashboard. No investment advice. No tax guidance. No legal opinions.</p>
+      <span class="feat-tag">Scoped · Restricted</span>
+    </div>
+    <div class="feat rv d2">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+      <div class="feat-title">Human in the loop</div>
+      <p class="feat-body">AI insights are advisory — never automated decisions. Every recommendation is presented to a human who reviews, accepts, or discards it. The AI supports your judgement; it doesn't replace it. Compliant with EU AI Act transparency requirements.</p>
+      <span class="feat-tag">Advisory only</span>
+    </div>
+    <div class="feat rv">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+      <div class="feat-title">No training on your data</div>
+      <p class="feat-body">We do not allow your API calls to be used to train or improve AI models — ever. Your financial data is processed in ephemeral sessions and immediately discarded. No logs, no retention, no sharing between clients.</p>
+      <span class="feat-tag">Zero retention</span>
+    </div>
+    <div class="feat rv d1">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg></div>
+      <div class="feat-title">Challenges, not confirms</div>
+      <p class="feat-body">The AI is built to challenge unrealistic budgets and forecasts — not to tell you what you want to hear. It flags when growth assumptions don't match historical trends and suggests concrete revisions.</p>
+      <span class="feat-tag">Critical thinking</span>
+    </div>
+    <div class="feat rv d2">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+      <div class="feat-title">Transparent processing</div>
+      <p class="feat-body">You can see exactly which data the AI has access to and which role it's responding from. No black boxes. Full audit trail of which insights were generated and when they were pinned to reports.</p>
+      <span class="feat-tag">Auditable</span>
+    </div>
+    <div class="feat rv">
+      <div class="feat-shine"></div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18.36 6.64a9 9 0 11-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
+      <div class="feat-title">No API connectors</div>
+      <p class="feat-body">We deliberately do not connect to your accounting system via API. All data is uploaded manually as CSV or Excel — you decide exactly what enters the platform and when. No background syncing, no standing access to your books.</p>
+      <span class="feat-tag">Manual upload · Full control</span>
+    </div>
   </div>
 </section>
 
@@ -1960,7 +2159,7 @@ footer {
   <div class="cta-orb"></div>
   <div class="label rv">Sign in</div>
   <h2 class="cta-h rv">Ready to understand your business<br/><span class="accent">like never before?</span></h2>
-  <p class="cta-sub rv">Invite-only access. 9 AI roles. Private AI. Cancel anytime.</p>
+  <p class="cta-sub rv">Invite-only access. 9 AI roles. EU-hosted AI. Cancel anytime.</p>
   <div class="cta-btns rv">
     <a href="/login" class="hero-btn-main">
       Sign in
@@ -1974,9 +2173,15 @@ footer {
 <footer>
   <div>
     <div class="foot-brand">targetdash<span>&gt;</span></div>
-    <div class="foot-copy">© 2026 targetdash.ai · All rights reserved</div>
+    <div class="foot-copy">© 2026 Targetflow Talousjohtopalvelut Oy · Business ID 3088717-5 · Helsinki, Finland</div>
   </div>
   <div class="foot-links">
+    <a href="https://app.targetdash.ai">Sign in</a>
+    <a href="mailto:niklas@targetdash.ai">niklas@targetdash.ai</a>
+  </div>
+  <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--dim);font-family:'DM Mono',monospace">
+    Financial data is encrypted and hosted within the European Union.<br/>
+    Terms of Service, Privacy Policy and Data Processing Agreement available upon sign-in.
   </div>
 </footer>
 
@@ -2026,6 +2231,15 @@ footer {
     </button>
   </div>
   <div class="popup-msgs" id="popupMsgs"></div>
+  <div id="popupPrompts" style="padding:8px 16px;display:flex;gap:6px;flex-wrap:wrap">
+    <button onclick="sendPopupMsg('What is targetdash?')" style="padding:4px 10px;border-radius:12px;border:1px solid var(--border);background:var(--panel);color:var(--mid);font-size:10px;cursor:pointer;font-family:var(--ui)">What is targetdash?</button>
+    <button onclick="sendPopupMsg('How does the AI work?')" style="padding:4px 10px;border-radius:12px;border:1px solid var(--border);background:var(--panel);color:var(--mid);font-size:10px;cursor:pointer;font-family:var(--ui)">How does the AI work?</button>
+    <button onclick="sendPopupMsg('Is my data safe?')" style="padding:4px 10px;border-radius:12px;border:1px solid var(--border);background:var(--panel);color:var(--mid);font-size:10px;cursor:pointer;font-family:var(--ui)">Is my data safe?</button>
+  </div>
+  <div style="padding:8px 12px 12px;display:flex;gap:8px">
+    <input id="popupInput" type="text" placeholder="Ask about targetdash..." onkeydown="if(event.key==='Enter')sendPopupMsg(this.value)" style="flex:1;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:12px;font-family:var(--ui);outline:none"/>
+    <button onclick="sendPopupMsg(document.getElementById('popupInput').value)" style="padding:8px 14px;border-radius:10px;border:none;background:var(--violet);color:#fff;font-size:12px;cursor:pointer;font-family:var(--ui);font-weight:600">→</button>
+  </div>
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -2138,7 +2352,7 @@ const CONVOS = {
     {role:'user', text:'Summarise the key points for the next board meeting.'},
     {role:'ai',   text:'Three headlines: 1. <span class="g">Revenue +21.5% YoY</span> at €3.6M FY estimate — ahead of budget by 0.8%. 2. <span class="v">EBIT turning positive in H2</span> — a €297K improvement vs prior year. 3. <span class="a">Cash position strong at €241K</span> but receivables aging needs board-level attention.'},
     {role:'user', text:'What strategic risks should the board discuss?'},
-    {role:'ai',   text:'Four strategic risks to table: 1. <span class="a">Client concentration</span> — top 3 clients represent 42% of revenue. 2. <span class="a">Key person dependency</span> — sole founder/operator model limits scale. 3. <span class="v">Competitive moat</span> — private AI infrastructure is a differentiator but needs continued investment. 4. <span class="g">Expansion timing</span> — Nordic base is solid, international push requires dedicated resourcing.'},
+    {role:'ai',   text:'Four strategic risks to table: 1. <span class="a">Client concentration</span> — top 3 clients represent 42% of revenue. 2. <span class="a">Key person dependency</span> — sole founder/operator model limits scale. 3. <span class="v">Competitive moat</span> — EU-hosted AI platform is a differentiator — data sovereignty and compliance positioning are strong. 4. <span class="g">Expansion timing</span> — Nordic base is solid, international push requires dedicated resourcing.'},
   ],
 };
 
@@ -2223,6 +2437,8 @@ const rvObs = new IntersectionObserver(entries => {
     if(e.isIntersecting) {
       e.target.classList.add('in');
       if(e.target.id === 'chatBox') setTimeout(() => runChat(currentRole), 600);
+      if(e.target.id === 'budgetWidget') setTimeout(() => e.target.classList.add('playing'), 400);
+      if(e.target.id === 'forecastWidget') setTimeout(() => e.target.classList.add('playing'), 400);
       rvObs.unobserve(e.target);
     }
   });
@@ -2632,7 +2848,7 @@ document.querySelectorAll('.stat-bar').forEach(b => {
 
 // ── EBITDA-9000 POPUP CHAT ────────────────────────────────────────────────
 const FACTS = [
-  'EBITDA-9000 runs on <span class="pv">our own AI servers</span> — your data never touches a third party. No third-party API calls. Complete data sovereignty.',
+  'EBITDA-9000 runs on <span class="pv">EU-hosted infrastructure</span> — your financial data stays within the European Union. Encrypted and isolated per client.',
   '💡 <em>Did you know?</em> The more specific your question, the better the AI response. Instead of "how are we doing?" try "why did gross margin drop in Q3?"',
   'I can respond as <span class="pv">CEO, CFO, CMO, CRO, CTO, COO, HR Manager, Auditor or Board Advisor</span> — switch roles to get a completely different lens on the same numbers.',
   '💡 <em>Did you know?</em> Giving the AI context makes a big difference. Start with "I\'m reviewing Q2 results for the board" before asking your question.',
@@ -2640,15 +2856,15 @@ const FACTS = [
   '💡 <em>Did you know?</em> You can ask the AI to compare two time periods: "compare our H1 this year vs last year" works better than a vague "how has revenue changed?"',
   'Upload any CSV or Excel file and I\'ll <span class="pv">automatically map your columns</span> to the right fields — no templates, no manual setup.',
   '💡 <em>Did you know?</em> Asking "what should I be worried about?" is one of the most powerful prompts — the AI will surface risks you might not have thought to look for.',
-  'NEW: <span class="pv">P&L and Balance Sheet forecast mode</span> — build scenarios, compare actuals vs budget vs forecast, all from the same dashboard.',
+  'NEW: <span class="pv">Budget Builder</span> — set growth assumptions, add capex investment schedules with automatic depreciation, and loan amortisation tables. Everything flows to P&amp;L and balance sheet.',
   '💡 <em>Did you know?</em> Role-switching changes the answer, not just the tone. Ask the same question as CFO vs Board Advisor and you\'ll get genuinely different insights.',
   'All AI infrastructure is <span class="pv">100% EU-based</span>. No data crosses outside the European Union. Ever.',
   '💡 <em>Did you know?</em> Short, direct questions get the sharpest answers. "What\'s driving the payroll increase?" beats "can you tell me a bit about what might be happening with our personnel costs?"',
-  'NEW: <span class="pv">Entity switching</span> — manage multiple companies from one login. Each entity has its own data, dashboards and AI context with full per-entity persistence.',
+  'NEW: <span class="pv">What-if heatmaps</span> — slide revenue up 10% and costs down 5%, and instantly see the effect on EBITDA, equity, and cash. Pin the scenario to your board report.',
   '💡 <em>Did you know?</em> You can ask the AI to draft board commentary: "write a 3-sentence summary of our Q2 financials for the board deck" — one prompt, one polished output.',
   'Every dashboard is <span class="pv">architecturally isolated</span>. It is impossible for one client to access another client\'s data.',
   '💡 <em>Did you know?</em> The AI works best when you tell it what decision you\'re trying to make. "Should we hire in Q3?" gives it the context to give you a useful answer.',
-  'targetdash is <span class="pv">100% Nordic-built</span>, deployed on EU infrastructure. Your data never leaves the EU. AI runs on our own servers — zero external dependencies.',
+  'targetdash is <span class="pv">Nordic-built</span> and EU-hosted. Your data never leaves the European Union. Budget builder, scenario planning, group consolidation, and AI analysis — all in one dashboard.',
   'Questions? Reach Niklas at <span class="pv">niklas@targetdash.ai</span>',
 ];
 
@@ -2734,7 +2950,7 @@ function sendPopupMsg(text) {
     // respond with a relevant fact or capability answer
     const q = text.toLowerCase();
     let reply;
-    if(q.includes('ai') || q.includes('local') || q.includes('server') || q.includes('inference'))
+    if(q.includes('ai') || q.includes('hosting') || q.includes('server') || q.includes('inference'))
       reply = FACTS[0];
     else if(q.includes('role') || q.includes('cfo') || q.includes('ceo') || q.includes('advisor'))
       reply = FACTS[2];
@@ -2742,6 +2958,14 @@ function sendPopupMsg(text) {
       reply = FACTS[4];
     else if(q.includes('user') || q.includes('team') || q.includes('member'))
       reply = FACTS[14];
+    else if(q.includes('budget') || q.includes('capex') || q.includes('loan') || q.includes('forecast'))
+      reply = FACTS[8];
+    else if(q.includes('consolidat') || q.includes('group') || q.includes('subsidiary'))
+      reply = FACTS[16];
+    else if(q.includes('what-if') || q.includes('scenario') || q.includes('heatmap'))
+      reply = FACTS[12];
+    else if(q.includes('board') || q.includes('report') || q.includes('pack'))
+      reply = 'Generate <span class="pv">professional board packs</span> in one click — P&amp;L variance, balance sheet, KPIs, AI insights, and sensitivity analysis. Pin AI insights directly to your report.';
     else if(q.includes('dashboard') || q.includes('cost centre') || q.includes('custom'))
       reply = FACTS[8];
     else if(q.includes('csv') || q.includes('upload') || q.includes('import'))
