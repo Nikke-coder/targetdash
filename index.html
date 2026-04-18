@@ -136,7 +136,7 @@ nav {
     0 0 0 1px rgba(124,58,237,0.15),
     0 0 80px rgba(124,58,237,0.1);
   overflow: hidden;
-  animation: floatDesktop 6s ease-in-out infinite;
+  animation: floatDesktop 9s cubic-bezier(.42,0,.58,1) infinite;
   transform-origin: center bottom;
 }
 .mockup-mobile {
@@ -148,7 +148,7 @@ nav {
     0 0 0 1px rgba(124,58,237,0.2),
     0 0 30px rgba(124,58,237,0.12);
   overflow: hidden;
-  animation: floatMobile 6s ease-in-out infinite .8s;
+  animation: floatMobile 10s cubic-bezier(.42,0,.58,1) infinite 1.2s;
 }
 
 /* reflection strip on top of both mockups */
@@ -164,7 +164,7 @@ nav {
   position: absolute; top: 45%; left: 38%; transform: translate(-50%,-50%);
   width: 80%; height: 75%; pointer-events: none; z-index: -1;
   background: radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, rgba(91,33,182,0.06) 45%, transparent 70%);
-  animation: glowPulse 4s ease-in-out infinite;
+  animation: glowPulse 5.5s cubic-bezier(.42,0,.58,1) infinite;
   filter: blur(24px);
 }
 
@@ -180,16 +180,23 @@ nav {
 }
 
 @keyframes floatDesktop {
-  0%, 100% { transform: translateY(0px) rotate(-0.5deg); }
-  50%       { transform: translateY(-10px) rotate(0.5deg); }
+  0%   { transform: translate3d(0, 0, 0)       rotate(-0.3deg); }
+  33%  { transform: translate3d(-2px, -9px, 0) rotate(0.15deg); }
+  66%  { transform: translate3d(3px, -5px, 0)  rotate(0.35deg); }
+  100% { transform: translate3d(0, 0, 0)       rotate(-0.3deg); }
 }
 @keyframes floatMobile {
-  0%, 100% { transform: translateY(0px) rotate(1deg); }
-  50%       { transform: translateY(-14px) rotate(-0.5deg); }
+  0%   { transform: translate3d(0, 0, 0)        rotate(0.8deg); }
+  33%  { transform: translate3d(4px, -12px, 0)  rotate(-0.3deg); }
+  66%  { transform: translate3d(-3px, -9px, 0)  rotate(0.55deg); }
+  100% { transform: translate3d(0, 0, 0)        rotate(0.8deg); }
 }
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
-  50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.1); }
+  0%   { opacity: 0.55; transform: translate(-50%,-50%) scale(1); }
+  25%  { opacity: 0.85; transform: translate(-50%,-50%) scale(1.06); }
+  50%  { opacity: 1;    transform: translate(-50%,-50%) scale(1.12); }
+  75%  { opacity: 0.88; transform: translate(-50%,-50%) scale(1.07); }
+  100% { opacity: 0.55; transform: translate(-50%,-50%) scale(1); }
 }
 
 @media(max-width:1100px){
@@ -280,7 +287,7 @@ nav {
 .scroll-hint {
   position: absolute; bottom: 32px; left: 52px;
   display: flex; align-items: center; gap: 8px;
-  font-family: var(--ui); font-size: 11px; color: var(--dim); letter-spacing: 0.06em;
+  font-family: var(--ui); font-size: 11px; color: #8b8a9a; letter-spacing: 0.06em;
   opacity: 0; animation: fadeIn 1s ease forwards 1.5s;
 }
 .scroll-line { width: 32px; height: 1px; background: var(--dim); position: relative; overflow: hidden; }
@@ -589,9 +596,9 @@ footer {
 }
 .foot-brand { font-family: var(--ui); font-size: 15px; font-weight: 600; color: var(--mid); }
 .foot-brand span { color: var(--violet-hi); }
-.foot-copy { font-family: var(--ui); font-size: 11px; color: var(--dim); margin-top: 4px; }
+.foot-copy { font-family: var(--ui); font-size: 11px; color: #8b8a9a; margin-top: 4px; }
 .foot-links { display: flex; gap: 24px; }
-.foot-links a { font-family: var(--ui); font-size: 12px; color: var(--dim); text-decoration: none; font-weight: 500; transition: color .2s; }
+.foot-links a { font-family: var(--ui); font-size: 12px; color: #8b8a9a; text-decoration: none; font-weight: 500; transition: color .2s; }
 .foot-links a:hover { color: var(--text); }
 
 /* ══════════════════════════════════
@@ -1407,31 +1414,37 @@ footer {
 /* Stagger positions + floating rhythms */
 .bt-mini-1 {
   top: -12px; right: -22px;
-  animation: btMiniFloat1 7s ease-in-out infinite .3s;
+  animation: btMiniFloat1 8s cubic-bezier(.42,0,.58,1) infinite .4s;
 }
 .bt-mini-2 {
   top: 36%; right: -54px;
-  animation: btMiniFloat2 8s ease-in-out infinite .6s;
+  animation: btMiniFloat2 9.5s cubic-bezier(.42,0,.58,1) infinite 1.1s;
 }
 .bt-mini-3 {
   bottom: -20px; right: -10px;
-  animation: btMiniFloat3 7.5s ease-in-out infinite 1s;
+  animation: btMiniFloat3 8.8s cubic-bezier(.42,0,.58,1) infinite 2s;
 }
-.bt-mini.rv.in.bt-mini-1 { animation: btMiniFloat1 7s ease-in-out infinite .3s; }
-.bt-mini.rv.in.bt-mini-2 { animation: btMiniFloat2 8s ease-in-out infinite .6s; }
-.bt-mini.rv.in.bt-mini-3 { animation: btMiniFloat3 7.5s ease-in-out infinite 1s; }
+.bt-mini.rv.in.bt-mini-1 { animation: btMiniFloat1 8s cubic-bezier(.42,0,.58,1) infinite .4s; }
+.bt-mini.rv.in.bt-mini-2 { animation: btMiniFloat2 9.5s cubic-bezier(.42,0,.58,1) infinite 1.1s; }
+.bt-mini.rv.in.bt-mini-3 { animation: btMiniFloat3 8.8s cubic-bezier(.42,0,.58,1) infinite 2s; }
 
 @keyframes btMiniFloat1 {
-  0%,100% { transform: translate(0,0) rotate(0.6deg); }
-  50%     { transform: translate(-4px,-8px) rotate(-0.4deg); }
+  0%   { transform: translate(0,0)       rotate(0.6deg); }
+  33%  { transform: translate(-5px,-9px) rotate(0.2deg); }
+  66%  { transform: translate(2px,-5px)  rotate(-0.4deg); }
+  100% { transform: translate(0,0)       rotate(0.6deg); }
 }
 @keyframes btMiniFloat2 {
-  0%,100% { transform: translate(0,0) rotate(-0.5deg); }
-  50%     { transform: translate(-6px,-10px) rotate(0.3deg); }
+  0%   { transform: translate(0,0)        rotate(-0.5deg); }
+  33%  { transform: translate(-7px,-11px) rotate(0.4deg); }
+  66%  { transform: translate(-3px,-4px)  rotate(0.2deg); }
+  100% { transform: translate(0,0)        rotate(-0.5deg); }
 }
 @keyframes btMiniFloat3 {
-  0%,100% { transform: translate(0,0) rotate(0.4deg); }
-  50%     { transform: translate(-3px,-6px) rotate(-0.6deg); }
+  0%   { transform: translate(0,0)       rotate(0.4deg); }
+  33%  { transform: translate(-2px,-7px) rotate(-0.5deg); }
+  66%  { transform: translate(-4px,-3px) rotate(-0.6deg); }
+  100% { transform: translate(0,0)       rotate(0.4deg); }
 }
 
 .bt-mini-head {
@@ -1447,6 +1460,7 @@ footer {
 .bt-mini-dot-fc  { background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.5); }
 .bt-mini-dot-scn { background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.5); }
 .bt-mini-dot-cit { background: #f87171; box-shadow: 0 0 8px rgba(248,113,113,0.5); }
+.bt-mini-dot-wi  { background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.55); }
 .bt-mini-title {
   font-family: 'DM Mono', monospace;
   font-size: 11px;
@@ -1531,12 +1545,13 @@ footer {
 
 /* Heatmap scanner sweep */
 .bt-heat-scan {
-  animation: btHeatScan 3.5s linear infinite;
+  animation: btHeatScan 4.2s cubic-bezier(.4,0,.6,1) infinite;
 }
 @keyframes btHeatScan {
-  0%   { transform: translateX(0); opacity: 0; }
-  10%  { opacity: 0.6; }
-  90%  { opacity: 0.6; }
+  0%   { transform: translateX(0);    opacity: 0; }
+  8%   { opacity: 0.7; }
+  50%  { opacity: 0.9; }
+  92%  { opacity: 0.4; }
   100% { transform: translateX(200px); opacity: 0; }
 }
 
@@ -1574,6 +1589,26 @@ footer {
   .bt-mini-title { font-size: 10px; }
   .bt-cit-row { font-size: 9px; }
   .bt-mini-1, .bt-mini-3 { transform-origin: right center; transform: scale(0.92); }
+}
+
+/* ── ACCESSIBILITY: prefers-reduced-motion ──
+   Disable decorative/image animations only.
+   Preserves functional transitions (hovers, fades) for usability. */
+@media (prefers-reduced-motion: reduce) {
+  .mockup-desktop,
+  .mockup-mobile,
+  .mockup-glow,
+  .bt-mini,
+  .bt-mini-1, .bt-mini-2, .bt-mini-3,
+  .bt-heat-scan,
+  .badge-dot,
+  .scroll-line::after,
+  .chat-fab-pulse,
+  #forecastWidget svg,
+  .agent-demo-card > div:first-child {
+    animation: none !important;
+  }
+  /* SMIL animate tags inside SVGs also respected via JS canvas guard below */
 }
 
 </style>
@@ -2022,7 +2057,7 @@ footer {
       <div class="chat-msgs" id="chatMsgs"></div>
       <div class="chat-footer">
         <input class="chat-input-fake" placeholder="Ask your AI advisor…" readonly/>
-        <button class="chat-send-btn">
+        <button class="chat-send-btn" aria-label="Send message" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 19-4-9-9-4 19-7z"/></svg>
         </button>
       </div>
@@ -2056,7 +2091,7 @@ footer {
 
       <!-- Widget header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(124,58,237,0.06);border-bottom:1px solid var(--border);">
-        <div style="display:flex;align-items:center;gap:10;">
+        <div style="display:flex;align-items:center;gap:10px;">
           <div style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--violet-lo),var(--violet-hi));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;">🤖</div>
           <div>
             <div style="font-family:var(--ui);font-size:12px;font-weight:600;color:var(--white);">AI Agents</div>
@@ -2598,11 +2633,15 @@ footer {
           <!-- FC area -->
           <path d="M100,34 L120,26 L140,20 L160,14 L180,10 L200,8 L200,80 L100,80 Z" fill="url(#mini_fc_grad)"/>
           <polyline points="100,34 120,26 140,20 160,14 180,10 200,8" fill="none" stroke="#9d5ffc" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="4,4"/>
-          <!-- Trailing dot pulse -->
+          <!-- Trailing dot pulse — layered ripples -->
           <circle cx="200" cy="8" r="3" fill="#9d5ffc"/>
-          <circle cx="200" cy="8" r="6" fill="none" stroke="#9d5ffc" stroke-width="0.8" opacity="0.5">
-            <animate attributeName="r" values="4;9;4" dur="2.2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.2s" repeatCount="indefinite"/>
+          <circle cx="200" cy="8" r="4" fill="none" stroke="#9d5ffc" stroke-width="0.9" opacity="0.6">
+            <animate attributeName="r" values="3;10;3" dur="2.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.75;0;0.75" dur="2.6s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="200" cy="8" r="4" fill="none" stroke="#9d5ffc" stroke-width="0.6" opacity="0.3">
+            <animate attributeName="r" values="3;13;3" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.5;0;0.5" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
           </circle>
         </svg>
         <div class="bt-mini-foot">
@@ -2677,23 +2716,65 @@ footer {
         </div>
       </div>
 
-      <!-- Mini #3: CIT-Specs -->
+      <!-- Mini #3: What-if heatmap (Revenue Δ × Cost Δ → EBITDA sensitivity) -->
       <div class="bt-mini bt-mini-3 rv d4">
         <div class="bt-mini-head">
-          <span class="bt-mini-dot bt-mini-dot-cit"></span>
-          <span class="bt-mini-title">CIT-Specs</span>
-          <span class="bt-mini-sub">FI 20%</span>
+          <span class="bt-mini-dot bt-mini-dot-wi"></span>
+          <span class="bt-mini-title">What-if</span>
+          <span class="bt-mini-sub">5×5 matrix</span>
         </div>
-        <div class="bt-mini-cit">
-          <div class="bt-cit-row"><span class="bt-cit-l">EBT</span><span class="bt-cit-v bt-cit-v-pos">+180.6K</span></div>
-          <div class="bt-cit-row bt-cit-sub"><span class="bt-cit-l">+ Perm. diffs</span><span class="bt-cit-v">+2.4K</span></div>
-          <div class="bt-cit-row bt-cit-sub"><span class="bt-cit-l">− Losses (3y)</span><span class="bt-cit-v">−12.0K</span></div>
-          <div class="bt-cit-row bt-cit-mid"><span class="bt-cit-l">Taxable</span><span class="bt-cit-v">171.0K</span></div>
-          <div class="bt-cit-row bt-cit-mid"><span class="bt-cit-l">× 20%</span><span class="bt-cit-v">34.2K</span></div>
-          <div class="bt-cit-row bt-cit-total"><span class="bt-cit-l">P&amp;L TAX/mo</span><span class="bt-cit-v bt-cit-v-final">2.85K</span></div>
-        </div>
+        <svg viewBox="0 0 200 84" xmlns="http://www.w3.org/2000/svg" class="bt-mini-svg">
+          <!-- 5×5 purple→green diagonal gradient (worst TL → best BR) -->
+          <g class="wi-grid">
+            <!-- Row 0 — cost+10% (worst cost row) -->
+            <rect x="40" y="10" width="30" height="11" fill="#5b21b6" opacity="0.75"/>
+            <rect x="72" y="10" width="30" height="11" fill="#6d28d9" opacity="0.6"/>
+            <rect x="104" y="10" width="30" height="11" fill="#7c3aed" opacity="0.5"/>
+            <rect x="136" y="10" width="30" height="11" fill="#9d5ffc" opacity="0.4"/>
+            <rect x="168" y="10" width="30" height="11" fill="#a78bfa" opacity="0.5"/>
+            <!-- Row 1 — cost+5% -->
+            <rect x="40" y="23" width="30" height="11" fill="#6d28d9" opacity="0.6"/>
+            <rect x="72" y="23" width="30" height="11" fill="#7c3aed" opacity="0.5"/>
+            <rect x="104" y="23" width="30" height="11" fill="#9d5ffc" opacity="0.4"/>
+            <rect x="136" y="23" width="30" height="11" fill="#a78bfa" opacity="0.55"/>
+            <rect x="168" y="23" width="30" height="11" fill="#a3e635" opacity="0.45"/>
+            <!-- Row 2 — cost 0% (BASE row) -->
+            <rect x="40" y="36" width="30" height="11" fill="#7c3aed" opacity="0.5"/>
+            <rect x="72" y="36" width="30" height="11" fill="#9d5ffc" opacity="0.45"/>
+            <rect x="104" y="36" width="30" height="11" fill="#a78bfa" opacity="0.6" stroke="#c4b5fd" stroke-width="1"/>
+            <rect x="136" y="36" width="30" height="11" fill="#a3e635" opacity="0.55"/>
+            <rect x="168" y="36" width="30" height="11" fill="#34d399" opacity="0.65"/>
+            <!-- Row 3 — cost-5% -->
+            <rect x="40" y="49" width="30" height="11" fill="#9d5ffc" opacity="0.45"/>
+            <rect x="72" y="49" width="30" height="11" fill="#a78bfa" opacity="0.6"/>
+            <rect x="104" y="49" width="30" height="11" fill="#a3e635" opacity="0.6"/>
+            <rect x="136" y="49" width="30" height="11" fill="#34d399" opacity="0.75"/>
+            <rect x="168" y="49" width="30" height="11" fill="#10b981" opacity="0.85"/>
+            <!-- Row 4 — cost-10% (best cost row) -->
+            <rect x="40" y="62" width="30" height="11" fill="#a78bfa" opacity="0.5"/>
+            <rect x="72" y="62" width="30" height="11" fill="#a3e635" opacity="0.55"/>
+            <rect x="104" y="62" width="30" height="11" fill="#34d399" opacity="0.7"/>
+            <rect x="136" y="62" width="30" height="11" fill="#10b981" opacity="0.9"/>
+            <rect x="168" y="62" width="30" height="11" fill="#059669"/>
+          </g>
+          <!-- Axis labels -->
+          <text x="40" y="8" font-family="'DM Mono',monospace" font-size="5.5" fill="#6e6a8a" letter-spacing="0.08em">REV %</text>
+          <text x="3" y="80" font-family="'DM Mono',monospace" font-size="5.5" fill="#6e6a8a" letter-spacing="0.08em">COST %</text>
+          <!-- Axis tick lines -->
+          <line x1="40" y1="77" x2="198" y2="77" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <line x1="37" y1="10" x2="37" y2="73" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <!-- BASE cell pulse — contained layered ripples -->
+          <circle cx="119" cy="41.5" r="2" fill="none" stroke="#c4b5fd" stroke-width="1" opacity="0.8">
+            <animate attributeName="r" values="2;7;2" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.9;0;0.9" dur="2.4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="119" cy="41.5" r="1.5" fill="#c4b5fd">
+            <animate attributeName="r" values="1.3;2.3;1.3" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;0.6;1" dur="2.4s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
         <div class="bt-mini-foot">
-          <span class="bt-mini-stat"><span class="bt-mini-flow"></span>Flows to BUD &amp; FC</span>
+          <span class="bt-mini-stat">Sensitivity <span class="bt-mini-stat-v">±82K</span> EBITDA</span>
         </div>
       </div>
 
@@ -2757,9 +2838,14 @@ footer {
         <rect class="fw-callout" x="16" y="272" width="488" height="40" rx="8" fill="rgba(251,191,36,0.04)" stroke="rgba(251,191,36,0.15)" stroke-width="0.5"/>
         <text class="fw-callout" x="30" y="290" font-family="'DM Mono',monospace" font-size="8" fill="#fbbf24" font-weight="600">EBITDA-9000</text>
         <text class="fw-callout" x="30" y="304" font-family="'DM Mono',monospace" font-size="7.5" fill="#a09fb0">FC assumes 12% Q4 growth. Historical Q4 avg is 5%. Consider revising to 7-8%.</text>
-        <circle cx="462" cy="68" r="8" fill="none" stroke="rgba(124,58,237,0.3)" stroke-width="1">
-          <animate attributeName="r" values="6;12;6" dur="2.5s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.6;0.15;0.6" dur="2.5s" repeatCount="indefinite"/>
+        <circle cx="462" cy="68" r="4" fill="#7c3aed"/>
+        <circle cx="462" cy="68" r="8" fill="none" stroke="rgba(124,58,237,0.35)" stroke-width="1">
+          <animate attributeName="r" values="5;14;5" dur="2.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.7;0;0.7" dur="2.8s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="462" cy="68" r="8" fill="none" stroke="rgba(124,58,237,0.25)" stroke-width="0.7">
+          <animate attributeName="r" values="5;18;5" dur="2.8s" begin="1.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.5;0;0.5" dur="2.8s" begin="1.4s" repeatCount="indefinite"/>
         </circle>
       </svg>
     </div>
@@ -2930,7 +3016,7 @@ footer {
     <a href="https://app.targetdash.ai">Sign in</a>
     <a href="mailto:niklas@targetdash.ai">niklas@targetdash.ai</a>
   </div>
-  <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--dim);font-family:'DM Mono',monospace">
+  <div style="text-align:center;margin-top:12px;font-size:10px;color:#8b8a9a;font-family:'DM Mono',monospace">
     Financial data is encrypted and hosted within the European Union.<br/>
     Terms of Service, Privacy Policy and Data Processing Agreement available upon sign-in.
   </div>
@@ -2941,7 +3027,7 @@ footer {
 <!-- CONTACT MODAL -->
 <div class="contact-modal-overlay" id="contactModal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="contact-modal">
-    <button class="contact-modal-close" onclick="document.getElementById('contactModal').classList.remove('open')">
+    <button class="contact-modal-close" onclick="document.getElementById('contactModal').classList.remove('open')" aria-label="Close dialog" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <div class="contact-modal-icon">
@@ -2960,7 +3046,7 @@ footer {
 </div>
 
 <!-- EBITDA-9000 FLOATING BUTTON -->
-<button class="chat-fab" id="chatFab" onclick="openPopup()">
+<button class="chat-fab" id="chatFab" onclick="openPopup()" aria-label="Open EBITDA-9000 chat">
   <div class="chat-fab-icon">E9K</div>
   EBITDA-9000
   <div class="chat-fab-pulse"></div>
@@ -2977,7 +3063,7 @@ footer {
         <div class="popup-tagline">Your financial intelligence AI</div>
       </div>
     </div>
-    <button class="popup-close" onclick="closePopup()">
+    <button class="popup-close" onclick="closePopup()" aria-label="Close chat" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
@@ -2985,6 +3071,25 @@ footer {
 </div>
 
 <script>
+// ── ACCESSIBILITY guards (added by security/bug pass) ──────────────────
+(function(){
+  var rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (rm && rm.matches) {
+    var cv = document.getElementById('canvas');
+    if (cv) cv.style.display = 'none';
+    // Neutralise SMIL <animate> inside SVGs by pausing the document's SVG animations
+    try { document.documentElement.pauseAnimations && document.documentElement.pauseAnimations(); } catch(_){}
+  }
+  // ESC closes modal + popup for keyboard users
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    var modal = document.getElementById('contactModal');
+    var pop   = document.getElementById('chatPopup');
+    if (modal && modal.classList.contains('open')) modal.classList.remove('open');
+    if (pop   && pop.classList.contains('open'))   typeof closePopup==='function' && closePopup();
+  });
+})();
+
 // ── CANVAS — VIOLET AMBIENT ──────────────────────────────────────────────
 const cv = document.getElementById('canvas');
 const cc = cv.getContext('2d');
